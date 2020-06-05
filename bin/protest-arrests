@@ -13,8 +13,6 @@ shift
 case "$CMD" in
   run)
     set -x
-    yarn install
-    yarn build
     yarn server
     ;;
 

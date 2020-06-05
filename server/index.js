@@ -10,8 +10,13 @@ const hostname = process.env.HOST || 'localhost'
 const port = process.env.PORT || 3000
 const sheetId = process.env.SHEET_ID
 
-app.use(bodyParser.json())
+const logger = function(req, res, next) {
+  console.log(req)
+  next()
+}
 
+app.use(bodyParser.json())
+app.use(logger)
 app.use(express.static('public'))
 
 app.use('/assets', createProxyMiddleware({
