@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { BasicSelect } from 'js/components/cells/select_cell/styles'
 
 export const Table = styled.table`
   width: 100%;
@@ -59,4 +60,14 @@ export const SubmitButton = styled(Button)`
   background-color: #117da5;
   border-color: #117da5;
   color: #fff;
+`
+
+export const Error = styled.span`
+  color: #b42d26;
+  margin-left: 12px;
+`
+
+export const Select = styled(BasicSelect)`
+  display: inline-block;
+  min-width: 7.2em;
 `

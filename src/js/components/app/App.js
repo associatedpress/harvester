@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
-import { Flex, Headline, Chatter, Footer } from 'ap-react-components'
+import { Footer } from 'ap-react-components'
 import { initGA, PageView } from 'interact-analytics'
 import { Form, Done } from 'js/components'
+import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
 
 function App(props) {
   const {
@@ -15,22 +16,34 @@ function App(props) {
   //   PageView()
   // }, [])
 
-  const cities = useData('/api/sheet/cities', { initial: [] })
-  const charges = useData('/api/sheet/charges', { initial: [] })
-  const race = useData('/api/sheet/races', { initial: [] })
-  const age = useData('/api/sheet/ages', { initial: [] })
-
-  const schema = [
-    { type: 'bool', label: 'Cumulative?', default: false },
-    { type: 'number', label: 'Arrests', default: 0, },
-    { type: 'select', label: 'Charge', default: '', valueKey: 'charge', options: charges, },
-    { type: 'select', label: 'Race', default: '', valueKey: 'race', options: race },
-    { type: 'select', label: 'Age', default: '', valueKey: 'age', options: age},
-  ]
-
   const [formId, setFormId] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+
+  const bust = url => `${url}?_=${formId}`
+
+  const cities = useData('/api/sheet/cities', { initial: [] })
+  const race = useData('/api/sheet/races', { initial: [] })
+  const age = useData('/api/sheet/ages', { initial: [] })
+  const charges = useData(bust('/api/existing-charges'), { initial: [] }).map(value => ({ value }))
+  console.log(charges)
+
+  const formatDate = date => {
+    const year = date.getFullYear()
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const day = date.getDate().toString().padStart(2, '0')
+    return `${month}/${day}/${year}`
+  }
+
+  const schema = [
+    { type: 'date', label: 'Date', default: formatDate(new Date()), global: true },
+    { type: 'select', label: 'City', default: '', options: cities, global: true },
+    { type: 'bool', label: 'Cumulative?', default: false },
+    { type: 'number', label: 'Arrests', default: 0, },
+    { type: 'select', label: 'Charge', default: '', options: charges, creatable: true },
+    { type: 'select', label: 'Race', default: '', options: race },
+    { type: 'select', label: 'Age', default: '', options: age },
+  ]
 
   const submit = (rows) => {
     setSubmitting(true)
@@ -54,9 +67,9 @@ function App(props) {
   }
 
   return (
-    <Flex.Interactive className={className}>
-      <Flex.Static>
-        <Headline>Protest Arrests Data Entry</Headline>
+    <FlexInteractive className={className}>
+      <FlexStatic>
+        <H1>Protest Arrests Data Entry</H1>
         <Chatter>
           Please enter arrests data below:
         </Chatter>
@@ -74,8 +87,8 @@ function App(props) {
         <Footer
           credit='The Data Team'
         />
-      </Flex.Static>
-    </Flex.Interactive>
+      </FlexStatic>
+    </FlexInteractive>
   )
 }
 

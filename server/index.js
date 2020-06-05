@@ -19,6 +19,14 @@ app.use('/assets', createProxyMiddleware({
   changeOrigin: true,
 }))
 
+app.get('/api/existing-charges', async (req, res) => {
+  const range = 'entry!F:F'
+  const data = await google.getRange(sheetId, { range, headers: false })
+  const values = data.slice(1).reduce((p, d) => p.concat(d), [])
+  const uniqueValues = Array.from(new Set(values))
+  res.json(uniqueValues)
+})
+
 app.get('/api/sheet/:sheet', async (req, res) => {
   const range = req.params.sheet.toLowerCase()
   const data = await google.getRange(sheetId, { range })

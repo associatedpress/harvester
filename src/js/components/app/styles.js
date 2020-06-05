@@ -35,3 +35,51 @@ export const Label = styled.div`
   margin-right: 8px;
   min-width: 2em;
 `
+
+export const FlexInteractive = styled.div`
+  font-family: 'Good Cond Regular', Arial, sans-serif;
+  color: #2c2c2c;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 8px);
+  width: calc(100% - 8px);
+  padding: 4px;
+`
+
+export const FlexStatic = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: content;
+`
+
+export const H1 = styled.h1`
+  font-family: 'Good Cond Bold', Arial, sans-serif;
+  line-height: 1.3;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  font-size: 1.2em;
+
+  @media screen and(min-width: 580px) {
+    font-size: 1.4em;
+  }
+
+  @media screen and (min-width: 720px) {
+    font-size: 1.8em;
+  }
+`
+
+export const Chatter = styled.div`
+  line-height: 1.3;
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+  color: #4d4d4e;
+  font-size: 0.8em;
+
+  @media screen and (min-width: 580px) {
+    font-size: 0.9em;
+  }
+
+  @media screen and (min-width: 720px) {
+    font-size: 1em;
+  }
+`

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+CMD=$1
+if [[ -z $CMD ]]; then
+  echo "Must specify a task" >&2
+  exit 1
+fi
+
+shift
+
+case "$CMD" in
+  run)
+    set -x
+    yarn install
+    yarn build
+    yarn server
+    ;;
+
+  migrate)
+    echo "No migrations needed"
+    ;;
+
+  *)
+    echo "Unsupported task '${CMD}'" >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,4 @@
+node_modules
+.git
+.auth.json
+.env

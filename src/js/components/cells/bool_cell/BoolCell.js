@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { Td } from './styles'
 
 function BoolCell(props) {
   const {
@@ -8,13 +9,13 @@ function BoolCell(props) {
   } = props
 
   return (
-    <td>
+    <Td>
       <input
         type='checkbox'
         checked={value}
         onChange={e => onChange(e.target.checked)}
       />
-    </td>
+    </Td>
   )
 }
 

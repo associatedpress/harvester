@@ -7,4 +7,8 @@ export const Message = styled.div`
 
 export const Button = styled.button`
   margin: 2em 0;
+  text-transform: uppercase;
+  padding: 0.75em;
+  background-color: #fff;
+  appearance: none;
 `
