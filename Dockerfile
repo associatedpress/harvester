@@ -16,7 +16,9 @@ EXPOSE $PORT
 
 RUN chown -R interact:interact .
 RUN echo "$GOOGLE_CREDS" > "$GOOGLE_APPLICATION_CREDENTIALS"
-RUN yarn config set "strict-ssl" false -g
+
+RUN yarn config set "strict-ssl" false --global && \
+  yarn config set registry https://artifactory.ap.org/api/npm/npm/ --global
 
 USER interact
 

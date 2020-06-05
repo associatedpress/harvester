@@ -1,6 +1,5 @@
 node_modules
 public
-yarn.lock
 .git
 .auth.json
 .env
