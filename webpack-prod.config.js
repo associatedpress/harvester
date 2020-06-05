@@ -1,4 +1,6 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -56,7 +58,7 @@ module.exports = {
         test: /.*\.s?css$/,
         sideEffects: true,
         use: [
-          'to-string-loader',
+          MiniCssExtractPlugin.loader,
           'css-loader',
           'resolve-url-loader',
           'sass-loader',
@@ -85,12 +87,16 @@ module.exports = {
   optimization: {
     minimizer: [
       new TerserPlugin(),
+      new OptimizeCSSAssetsPlugin(),
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
     }),
     new CleanWebpackPlugin(),
   ],

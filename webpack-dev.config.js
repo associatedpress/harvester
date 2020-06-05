@@ -24,7 +24,7 @@ const config = (env, argv, port) => ({
   devServer: {
     compress: true,
     port,
-    open: true,
+    // open: true,
     contentBase: path.join(__dirname, 'public'),
     overlay: {
       errors: true,
@@ -48,8 +48,11 @@ const config = (env, argv, port) => ({
         //pathRewrite: {'^/live-data': '/protest-arrests-data-entry/live-data'},
       },
       '/assets/': {
-         target: 'https://interactives.ap.org',
-         changeOrigin: true,
+        target: 'https://interactives.ap.org',
+        changeOrigin: true,
+      },
+      '/api/': {
+        target: 'http://localhost:3000',
       },
     },
   },
@@ -91,7 +94,7 @@ const config = (env, argv, port) => ({
         test: /.*\.s?css$/,
         sideEffects: true,
         use: [
-          'to-string-loader',
+          'style-loader',
           'css-loader',
           'resolve-url-loader',
           'sass-loader',
