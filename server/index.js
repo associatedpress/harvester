@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000
 const sheetId = process.env.SHEET_ID
 
 const logger = function(req, res, next) {
-  console.log(req)
+  console.log(`${req.method} ${req.originalUrl}`)
   next()
 }
 
