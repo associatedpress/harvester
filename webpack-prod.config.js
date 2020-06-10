@@ -18,6 +18,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -70,6 +71,8 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'fonts/[name].[contenthash].[ext]',
+            outputPath: 'fonts',
+            publicPath: '/fonts/',
           },
         },
       },
@@ -78,7 +81,9 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: 'images/[name].[contenthash].[ext]',
+            name: '[name].[contenthash].[ext]',
+            outputPath: 'images',
+            publicPath: '/images/',
           },
         }],
       },

@@ -24,14 +24,14 @@ function Row(props) {
   return (
     <tr>
       {schema.map((col, i) => {
-        const { type, ...cellProps } = col
+        const { type, config } = col
         const C = cells[type]
         return (
           <C
             key={i}
             onChange={v => onChange(rowNum, i, v)}
             value={values[i]}
-            {...cellProps}
+            {...config}
           />
         )
       })}

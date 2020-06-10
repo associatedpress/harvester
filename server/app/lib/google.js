@@ -50,9 +50,6 @@ async function getRange(spreadsheetId, options = {}) {
 }
 
 async function appendRows(spreadsheetId, rows, options = {}) {
-  // const {
-  // } = options
-
   const auth = await getAuth()
   const sheets = google.sheets('v4')
 

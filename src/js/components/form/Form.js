@@ -31,12 +31,12 @@ function Form(props) {
 
   const [globalErrors, setGlobalErrors] = useState({})
 
-  const globalSchema = schema.filter(s => s.global)
-  const tableSchema = schema.filter(s => !s.global)
+  const globalSchema = schema.filter(s => s.config.global)
+  const tableSchema = schema.filter(s => !s.config.global)
 
   const insert = (arr, i, v) => [...arr.slice(0, i), v, ...arr.slice(i + 1)]
 
-  const [globals, setGlobals] = useState(globalSchema.map(s => s.default))
+  const [globals, setGlobals] = useState(globalSchema.map(s => s.config.default))
   const setGlobal = (index, val) => {
     if (globalErrors[index]) {
       setGlobalErrors(Object.assign({}, globalErrors, { [index]: undefined }))
@@ -45,7 +45,7 @@ function Form(props) {
     setGlobals(newGlobals)
   }
 
-  const defaultRow = tableSchema.map(c => c.default)
+  const defaultRow = tableSchema.map(c => c.config.default)
   const [rows, setRows] = useState([defaultRow])
   const setRowValue = (rowNum, index, val) => {
     const row = rows[rowNum]
@@ -96,13 +96,13 @@ function Form(props) {
             )
           }
           if (g.type === 'select') {
-            const selected = g.options.find(opt => opt.value === globals[i])
+            const selected = g.config.options.find(opt => opt.value === globals[i])
             return (
               <div key={i}>
                 <Label>{g.label}:</Label>
                 <Select
                   value={selected}
-                  options={g.options}
+                  options={g.config.options}
                   onChange={opt => setGlobal(i, opt.value)}
                 />
                 {globalErrors[i] && (
