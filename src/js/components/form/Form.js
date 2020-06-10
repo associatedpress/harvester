@@ -76,9 +76,7 @@ function Form(props) {
     if (Object.keys(errors).length) {
       setGlobalErrors(errors)
     } else if (confirm('Submit data? Values cannot be changed after submission.')) {
-      const now = new Date()
-      const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
-      submit(fullRows)
+      submit({ globals, rows })
     }
   }
 

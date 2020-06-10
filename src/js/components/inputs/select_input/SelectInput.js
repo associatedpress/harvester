@@ -11,14 +11,14 @@ function SelectInput(props) {
   } = props
 
   const getLabel = opt => opt.label || opt.value
-  const selected = options.find(opt => opt.value === value)
+  const selected = options.options.find(opt => opt.value === value)
 
   const C = creatable ? Creatable : Select
 
   return (
     <C
       value={selected}
-      options={options}
+      options={options.options}
       getOptionLabel={getLabel}
       getNewOptionData={value => ({ value })}
       onChange={opt => onChange(opt.value)}
@@ -29,7 +29,7 @@ function SelectInput(props) {
 SelectInput.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string,
-  options: PropTypes.array,
+  options: PropTypes.object,
   creatable: PropTypes.bool,
 }
 

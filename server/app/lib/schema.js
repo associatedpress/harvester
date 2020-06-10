@@ -20,7 +20,10 @@ async function parseConfig(docId, type, key, value) {
     case 'default':
       return (type === 'bool') ? (value === 'true') : value
     case 'options':
-      return await resolveOptions(docId, value)
+      return {
+        range: value,
+        options: await resolveOptions(docId, value),
+      }
     case 'creatable':
       return value === 'true'
     default:

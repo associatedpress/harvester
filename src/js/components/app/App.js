@@ -19,14 +19,41 @@ function App(props) {
 
   const schema = useData(bust(`/api/${docId}/schema`))
 
-  const submit = (rows) => {
+  const processRows = async (rows) => {
+    const creatableSelects = schema.columns.filter(col => (
+      col.type === 'select' && col.config.creatable
+    ))
+    Object.values(rows).forEach(row => {
+      creatableSelects.forEach(({ id, config }) => {
+        const value = row[id]
+        const { options, range } = config.options
+        if (!options.includes(value)) {
+          const cfg = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify([[value]]),
+          }
+          const params = new URLSearchParams({ range })
+          fetch(`/api/${docId}/entry?${params.toString()}`, cfg)
+        }
+      })
+    })
+  }
+
+  const submit = (data) => {
+    console.log(data)
+    const { globals, rows } = data
+    const now = new Date()
+    const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
+
     setSubmitting(true)
+    processRows(rows)
     const config = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rows),
+      body: JSON.stringify(fullRows),
     }
-    fetch('/api/append-rows', config)
+    fetch(`/api/${docId}/entry`, config)
       .then(rsp => {
         setSubmitting(false)
         if (rsp.ok) {
