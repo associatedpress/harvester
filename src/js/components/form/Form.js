@@ -1,70 +1,75 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Table,
   THead,
   TBody,
-  Label,
   ButtonContainer,
   NewRowButton,
-  SubmitButton,
-  Error,
-  Select
+  SubmitButton
 } from './styles'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import { Row } from 'js/components'
+import { Global, Row } from 'js/components'
 
 function Form(props) {
   const {
     schema,
     submit,
-    cities,
     submitting,
   } = props
-
-  const formatDate = date => {
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    return `${month}/${day}/${year}`
-  }
 
   const [globalErrors, setGlobalErrors] = useState({})
 
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
 
-  const insert = (arr, i, v) => [...arr.slice(0, i), v, ...arr.slice(i + 1)]
-
-  const [globals, setGlobals] = useState(globalSchema.map(s => s.config.default))
-  const setGlobal = (index, val) => {
-    if (globalErrors[index]) {
-      setGlobalErrors(Object.assign({}, globalErrors, { [index]: undefined }))
+  const [globals, setGlobals] = useState(globalSchema.reduce((p, s) => ({ ...p, [s.id]: s.config.default }), {}))
+  const setGlobal = (id, val) => {
+    if (globalErrors[id]) {
+      const newGlobalErrors = { ...globalErrors }
+      delete newGlobalErrors[id]
+      setGlobalErrors(newGlobalErrors)
     }
-    const newGlobals = insert(globals, index, val)
+    const newGlobals = {
+      ...globals,
+      [id]: val,
+    }
     setGlobals(newGlobals)
   }
 
-  const defaultRow = tableSchema.map(c => c.config.default)
-  const [rows, setRows] = useState([defaultRow])
-  const setRowValue = (rowNum, index, val) => {
-    const row = rows[rowNum]
-    const newRow = insert(row, index, val)
-    const newRows = insert(rows, rowNum, newRow)
+  const defaultRow = tableSchema.reduce((p, c) => ({ ...p, [c.id]: c.config.default }), {})
+  const [nextRowId, setNextRowId] = useState(1)
+  const [rows, setRows] = useState({ 0: defaultRow })
+  const setRowValue = (rowId, colId, val) => {
+    const row = rows[rowId]
+    const newRow = {
+      ...row,
+      [colId]: val,
+    }
+    const newRows = {
+      ...rows,
+      [rowId]: newRow,
+    }
     setRows(newRows)
   }
-  const addRow = () => setRows([...rows, defaultRow])
-  const deleteRow = (index) => {
+  const addRow = () => {
+    setRows({
+      ...rows,
+      [nextRowId]: defaultRow,
+    })
+    setNextRowId(nextRowId + 1)
+  }
+  const deleteRow = (id) => {
     if (confirm('Delete row? Values will be lost.')) {
-      const newRows = [...rows.slice(0, index), ...rows.slice(index + 1)]
+      const newRows = { ...rows }
+      delete newRows[id]
       setRows(newRows)
     }
   }
 
   const submitAll = () => {
-    const errors = globalSchema.reduce((errs, g, i) => {
-      if (!globals[i]) {
-        errs[i] = `${g.label} cannot be left blank`
+    const errors = globalSchema.reduce((errs, g) => {
+      if (g.required && !globals[g.id]) {
+        errs[g.id] = `${g.label} cannot be left blank`
       }
       return errs
     }, {})
@@ -72,7 +77,7 @@ function Form(props) {
       setGlobalErrors(errors)
     } else if (confirm('Submit data? Values cannot be changed after submission.')) {
       const now = new Date()
-      const fullRows = rows.map(row => [now, ...globals, ...row])
+      const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
       submit(fullRows)
     }
   }
@@ -80,38 +85,15 @@ function Form(props) {
   return (
     <article>
       <section>
-        {globalSchema.map((g, i) => {
-          if (g.type === 'date') {
-            return (
-              <div key={i}>
-                <Label>{g.label}:</Label>
-                <DatePicker
-                  selected={new Date(globals[i])}
-                  onChange={d => setGlobal(i, formatDate(d))}
-                />
-                {globalErrors[i] && (
-                  <Error>{globalErrors[i]}</Error>
-                )}
-              </div>
-            )
-          }
-          if (g.type === 'select') {
-            const selected = g.config.options.find(opt => opt.value === globals[i])
-            return (
-              <div key={i}>
-                <Label>{g.label}:</Label>
-                <Select
-                  value={selected}
-                  options={g.config.options}
-                  onChange={opt => setGlobal(i, opt.value)}
-                />
-                {globalErrors[i] && (
-                  <Error>{globalErrors[i]}</Error>
-                )}
-              </div>
-            )
-          }
-        })}
+        {globalSchema.map(g => (
+          <Global
+            key={g.id}
+            schema={g}
+            value={globals[g.id]}
+            error={globalErrors[g.id]}
+            onChange={d => setGlobal(g.id, d)}
+          />
+        ))}
         <Table>
           <THead>
             <tr>
@@ -122,13 +104,13 @@ function Form(props) {
             </tr>
           </THead>
           <TBody>
-            {rows.map((row, index) => (
+            {Object.entries(rows).map(([rowId, row]) => (
               <Row
-                key={index}
-                rowNum={index}
+                key={rowId}
+                rowId={rowId}
                 schema={tableSchema}
                 values={row}
-                deleteRow={() => deleteRow(index)}
+                deleteRow={() => deleteRow(rowId)}
                 onChange={setRowValue}
               />
             ))}
@@ -143,8 +125,14 @@ function Form(props) {
   )
 }
 
-Form.propTypes = {}
+Form.propTypes = {
+  schema: PropTypes.array,
+  submit: PropTypes.func,
+  submitting: PropTypes.bool,
+}
 
-Form.defaultProps = {}
+Form.defaultProps = {
+  submitting: false,
+}
 
 export default Form

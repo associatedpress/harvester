@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const config = (env, argv, port) => ({
@@ -85,12 +84,7 @@ const config = (env, argv, port) => ({
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'src/index.html',
-    }),
-  ],
+  plugins: [],
 });
 
 module.exports = config

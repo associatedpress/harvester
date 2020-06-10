@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
@@ -71,6 +71,7 @@ function App(props) {
 
 App.propTypes = {
   className: PropTypes.string,
+  docId: PropTypes.string,
 }
 
 App.defaultProps = {}

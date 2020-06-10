@@ -1,18 +1,11 @@
 const google = require('./google')
 
-const configParsers = {
-  global: (_, v) => v === 'true',
-  default: (type, v) => type === 'bool' ? v === 'true' : v,
-  options: (_, v) => v,
-  creatable: (_, v) => v === 'true',
-}
-
 const allowedOptions = {
-  date: new Set(['global', 'default']),
-  bool: new Set(['global', 'default']),
-  number: new Set(['global', 'default']),
-  string: new Set(['global', 'default']),
-  select: new Set(['global', 'default', 'creatable', 'options']),
+  date: new Set(['global', 'default', 'required']),
+  bool: new Set(['global', 'default', 'required']),
+  number: new Set(['global', 'default', 'required']),
+  string: new Set(['global', 'default', 'required']),
+  select: new Set(['global', 'default', 'required', 'creatable', 'options']),
 }
 
 async function resolveOptions(docId, range) {

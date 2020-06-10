@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { BasicSelect } from 'js/components/cells/select_cell/styles'
 
 export const Table = styled.table`
   width: 100%;
@@ -30,13 +29,6 @@ export const TBody = styled.tbody`
   }
 `
 
-export const Label = styled.div`
-  display: inline-block;
-  font-family: "Good Cond Bold", "Arial Narrow", Arial, sans-serif;
-  margin-right: 8px;
-  min-width: 2em;
-`
-
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -60,14 +52,4 @@ export const SubmitButton = styled(Button)`
   background-color: #117da5;
   border-color: #117da5;
   color: #fff;
-`
-
-export const Error = styled.span`
-  color: #b42d26;
-  margin-left: 12px;
-`
-
-export const Select = styled(BasicSelect)`
-  display: inline-block;
-  min-width: 7.2em;
 `

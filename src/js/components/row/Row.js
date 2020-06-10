@@ -1,38 +1,30 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BoolCell, NumberCell, SelectCell } from 'js/components/cells'
+import { TypedInput } from 'js/components/inputs'
 import { Delete } from './styles'
 
 function Row(props) {
   const {
     schema,
-    rowNum,
+    rowId,
     values,
     onChange,
-    boolCell,
-    numberCell,
-    selectCell,
     deleteRow,
   } = props
 
-  const cells = {
-    bool: boolCell,
-    number: numberCell,
-    select: selectCell,
-  }
-
   return (
     <tr>
-      {schema.map((col, i) => {
+      {schema.map(col => {
         const { type, config } = col
-        const C = cells[type]
         return (
-          <C
-            key={i}
-            onChange={v => onChange(rowNum, i, v)}
-            value={values[i]}
-            {...config}
-          />
+          <td key={col.id}>
+            <TypedInput
+              type={type}
+              onChange={v => onChange(rowId, col.id, v)}
+              value={values[col.id]}
+              {...config}
+            />
+          </td>
         )
       })}
       <td>
@@ -44,18 +36,12 @@ function Row(props) {
 
 Row.propTypes = {
   schema: PropTypes.array,
-  rowNum: PropTypes.number,
+  rowId: PropTypes.any,
+  values: PropTypes.object,
   onChange: PropTypes.func,
   deleteRow: PropTypes.func,
-  boolCell: PropTypes.elementType,
-  numberCell: PropTypes.elementType,
-  selectCell: PropTypes.elementType,
 }
 
-Row.defaultProps = {
-  boolCell: BoolCell,
-  numberCell: NumberCell,
-  selectCell: SelectCell,
-}
+Row.defaultProps = {}
 
 export default Row

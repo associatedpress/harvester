@@ -9,7 +9,7 @@ function Done(props) {
 
   return (
     <Message>
-      Thank you for submitting protest arrests data!
+      Thank you for submitting data!
       <div>
         <Button onClick={restart}>Enter More Data</Button>
       </div>
