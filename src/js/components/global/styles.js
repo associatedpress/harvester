@@ -4,6 +4,7 @@ export const GlobalContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  margin-bottom: 0.2em;
 `
 
 export const Label = styled.div`

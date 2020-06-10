@@ -6,4 +6,5 @@ export const Input = styled.input.attrs({ type: 'text' })`
   border: 1px solid #b5b5b5;
   font-size: 0.72em;
   padding: 0;
+  padding-left: 0.4em;
 `
