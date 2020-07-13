@@ -1,13 +1,12 @@
 import React from 'react'
 import { render } from 'react-dom'
 import App from './components'
-import styled from 'styled-components'
+import 'scss/app.scss'
 
-import styles from 'scss/app.scss'
-
-const StyledApp = styled(App)`${styles}`
+const node = document.getElementById('app')
+const docId = node.getAttribute('data-docid')
 
 render(
-  <StyledApp />,
+  <App docId={docId} />,
   document.getElementById('app')
 )

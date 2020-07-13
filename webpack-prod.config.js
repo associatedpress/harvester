@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
@@ -18,6 +17,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -70,6 +70,8 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'fonts/[name].[contenthash].[ext]',
+            outputPath: 'fonts',
+            publicPath: '/fonts/',
           },
         },
       },
@@ -78,7 +80,9 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: 'images/[name].[contenthash].[ext]',
+            name: '[name].[contenthash].[ext]',
+            outputPath: 'images',
+            publicPath: '/images/',
           },
         }],
       },
@@ -91,10 +95,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: './src/index.html',
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),

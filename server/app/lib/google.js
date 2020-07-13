@@ -50,8 +50,10 @@ async function getRange(spreadsheetId, options = {}) {
 }
 
 async function appendRows(spreadsheetId, rows, options = {}) {
-  // const {
-  // } = options
+  const {
+    range = 'A1',
+    valueInputOption = 'USER_ENTERED',
+  } = options
 
   const auth = await getAuth()
   const sheets = google.sheets('v4')
@@ -59,8 +61,8 @@ async function appendRows(spreadsheetId, rows, options = {}) {
   const request = {
     auth,
     spreadsheetId,
-    range: 'A1',
-    valueInputOption: 'USER_ENTERED',
+    range,
+    valueInputOption,
     resource: {
       values: rows,
     },

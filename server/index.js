@@ -1,49 +1,63 @@
+require('dotenv').config()
+
+const path = require('path')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
-const google = require('./google')
 
-require('dotenv').config()
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
+const HOST = process.env.HOST || '0.0.0.0'
+const PORT = process.env.PORT || 3000
 
-const app = express()
-const hostname = process.env.HOST || 'localhost'
-const port = process.env.PORT || 3000
-const sheetId = process.env.SHEET_ID
+const start = (port = PORT, host = HOST) => {
+  const app = express()
 
-const logger = function(req, res, next) {
-  console.log(`[${new Date()}] ${req.method} ${req.originalUrl}`)
-  next()
+  app.set('view engine', 'ejs')
+  app.set('views', path.join(__dirname, 'views'))
+
+  app.use(bodyParser.json())
+
+  app.use((req, res, next) => {
+    require('./app/logger')(req, res, next)
+  })
+
+  app.use((req, res, next) => {
+    require('./app/router')(req, res, next)
+  })
+
+  // static
+  if (!IS_PRODUCTION) {
+    const webpack = require('webpack')
+    const webpackDevMiddleware = require('webpack-dev-middleware')
+    const webpackHotMiddleware = require('webpack-hot-middleware')
+    const webpackConfigFn = require('../webpack-dev.config.js')
+    const config = webpackConfigFn(undefined, undefined, port)
+
+    config.entry = ['webpack-hot-middleware/client?reload=true&timeout=1000', config.entry]
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+    const compiler = webpack(config)
+    app.use(webpackDevMiddleware(compiler, {
+        publicPath: config.output.publicPath,
+    }))
+    app.use(webpackHotMiddleware(compiler))
+  } else {
+    app.use(express.static('public'))
+  }
+
+  app.use('/assets', createProxyMiddleware({
+    target: 'https://interactives.ap.org',
+    changeOrigin: true,
+  }))
+
+  app.listen(port, host, () => {
+    console.log(`Express server listening at http://${host}:${port}`)
+  })
 }
 
-app.use(bodyParser.json())
-app.use(logger)
-app.use(express.static('public'))
-
-app.use('/assets', createProxyMiddleware({
-  target: 'https://interactives.ap.org',
-  changeOrigin: true,
-}))
-
-app.get('/api/existing-charges', async (req, res) => {
-  const range = 'entry!F:F'
-  const data = await google.getRange(sheetId, { range, headers: false })
-  const values = data.slice(1).reduce((p, d) => p.concat(d), [])
-  const uniqueValues = Array.from(new Set(values))
-  res.json(uniqueValues)
-})
-
-app.get('/api/sheet/:sheet', async (req, res) => {
-  const range = req.params.sheet.toLowerCase()
-  const data = await google.getRange(sheetId, { range })
-  res.json(data)
-})
-
-app.post('/api/append-rows', (req, res) => {
-  const rows = req.body
-  const googleRsp = google.appendRows(sheetId, rows)
-  res.json({ rows: rows.length })
-})
-
-app.listen(port, hostname, () => {
-  console.log(`Express server listening at http://${hostname}:${port}`)
-})
+if (!IS_PRODUCTION) {
+  const portfinder = require('portfinder')
+  portfinder.basePort = PORT
+  portfinder.getPortPromise().then(start)
+} else {
+  start()
+}
