@@ -27,7 +27,8 @@ function App(props) {
       creatableSelects.forEach(({ id, config }) => {
         const value = row[id]
         const { options, range } = config.options
-        if (!options.includes(value)) {
+        const optionValues = options.map(opt => opt.value)
+        if (!optionValues.includes(value)) {
           const cfg = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

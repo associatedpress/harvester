@@ -9,6 +9,7 @@ import {
   SubmitButton
 } from './styles'
 import { Global, Row } from 'js/components'
+import { formatDate } from 'js/components/inputs/date_input'
 
 function Form(props) {
   const {
@@ -22,7 +23,15 @@ function Form(props) {
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
 
-  const [globals, setGlobals] = useState(globalSchema.reduce((p, s) => ({ ...p, [s.id]: s.config.default }), {}))
+  const getDefault = c => {
+    const val = c.config.default
+    if (c.type === 'date') {
+      return formatDate(val ? new Date(val) : new Date())
+    }
+    return val
+  }
+
+  const [globals, setGlobals] = useState(globalSchema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {}))
   const setGlobal = (id, val) => {
     if (globalErrors[id]) {
       const newGlobalErrors = { ...globalErrors }
@@ -36,7 +45,7 @@ function Form(props) {
     setGlobals(newGlobals)
   }
 
-  const defaultRow = tableSchema.reduce((p, c) => ({ ...p, [c.id]: c.config.default }), {})
+  const defaultRow = tableSchema.reduce((p, c) => ({ ...p, [c.id]: getDefault(c) }), {})
   const [nextRowId, setNextRowId] = useState(1)
   const [rows, setRows] = useState({ 0: defaultRow })
   const setRowValue = (rowId, colId, val) => {

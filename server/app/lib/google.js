@@ -55,8 +55,6 @@ async function appendRows(spreadsheetId, rows, options = {}) {
     valueInputOption = 'USER_ENTERED',
   } = options
 
-  console.log('APPENDING', range, rows)
-
   const auth = await getAuth()
   const sheets = google.sheets('v4')
 
