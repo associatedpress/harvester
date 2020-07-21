@@ -15,7 +15,7 @@ function Global(props) {
 
   return (
     <GlobalContainer>
-      <Label>{label}:</Label>
+      <Label>{label}</Label>
       <TypedInput
         type={type}
         value={value}

@@ -1,8 +1,13 @@
 import styled from 'styled-components'
 
+export const TableContainer = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 12px;
+`
+
 export const Table = styled.table`
   width: 100%;
-  max-width: 100%;
   margin-top: 1rem;
   margin-bottom: 1rem;
   background-color: transparent;
@@ -18,6 +23,23 @@ export const THead = styled.thead`
     border-top: 1px solid #dee2e6;
     border-bottom: 2px solid #dee2e6;
     text-align: inherit;
+  }
+`
+
+export const Help = styled.span`
+  &::before {
+    content: 'i';
+    font-size: 0.7em;
+    color: #aaa;
+    vertical-align: top;
+    width: 1em;
+    height: 1em;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    margin-left: 0.3em;
+    cursor: help;
   }
 `
 
@@ -41,6 +63,7 @@ export const Button = styled.button`
   padding: 0.75em;
   background-color: #fff;
   appearance: none;
+  cursor: pointer;
 `
 
 export const NewRowButton = styled(Button)`

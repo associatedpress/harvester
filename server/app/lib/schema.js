@@ -1,11 +1,17 @@
 const google = require('./google')
 
+const universalOptions = [
+  'global',
+  'default',
+  'required',
+  'help',
+]
 const allowedOptions = {
-  date: new Set(['global', 'default', 'required']),
-  bool: new Set(['global', 'default', 'required']),
-  number: new Set(['global', 'default', 'required']),
-  string: new Set(['global', 'default', 'required']),
-  select: new Set(['global', 'default', 'required', 'creatable', 'options']),
+  date: new Set([...universalOptions]),
+  bool: new Set([...universalOptions]),
+  number: new Set([...universalOptions]),
+  string: new Set([...universalOptions]),
+  select: new Set([...universalOptions, 'creatable', 'options']),
 }
 
 async function resolveOptions(docId, range) {

@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import {
+  TableContainer,
   Table,
   THead,
   TBody,
+  Help,
   ButtonContainer,
   NewRowButton,
   SubmitButton
 } from './styles'
-import { Global, Row } from 'js/components'
+import { Global, Row, Page } from 'js/components'
 import { formatDate } from 'js/components/inputs/date_input'
 
 function Form(props) {
@@ -18,6 +20,8 @@ function Form(props) {
     submitting,
   } = props
 
+  console.log(schema)
+
   const [globalErrors, setGlobalErrors] = useState({})
 
   const globalSchema = schema.filter(s => s.config.global)
@@ -26,6 +30,9 @@ function Form(props) {
   const getDefault = c => {
     const val = c.config.default
     if (c.type === 'date') {
+      if (val === 'empty') {
+        return null
+      }
       return formatDate(val ? new Date(val) : new Date())
     }
     return val
@@ -101,28 +108,16 @@ function Form(props) {
             onChange={d => setGlobal(g.id, d)}
           />
         ))}
-        <Table>
-          <THead>
-            <tr>
-              {tableSchema.map((c, i) => (
-                <th key={i}>{c.label}</th>
-              ))}
-              <th />
-            </tr>
-          </THead>
-          <TBody>
-            {Object.entries(rows).map(([rowId, row]) => (
-              <Row
-                key={rowId}
-                rowId={rowId}
-                schema={tableSchema}
-                values={row}
-                deleteRow={() => deleteRow(rowId)}
-                onChange={setRowValue}
-              />
-            ))}
-          </TBody>
-        </Table>
+        {Object.entries(rows).map(([rowId, row]) => (
+          <Page
+            key={rowId}
+            rowId={rowId}
+            schema={tableSchema}
+            values={row}
+            deleteRow={() => deleteRow(rowId)}
+            onChange={setRowValue}
+          />
+        ))}
         <ButtonContainer>
           <NewRowButton onClick={addRow}>New Row</NewRowButton>
           <SubmitButton onClick={submitAll} disabled={submitting}>Submit</SubmitButton>

@@ -6,4 +6,8 @@ export const Delete = styled.span`
   content: url(${clear});
   width: 24px;
   height: 24px;
+  cursor: pointer;
+`
+
+export const Td = styled.td`
 `

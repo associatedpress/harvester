@@ -7,4 +7,5 @@ export const Input = styled.input.attrs({ type: 'text' })`
   font-size: 0.72em;
   padding: 0;
   padding-left: 0.4em;
+  box-sizing: border-box;
 `
