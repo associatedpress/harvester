@@ -116,7 +116,7 @@ function Form(props) {
             onChange={d => setGlobal(g.id, d)}
           />
         ))}
-        {Object.entries(rows).map(([rowId, row]) => (
+        {tableSchema.length > 0 && Object.entries(rows).map(([rowId, row]) => (
           <Page
             key={rowId}
             rowId={rowId}
@@ -127,7 +127,11 @@ function Form(props) {
           />
         ))}
         <ButtonContainer>
-          <NewRowButton onClick={addRow}>New Row</NewRowButton>
+          {tableSchema.length > 0 ? (
+            <NewRowButton onClick={addRow}>New Row</NewRowButton>
+          ) : (
+            <div />
+          )}
           <SubmitButton onClick={submitAll} disabled={submitting}>Submit</SubmitButton>
         </ButtonContainer>
       </section>
