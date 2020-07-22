@@ -25,6 +25,8 @@ function Form(props) {
   const [globalErrors, setGlobalErrors] = useState({})
   const [dirty, setDirty] = useState(false)
 
+  const [globalRequires, setGlobalRequires] = useState({})
+
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
 
@@ -50,6 +52,15 @@ function Form(props) {
       ...globals,
       [id]: val,
     }
+
+    const { key } = schema[id].config
+    if (key) {
+      setGlobalRequires({
+        ...globalRequires,
+        [key]: val,
+      })
+    }
+
     setGlobals(newGlobals)
     setDirty(true)
   }
@@ -112,6 +123,7 @@ function Form(props) {
             key={g.id}
             schema={g}
             value={globals[g.id]}
+            requires={globalRequires}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
           />

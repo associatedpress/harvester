@@ -7,6 +7,7 @@ function Global(props) {
   const {
     schema,
     value,
+    requires,
     error,
     onChange,
   } = props
