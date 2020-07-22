@@ -1,17 +1,31 @@
 const google = require('./google')
 
 const universalOptions = [
-  'global',
-  'default',
-  'required',
-  'help',
+  'default',  // default value for column
+  'global',   // whether or not column is global
+  'help',     // help text for the column
+  'key',      // unique ID for the column
+  'required', // whether or not the column is required
 ]
 const allowedOptions = {
-  date: new Set([...universalOptions]),
-  bool: new Set([...universalOptions]),
-  number: new Set([...universalOptions]),
-  string: new Set([...universalOptions]),
-  select: new Set([...universalOptions, 'creatable', 'options']),
+  date: new Set([
+    ...universalOptions,
+  ]),
+  bool: new Set([
+    ...universalOptions,
+  ]),
+  number: new Set([
+    ...universalOptions,
+  ]),
+  string: new Set([
+    ...universalOptions,
+  ]),
+  select: new Set([
+    ...universalOptions,
+    'creatable', // whether or not new options can be added
+    'options',   // sheet to pull select options from
+    'requires',  // column to parameterize async data request
+  ]),
 }
 
 async function resolveOptions(docId, range) {
@@ -19,7 +33,8 @@ async function resolveOptions(docId, range) {
   return options.map(opt => ({ value: opt.value, label: opt.label }))
 }
 
-async function parseConfig(docId, type, key, value) {
+async function parseConfig(docId, type, key, value, options) {
+  const requires = options.some(o => /^requires:/.test(o))
   switch (key) {
     case 'global':
       return value === 'true'
@@ -28,7 +43,7 @@ async function parseConfig(docId, type, key, value) {
     case 'options':
       return {
         range: value,
-        options: await resolveOptions(docId, value),
+        options: requires ? [] : await resolveOptions(docId, value),
       }
     case 'creatable':
       return value === 'true'
@@ -54,7 +69,7 @@ async function parseColumnSchema(docId, schema, id) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
     }
 
-    config[key] = await parseConfig(docId, type, key, val)
+    config[key] = await parseConfig(docId, type, key, val, options)
   }
 
   return { id, label, type, config }
