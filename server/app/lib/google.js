@@ -22,6 +22,7 @@ async function getRange(spreadsheetId, options = {}) {
     range = 'A:Z',
     headers = true,
     majorDimension = 'ROWS',
+    filters = {},
   } = options
 
   const auth = await getAuth()
@@ -39,12 +40,16 @@ async function getRange(spreadsheetId, options = {}) {
 
   if (headers) {
     const heads = values[0]
-    return values.slice(1).map(d => {
-      return heads.reduce((rec, head, i) => ({
+    return values.slice(1).reduce((vals, d) => {
+      const row = heads.reduce((rec, head, i) => ({
         ...rec,
         [head]: d[i],
       }), {})
-    })
+      if (Object.keys(filters).every(k => filters[k] === row[k])) {
+        return [...vals, row]
+      }
+      return vals
+    }, [])
   }
   return values
 }
