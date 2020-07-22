@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   TableContainer,
@@ -23,6 +23,7 @@ function Form(props) {
   console.log(schema)
 
   const [globalErrors, setGlobalErrors] = useState({})
+  const [dirty, setDirty] = useState(false)
 
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
@@ -50,6 +51,7 @@ function Form(props) {
       [id]: val,
     }
     setGlobals(newGlobals)
+    setDirty(true)
   }
 
   const defaultRow = tableSchema.reduce((p, c) => ({ ...p, [c.id]: getDefault(c) }), {})
@@ -66,6 +68,7 @@ function Form(props) {
       [rowId]: newRow,
     }
     setRows(newRows)
+    setDirty(true)
   }
   const addRow = () => {
     setRows({
@@ -93,8 +96,13 @@ function Form(props) {
       setGlobalErrors(errors)
     } else if (confirm('Submit data? Values cannot be changed after submission.')) {
       submit({ globals, rows })
+      setDirty(false)
     }
   }
+
+  useEffect(() => {
+    window.onbeforeunload = () => dirty ? true : undefined
+  }, [dirty])
 
   return (
     <article>
