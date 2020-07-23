@@ -18,7 +18,6 @@ function Form(props) {
     schema,
     submit,
     submitting,
-    docId,
   } = props
 
   const [globalErrors, setGlobalErrors] = useState({})
@@ -135,7 +134,6 @@ function Form(props) {
             keys={keys}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
-            docId={docId}
           />
         ))}
         {tableSchema.length > 0 && Object.entries(rows).map(([rowId, row]) => (
@@ -148,7 +146,6 @@ function Form(props) {
             keys={keys}
             deleteRow={() => deleteRow(rowId)}
             onChange={setRowValue}
-            docId={docId}
           />
         ))}
         <ButtonContainer>

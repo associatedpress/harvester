@@ -12,7 +12,6 @@ function Page(props) {
     keys,
     onChange,
     deleteRow,
-    docId,
   } = props
 
   const [isOpen, setIsOpen] = useState(true)
@@ -55,7 +54,6 @@ function Page(props) {
                     value={values[col.id]}
                     values={{ ...values, ...globals }}
                     keys={keys}
-                    docId={docId}
                     {...config}
                   />
                 </Value>

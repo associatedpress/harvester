@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Select, Creatable } from './styles'
 import { useData } from 'ap-react-hooks'
+import { DocContext } from 'js/components'
 
 function SelectInput(props) {
   const {
@@ -12,8 +13,9 @@ function SelectInput(props) {
     creatable,
     requires,
     keys,
-    docId,
   } = props
+
+  const docId = useContext(DocContext)
 
   const reqId = requires && keys[requires]
   const reqVal = values[reqId]

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done } from 'js/components'
+import { Form, Done, DocContext } from 'js/components'
 import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
 
 function App(props) {
@@ -74,26 +74,27 @@ function App(props) {
   const { headline, chatter, columns } = schema
 
   return (
-    <FlexInteractive className={className}>
-      <FlexStatic>
-        {headline && <H1>{headline}</H1>}
-        {chatter && <Chatter>{chatter}</Chatter>}
-        {done ? (
-          <Done restart={restart} />
-        ) : (
-          <Form
-            docId={docId}
-            key={formId}
-            schema={columns}
-            submitting={submitting}
-            submit={submit}
+    <DocContext.Provider value={docId}>
+      <FlexInteractive className={className}>
+        <FlexStatic>
+          {headline && <H1>{headline}</H1>}
+          {chatter && <Chatter>{chatter}</Chatter>}
+          {done ? (
+            <Done restart={restart} />
+          ) : (
+            <Form
+              key={formId}
+              schema={columns}
+              submitting={submitting}
+              submit={submit}
+            />
+          )}
+          <Footer
+            credit='The Data Team'
           />
-        )}
-        <Footer
-          credit='The Data Team'
-        />
-      </FlexStatic>
-    </FlexInteractive>
+        </FlexStatic>
+      </FlexInteractive>
+    </DocContext.Provider>
   )
 }
 

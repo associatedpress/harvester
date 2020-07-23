@@ -10,7 +10,6 @@ function Global(props) {
     keys,
     error,
     onChange,
-    docId,
   } = props
 
   const { type, label, config } = schema
@@ -25,7 +24,6 @@ function Global(props) {
           values={values}
           keys={keys}
           onChange={onChange}
-          docId={docId}
           {...config}
         />
         {error && <Error>{error}</Error>}
