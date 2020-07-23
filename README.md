@@ -68,8 +68,8 @@ Three attribute types are currently supported:
   column in the second cell, and the type of the column in the third cell.
   Example:
 
-  |:-------|:----|:-------|
   | column | Age | number |
+  |:-------|:----|:-------|
 
 ### Column Definitions
 
