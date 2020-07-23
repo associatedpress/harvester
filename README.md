@@ -63,12 +63,18 @@ Three attribute types are currently supported:
   |:--------|:------------------------------------------|
 
 * `column` - this defines the main building block of the form: a single field
-  that the user will input. The details of the `column` type are below.
+  that the user will input. The details of the `column` type are below, but
+  every column requires the type `column` in the first cell, the name of the
+  column in the second cell, and the type of the column in the third cell.
   Example:
 
-  | column | Age | number |
   |:-------|:----|:-------|
+  | column | Age | number |
 
 ### Column Definitions
 
-
+The definitions of columns can get a little more complicated than the rest
+because they define the meat of the form. Beyond the name of the column (which
+is what shows up as the field label on the form) and they type of the column
+(which is what determines how the actual input field is rendered), each column
+can accept some additional options in subsequent cells in any order.
