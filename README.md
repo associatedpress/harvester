@@ -77,4 +77,95 @@ The definitions of columns can get a little more complicated than the rest
 because they define the meat of the form. Beyond the name of the column (which
 is what shows up as the field label on the form) and they type of the column
 (which is what determines how the actual input field is rendered), each column
-can accept some additional options in subsequent cells in any order.
+can accept some additional options in subsequent cells in any order (specified
+as `<key>:<value>`). The supported column types are listed below along with the
+options that they support (note that all columns support the general options
+listed at the end).
+
+* `bool` - a boolean flag that renders as a checkbox. This column type does not
+  support any specific options. Example:
+
+  | column | Retiring | bool |
+  |:-------|:---------|:-----|
+
+* `date` - a date input that renders as a date picker. This column type does
+  not support any specific options.
+
+  | column | Start date | date |
+  |:-------|:-----------|:-----|
+
+* `number` - a number input. This column type does not support any specific
+  options.
+
+  | column | Age | number |
+  |:-------|:----|:-------|
+
+* `string` - a short text input. This column type does not support any specific
+  options.
+
+  | column | Name | string |
+  |:-------|:-----|:-------|
+
+* `select` - an input that allows a user to select from a list of options. The
+  `select` input supports the following specific options:
+
+  - `options:<sheet name>` (required) - this option specifies the name of the
+    tab in the current workbook that holds the table of options for this select
+    input. The table of options must contain a header row and must at least
+    contain a column named `value` that specifies unique identifiers for the
+    options.  The table may contain any additional columns you want. If it
+    contains a column named `label` then the values from that column will be
+    used as the option labels in the select menu. Example:
+
+    | column | State | select | options:states |
+    |:-------|:------|:-------|:---------------|
+
+  - `creatable:<true|false>` - this determines whether or not the user is
+    allowed to create additional options that are not available in the options
+    table. When the user creates an option its value will be appended to the
+    options table in the `value` column, making it available as a suggested
+    option in the future. Example:
+
+    | column | Category | select | options:categories | creatable:true |
+    |:-------|:---------|:-------|:-------------------|:---------------|
+
+  - `requires:<column key>` - this specifies a column that this select menu
+    depends on. No options will be loaded for this select menu until the user
+    specifies a value for the column with the key specified here (see the `key`
+    option below). Once the user selects a value for the required column, the
+    value provided there will be used to filter the options from this select's
+    options table. It is expected that the options table will have a column
+    with the same name as the required key. Example:
+
+    | column | County | select | options:us_counties | requires:state |
+    |:-------|:-------|:-------|:--------------------|:---------------|
+
+    This example won't provide any option in the County select menu until the
+    user provides a value for the column with the key `state` (see the `key`
+    option below); at that point the `us_counties` tab will be filtered down to
+    just the rows with the selected state in the `state` column and those rows
+    will be used as the options menu for this select menu. If the user then
+    picks a different state this select menu will be cleared and new options
+    will be loaded.
+
+General options that can be provided to any type of column:
+
+* `default:<value>` - provide a default value for the column. You should pick
+  something that makes sense with the type. By default date entries will
+  default to the current day; you can specify `default:empty` to instead render
+  them with no date selected.
+
+* `global:<true|false>` - global fields are included at the top of the form and
+  apply to all pages.
+
+* `help:<help text>` - a string that will show up as hover text over an info
+  icon next to the column label.
+
+* `key:<string>` - a unique identifier for the column that makes it available
+  as a dependency for `select` columns through the `requires` option. You can
+  provide any key you want, but it should be universally unique to the column.
+  Also bear in mind the specific requirements of the `requires` option,
+  described above.
+
+* `required:<true|false>` - specify that a column _must_ be filled out by the
+  user in order for them to submit the form.
