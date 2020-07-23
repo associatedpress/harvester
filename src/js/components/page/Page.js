@@ -8,6 +8,8 @@ function Page(props) {
     schema,
     rowId,
     values,
+    globals,
+    keys,
     onChange,
     deleteRow,
   } = props
@@ -50,6 +52,8 @@ function Page(props) {
                     type={type}
                     onChange={v => onChange(rowId, col.id, v)}
                     value={values[col.id]}
+                    values={{ ...values, ...globals }}
+                    keys={keys}
                     {...config}
                   />
                 </Value>

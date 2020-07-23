@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { TypedInput } from 'js/components/inputs'
-import { GlobalContainer, Label, Error } from './styles'
+import { GlobalContainer, Label, Value, Error } from './styles'
 
 function Global(props) {
   const {
     schema,
-    value,
+    values,
+    keys,
     error,
     onChange,
   } = props
@@ -16,13 +17,17 @@ function Global(props) {
   return (
     <GlobalContainer>
       <Label>{label}</Label>
-      <TypedInput
-        type={type}
-        value={value}
-        onChange={onChange}
-        {...config}
-      />
-      {error && <Error>{error}</Error>}
+      <Value>
+        <TypedInput
+          type={type}
+          value={values[schema.id]}
+          values={values}
+          keys={keys}
+          onChange={onChange}
+          {...config}
+        />
+        {error && <Error>{error}</Error>}
+      </Value>
     </GlobalContainer>
   )
 }

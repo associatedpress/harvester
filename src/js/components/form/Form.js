@@ -20,13 +20,21 @@ function Form(props) {
     submitting,
   } = props
 
-  console.log(schema)
-
   const [globalErrors, setGlobalErrors] = useState({})
   const [dirty, setDirty] = useState(false)
 
+  const [globalRequires, setGlobalRequires] = useState({})
+
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
+
+  const keys = schema.reduce((ks, s) => {
+    const { key } = s.config
+    if (key) {
+      ks[key] = s.id
+    }
+    return ks
+  }, {})
 
   const getDefault = c => {
     const val = c.config.default
@@ -50,6 +58,15 @@ function Form(props) {
       ...globals,
       [id]: val,
     }
+
+    const { key } = schema[id].config
+    if (key) {
+      setGlobalRequires({
+        ...globalRequires,
+        [key]: val,
+      })
+    }
+
     setGlobals(newGlobals)
     setDirty(true)
   }
@@ -70,6 +87,7 @@ function Form(props) {
     setRows(newRows)
     setDirty(true)
   }
+
   const addRow = () => {
     setRows({
       ...rows,
@@ -77,6 +95,7 @@ function Form(props) {
     })
     setNextRowId(nextRowId + 1)
   }
+
   const deleteRow = (id) => {
     if (confirm('Delete row? Values will be lost.')) {
       const newRows = { ...rows }
@@ -111,7 +130,8 @@ function Form(props) {
           <Global
             key={g.id}
             schema={g}
-            value={globals[g.id]}
+            values={globals}
+            keys={keys}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
           />
@@ -122,6 +142,8 @@ function Form(props) {
             rowId={rowId}
             schema={tableSchema}
             values={row}
+            globals={globals}
+            keys={keys}
             deleteRow={() => deleteRow(rowId)}
             onChange={setRowValue}
           />

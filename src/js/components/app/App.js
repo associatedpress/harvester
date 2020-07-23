@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done } from 'js/components'
+import { Form, Done, DocContext, Loading } from 'js/components'
 import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
 
 function App(props) {
@@ -42,7 +42,6 @@ function App(props) {
   }
 
   const submit = (data) => {
-    console.log(data)
     const { globals, rows } = data
     const now = new Date()
     const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
@@ -69,31 +68,33 @@ function App(props) {
   }
 
   if (!schema) {
-    return null
+    return <Loading />
   }
 
   const { headline, chatter, columns } = schema
 
   return (
-    <FlexInteractive className={className}>
-      <FlexStatic>
-        {headline && <H1>{headline}</H1>}
-        {chatter && <Chatter>{chatter}</Chatter>}
-        {done ? (
-          <Done restart={restart} />
-        ) : (
-          <Form
-            key={formId}
-            schema={columns}
-            submitting={submitting}
-            submit={submit}
+    <DocContext.Provider value={docId}>
+      <FlexInteractive className={className}>
+        <FlexStatic>
+          {headline && <H1>{headline}</H1>}
+          {chatter && <Chatter>{chatter}</Chatter>}
+          {done ? (
+            <Done restart={restart} />
+          ) : (
+            <Form
+              key={formId}
+              schema={columns}
+              submitting={submitting}
+              submit={submit}
+            />
+          )}
+          <Footer
+            credit='The Data Team'
           />
-        )}
-        <Footer
-          credit='The Data Team'
-        />
-      </FlexStatic>
-    </FlexInteractive>
+        </FlexStatic>
+      </FlexInteractive>
+    </DocContext.Provider>
   )
 }
 

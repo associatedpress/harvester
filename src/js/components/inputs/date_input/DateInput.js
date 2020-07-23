@@ -16,8 +16,6 @@ function DateInput(props) {
     value,
   } = props
 
-  console.log(value)
-
   return (
     <DatePicker
       selected={value && new Date(value)}
