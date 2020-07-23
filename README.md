@@ -52,8 +52,8 @@ Three attribute types are currently supported:
 * `headline` - this defines the title of the form. The only other column in
   a `headline`-type row is the text of the column. Example:
 
-| headline | My Wonderful Form |
-|:---------|:------------------|
+  | headline | My Wonderful Form |
+  |:---------|:------------------|
 
 * `chatter` - this defines some (usually explanatory) text that will be
   displayed underneath the headline. The only other column in a `chatter`-type
