@@ -8,17 +8,18 @@ export const BasicSelect = styled(ReactSelect).attrs({ classNamePrefix: 'custom-
   }
 
   .custom-select__control {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #727272;
     background-color: transparent;
     height: 1em;
     min-height: 2em;
-    border: 1px solid #b5b5b5;
+    border: none;
+    border-bottom: 1px solid #ebebeb;
     border-radius: 0;
   }
 
   .custom-select__option {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #727272;
   }
 
@@ -43,17 +44,18 @@ export const BasicCreatable = styled(ReactSelectCreatable).attrs({ classNamePref
   }
 
   .custom-select__control {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #727272;
     background-color: transparent;
     height: 1em;
     min-height: 2em;
-    border: 1px solid #b5b5b5;
+    border: none;
+    border-bottom: 1px solid #ebebeb;
     border-radius: 0;
   }
 
   .custom-select__option {
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #727272;
   }
 

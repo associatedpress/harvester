@@ -25,7 +25,7 @@ NumberInput.propTypes = {
 }
 
 NumberInput.defaultProps = {
-  value: 0,
+  value: '',
 }
 
 export default NumberInput

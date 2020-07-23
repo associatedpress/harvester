@@ -12,12 +12,11 @@ export const Container = styled.div`
 
 export const Row = styled.div`
   display: flex;
-  align-items: center;
+  align-items: baseline;
   margin-bottom: 0.2em;
 `
 
 export const Label = styled.div`
-  font-family: "Good Cond Bold", "Arial Narrow", Arial, sans-serif;
   margin-right: 1em;
   min-width: 120px;
 `
@@ -78,4 +77,6 @@ export const Controls = styled.div`
 
 export const Body = styled.div`
   padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-right: 1rem;
 `
