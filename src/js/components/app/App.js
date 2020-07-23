@@ -17,7 +17,7 @@ function App(props) {
 
   const bust = url => `${url}?_=${formId}`
 
-  const schema = useData(bust(`/api/${docId}/schema`))
+  const schema = useData(bust(`/api/${docId}/schema`), { onError: e => e })
 
   const processRows = async (rows) => {
     const creatableSelects = schema.columns.filter(col => (

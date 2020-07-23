@@ -19,7 +19,8 @@ function Page(props) {
   const preview = schema
     .map(col => {
       const value = values[col.id]
-      return `${col.label}: ${value || 'unset'}`
+      const unset = (typeof value === 'undefined') || (value === null)
+      return `${col.label}: ${unset ? 'unset' : value}`
     })
     .join(', ')
 

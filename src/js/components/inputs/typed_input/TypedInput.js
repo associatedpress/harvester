@@ -5,7 +5,8 @@ import {
   NumberInput,
   DateInput,
   SelectInput,
-  StringInput
+  StringInput,
+  TextInput
 } from '..'
 
 function TypedInput(props) {
@@ -20,6 +21,7 @@ function TypedInput(props) {
     date: DateInput,
     select: SelectInput,
     string: StringInput,
+    text: TextInput,
   }
 
   const C = typeInputs[type]
@@ -36,6 +38,7 @@ TypedInput.propTypes = {
     'date',
     'select',
     'string',
+    'text',
   ]).isRequired,
 }
 

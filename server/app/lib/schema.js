@@ -20,6 +20,9 @@ const allowedOptions = {
   string: new Set([
     ...universalOptions,
   ]),
+  text: new Set([
+    ...universalOptions,
+  ]),
   select: new Set([
     ...universalOptions,
     'creatable', // whether or not new options can be added

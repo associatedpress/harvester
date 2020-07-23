@@ -3,6 +3,7 @@ import NumberInput from './number_input'
 import DateInput from './date_input'
 import SelectInput from './select_input'
 import StringInput from './string_input'
+import TextInput from './text_input'
 import TypedInput from './typed_input'
 
 export {
@@ -11,5 +12,6 @@ export {
   DateInput,
   SelectInput,
   StringInput,
+  TextInput,
   TypedInput
 }
