@@ -5,6 +5,7 @@ import Done from './done'
 import Global from './global'
 import Page from './page'
 import DocContext from './doc_context'
+import Loading from './loading'
 
 export {
   App,
@@ -13,7 +14,8 @@ export {
   Done,
   Global,
   Page,
-  DocContext
+  DocContext,
+  Loading
 }
 
 export default App

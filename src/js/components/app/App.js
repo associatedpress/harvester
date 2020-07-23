@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done, DocContext } from 'js/components'
+import { Form, Done, DocContext, Loading } from 'js/components'
 import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
 
 function App(props) {
@@ -68,7 +68,7 @@ function App(props) {
   }
 
   if (!schema) {
-    return null
+    return <Loading />
   }
 
   const { headline, chatter, columns } = schema
