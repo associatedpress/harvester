@@ -53,6 +53,7 @@ Three attribute types are currently supported:
   a `headline`-type row is the text of the column. Example:
 
 | headline | My Wonderful Form |
+|:---------|:------------------|
 
 * `chatter` - this defines some (usually explanatory) text that will be
   displayed underneath the headline. The only other column in a `chatter`-type
