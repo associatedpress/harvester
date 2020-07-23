@@ -10,6 +10,7 @@ function Global(props) {
     requires,
     error,
     onChange,
+    docId,
   } = props
 
   const { type, label, config } = schema
@@ -20,7 +21,9 @@ function Global(props) {
       <TypedInput
         type={type}
         value={value}
+        keyValues={requires}
         onChange={onChange}
+        docId={docId}
         {...config}
       />
       {error && <Error>{error}</Error>}

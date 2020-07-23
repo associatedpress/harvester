@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Select, Creatable } from './styles'
+import { useData } from 'ap-react-hooks'
 
 function SelectInput(props) {
   const {
@@ -8,20 +9,35 @@ function SelectInput(props) {
     value,
     options,
     creatable,
+    requires,
+    keyValues,
+    docId,
   } = props
 
+  const kvReq = requires && keyValues[requires]
+  const q = new URLSearchParams({ [requires]: kvReq })
+  const url = kvReq ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
+  const requireOpts = useData(url, { initial: [] })
+
+  useEffect(() => {
+    onChange(null)
+  }, [kvReq])
+
+  const opts = (requires && keyValues[requires]) ? requireOpts : options.options
+
   const getLabel = opt => opt.label || opt.value
-  const selected = options.options.find(opt => opt.value === value)
+  const selected = opts.find(opt => opt.value === value)
 
   const C = creatable ? Creatable : Select
 
   return (
     <C
-      value={selected}
-      options={options.options}
+      value={selected || null}
+      options={opts}
       getOptionLabel={getLabel}
       getNewOptionData={value => ({ value })}
-      onChange={opt => onChange(opt.value)}
+      isClearable
+      onChange={opt => onChange(opt && opt.value)}
     />
   )
 }

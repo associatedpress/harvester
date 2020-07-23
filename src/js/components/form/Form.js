@@ -18,9 +18,8 @@ function Form(props) {
     schema,
     submit,
     submitting,
+    docId,
   } = props
-
-  console.log(schema)
 
   const [globalErrors, setGlobalErrors] = useState({})
   const [dirty, setDirty] = useState(false)
@@ -81,6 +80,7 @@ function Form(props) {
     setRows(newRows)
     setDirty(true)
   }
+
   const addRow = () => {
     setRows({
       ...rows,
@@ -88,6 +88,7 @@ function Form(props) {
     })
     setNextRowId(nextRowId + 1)
   }
+
   const deleteRow = (id) => {
     if (confirm('Delete row? Values will be lost.')) {
       const newRows = { ...rows }
@@ -126,6 +127,7 @@ function Form(props) {
             requires={globalRequires}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
+            docId={docId}
           />
         ))}
         {tableSchema.length > 0 && Object.entries(rows).map(([rowId, row]) => (

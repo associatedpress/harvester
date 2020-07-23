@@ -42,7 +42,6 @@ function App(props) {
   }
 
   const submit = (data) => {
-    console.log(data)
     const { globals, rows } = data
     const now = new Date()
     const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
@@ -83,6 +82,7 @@ function App(props) {
           <Done restart={restart} />
         ) : (
           <Form
+            docId={docId}
             key={formId}
             schema={columns}
             submitting={submitting}
