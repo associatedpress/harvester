@@ -59,13 +59,15 @@ Three attribute types are currently supported:
   displayed underneath the headline. The only other column in a `chatter`-type
   row is the text of the chatter that will be displayed. Example:
 
-|chatter|Here's what you should do with this form.|
+  | chatter | Here's what you should do with this form. |
+  |:--------|:------------------------------------------|
 
 * `column` - this defines the main building block of the form: a single field
   that the user will input. The details of the `column` type are below.
   Example:
 
-|column|Age|number|
+  | column | Age | number |
+  |:-------|:----|:-------|
 
 ### Column Definitions
 
