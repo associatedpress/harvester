@@ -106,6 +106,16 @@ listed at the end).
   | column | Name | string |
   |:-------|:-----|:-------|
 
+* `text` - a longer text input that displays as a `textarea` input. This column
+  type supports the following specific option:
+
+  - `rows:<num>` - the number of rows to render in the textarea initially. The
+    area is resizeable so this isn't necessary, but it might make for a better
+    user experience in some cases. The default is 2. Example:
+
+    | column | Notes | text | rows:5 |
+    |:-------|:------|:-----|:-------|
+
 * `select` - an input that allows a user to select from a list of options. The
   `select` input supports the following specific options:
 
