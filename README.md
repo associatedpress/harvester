@@ -153,13 +153,22 @@ General options that can be provided to any type of column:
 * `default:<value>` - provide a default value for the column. You should pick
   something that makes sense with the type. By default date entries will
   default to the current day; you can specify `default:empty` to instead render
-  them with no date selected.
+  them with no date selected. Example:
+
+  | column | Number of people | number | default:0 |
+  |:-------|:-----------------|:-------|:----------|
 
 * `global:<true|false>` - global fields are included at the top of the form and
-  apply to all pages.
+  apply to all pages. (Default is `false`.) Example:
+
+  | column | Number of people | number | global:true |
+  |:-------|:-----------------|:-------|:------------|
 
 * `help:<help text>` - a string that will show up as hover text over an info
   icon next to the column label.
+
+  | column | Number of people | number | help:The number of people that were affected. |
+  |:-------|:-----------------|:-------|:----------------------------------------------|
 
 * `key:<string>` - a unique identifier for the column that makes it available
   as a dependency for `select` columns through the `requires` option. You can
@@ -167,5 +176,11 @@ General options that can be provided to any type of column:
   Also bear in mind the specific requirements of the `requires` option,
   described above.
 
+  | column | State | select | options:states | key:state |
+  |:-------|:------|:-------|:---------------|:----------|
+
 * `required:<true|false>` - specify that a column _must_ be filled out by the
   user in order for them to submit the form.
+
+  | column | Number of people | number | required:true |
+  |:-------|:-----------------|:-------|:--------------|
