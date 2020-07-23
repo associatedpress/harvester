@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Input = styled.textarea`
   width: 100%;
-  height: 2.1em;
   font-size: 0.9em;
   padding: 0;
   padding-left: 0.4em;
@@ -15,6 +14,7 @@ export const Input = styled.textarea`
   padding-top: 0.2em;
   display: block;
   resize: vertical;
+  margin-bottom: 0.1em;
 
   &:hover {
     border-color: #aaa;

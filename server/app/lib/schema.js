@@ -21,6 +21,7 @@ const allowedOptions = {
     ...universalOptions,
   ]),
   text: new Set([
+    'rows', // number of rows for the textarea
     ...universalOptions,
   ]),
   select: new Set([
