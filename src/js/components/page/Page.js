@@ -8,8 +8,11 @@ function Page(props) {
     schema,
     rowId,
     values,
+    globals,
+    keys,
     onChange,
     deleteRow,
+    docId,
   } = props
 
   const [isOpen, setIsOpen] = useState(true)
@@ -50,6 +53,9 @@ function Page(props) {
                     type={type}
                     onChange={v => onChange(rowId, col.id, v)}
                     value={values[col.id]}
+                    values={{ ...values, ...globals }}
+                    keys={keys}
+                    docId={docId}
                     {...config}
                   />
                 </Value>

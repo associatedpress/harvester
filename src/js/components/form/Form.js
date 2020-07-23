@@ -29,6 +29,14 @@ function Form(props) {
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
 
+  const keys = schema.reduce((ks, s) => {
+    const { key } = s.config
+    if (key) {
+      ks[key] = s.id
+    }
+    return ks
+  }, {})
+
   const getDefault = c => {
     const val = c.config.default
     if (c.type === 'date') {
@@ -123,8 +131,8 @@ function Form(props) {
           <Global
             key={g.id}
             schema={g}
-            value={globals[g.id]}
-            requires={globalRequires}
+            values={globals}
+            keys={keys}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
             docId={docId}
@@ -136,8 +144,11 @@ function Form(props) {
             rowId={rowId}
             schema={tableSchema}
             values={row}
+            globals={globals}
+            keys={keys}
             deleteRow={() => deleteRow(rowId)}
             onChange={setRowValue}
+            docId={docId}
           />
         ))}
         <ButtonContainer>

@@ -8,10 +8,13 @@ export const GlobalContainer = styled.div`
 `
 
 export const Label = styled.div`
-  display: inline-block;
   font-family: "Good Cond Bold", "Arial Narrow", Arial, sans-serif;
-  margin-right: 8px;
-  min-width: 2em;
+  margin-right: 1em;
+  min-width: 120px;
+`
+
+export const Value = styled.div`
+  flex-grow: 1;
 `
 
 export const Error = styled.span`

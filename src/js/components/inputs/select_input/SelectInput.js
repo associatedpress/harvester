@@ -7,23 +7,25 @@ function SelectInput(props) {
   const {
     onChange,
     value,
+    values,
     options,
     creatable,
     requires,
-    keyValues,
+    keys,
     docId,
   } = props
 
-  const kvReq = requires && keyValues[requires]
-  const q = new URLSearchParams({ [requires]: kvReq })
-  const url = kvReq ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
+  const reqId = requires && keys[requires]
+  const reqVal = values[reqId]
+  const q = new URLSearchParams({ [requires]: reqVal })
+  const url = reqVal ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
   const requireOpts = useData(url, { initial: [] })
 
   useEffect(() => {
     onChange(null)
-  }, [kvReq])
+  }, [reqVal])
 
-  const opts = (requires && keyValues[requires]) ? requireOpts : options.options
+  const opts = requires ? requireOpts : options.options
 
   const getLabel = opt => opt.label || opt.value
   const selected = opts.find(opt => opt.value === value)
