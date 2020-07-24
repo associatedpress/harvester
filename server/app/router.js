@@ -5,6 +5,26 @@ const logger = require('./logger')
 const parseSchema = require('./lib/schema')
 
 const docIdParam = ':docId([a-zA-Z0-9-_]+)'
+const HARVESTER_CONFIG_DOC_ID = process.env.HARVESTER_CONFIG_DOC_ID
+
+router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
+  if (HARVESTER_CONFIG_DOC_ID) {
+    try {
+      const { slug } = req.params
+      const range = 'forms'
+      const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
+      const form = forms.find(f => f.slug === slug)
+      const docId = form.doc_id
+      res.render('docId', { docId })
+    } catch (error) {
+      logger.error('Error from Google:', error)
+      res.status(500).json({ message: error.message })
+    }
+  } else {
+    const message = 'Custom form names not supported without Harvester config'
+    res.status(401).json({ message })
+  }
+})
 
 router.get(`/d/${docIdParam}`, (req, res) => {
   const { docId } = req.params
