@@ -11,10 +11,10 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
   if (HARVESTER_CONFIG_DOC_ID) {
     try {
       const { slug } = req.params
-      const range = 'tables'
-      const tables = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
-      const table = tables.find(t => t.slug === slug)
-      const docId = table.doc_id
+      const range = 'forms'
+      const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
+      const form = forms.find(f => f.slug === slug)
+      const docId = form.doc_id
       res.render('docId', { docId })
     } catch (error) {
       logger.error('Error from Google:', error)
