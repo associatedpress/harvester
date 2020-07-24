@@ -21,5 +21,5 @@ EXPOSE $PORT
 
 RUN echo "$GOOGLE_CREDS" > "$GOOGLE_APPLICATION_CREDENTIALS"
 
-ENTRYPOINT ["bin/protest-arrests"]
+ENTRYPOINT ["bin/harvester"]
 CMD ["run"]
