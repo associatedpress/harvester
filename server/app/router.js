@@ -14,8 +14,12 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
       const range = 'forms'
       const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
       const form = forms.find(f => f.slug === slug)
-      const docId = form.doc_id
-      res.render('docId', { docId })
+      if (form) {
+        const docId = form.doc_id
+        res.render('docId', { docId })
+      } else {
+        res.status(404).json({ message: `No form found with slug '${slug}'` })
+      }
     } catch (error) {
       logger.error('Error from Google:', error)
       res.status(500).json({ message: error.message })

@@ -194,3 +194,34 @@ General options that can be provided to any type of column:
 
   | column | Number of people | number | required:true |
   |:-------|:-----------------|:-------|:--------------|
+
+## App-level Configuration
+
+Harvester allows for some optional app-level configuration through a Harvester
+configuration sheet. If you deploy the app with the environment variable
+`HARVESTER_CONFIG_DOC_ID` set to the doc ID of a Google Sheet then Harvester
+will use that sheet as its app configuration.
+
+### Custom Form URLs
+
+The app configuration sheet allows you to set up custom form URLs in order to
+get a more human-readable link to share with data collectors. If the config
+sheet has a tab named `forms` that contains the columns `slug` and `doc_id`
+then you can access the form specified by the sheet with ID `doc_id` at the URL
+
+```
+/forms/<slug>
+```
+
+For example, if the `forms` tab looks like this:
+
+| slug    | doc_id                             |
+|:--------|:-----------------------------------|
+| my-form | 1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT |
+
+then the following paths will be equivalent:
+
+```
+/forms/my-form
+/d/1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT
+```
