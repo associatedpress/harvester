@@ -30,9 +30,25 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
   }
 })
 
-router.get(`/d/${docIdParam}`, (req, res) => {
+router.get(`/d/${docIdParam}`, async (req, res) => {
   const { docId } = req.params
-  res.render('docId', { docId })
+  if (HARVESTER_CONFIG_DOC_ID) {
+    try {
+      const range = 'forms'
+      const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
+      const form = forms.find(f => f.doc_id === docId)
+      if (form) {
+        res.redirect(301, `/forms/${form.slug}`)
+      } else {
+        res.render('docId', { docId })
+      }
+    } catch (error) {
+      logger.error('Error:', error)
+      res.status(500).json({ message: error.message })
+    }
+  } else {
+    res.render('docId', { docId })
+  }
 })
 
 router.get(`/api/${docIdParam}/schema`, async (req, res) => {
