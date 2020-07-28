@@ -116,25 +116,43 @@ listed at the end).
     | column | Notes | text | rows:5 |
     |:-------|:------|:-----|:-------|
 
-* `select` - an input that allows a user to select from a list of options. The
-  `select` input supports the following specific options:
+* `select` - an input that allows a user to select from a list of options. This
+  column type has the ability to be rendered as a dropdown, a collection of
+  checkboxes, or a group of radio buttons; a select menu is used when using the
+  `options` parameter and checkboxes/radios are used when using the
+  `optionlist` parameter, depending on whether multiple entries are allowed.
+  The `select` input supports the following specific options:
 
-  - `options:<sheet name>` (required) - this option specifies the name of the
-    tab in the current workbook that holds the table of options for this select
-    input. The table of options must contain a header row and must at least
-    contain a column named `value` that specifies unique identifiers for the
-    options.  The table may contain any additional columns you want. If it
-    contains a column named `label` then the values from that column will be
-    used as the option labels in the select menu. Example:
+	- `options:<sheet name>` (required if not using `optionlist`) - this option
+    specifies the name of the tab in the current workbook that holds the table
+    of options for this select input. The table of options must contain a
+    header row and must at least contain a column named `value` that specifies
+    unique identifiers for the options. The table may contain any additional
+    columns you want. If it contains a column named `label` then the values
+    from that column will be used as the option labels in the select menu.
+    (Note that using the `options` parameter will cause the select input to
+    render as a select menu. If you want checkboxes or radio buttons, use the
+    `optionlist` parameter instead.) Example:
 
     | column | State | select | options:states |
     |:-------|:------|:-------|:---------------|
+
+  - `optionlist:<a,b,c>` (required if not using `options`) - this option
+    specifies a comma-separated list of static options to use. Using this
+    option causes the select to display as either a collection of checkboxes or
+    a group of radio buttons, depending on the value of `multiple`. (Note that
+    if you specify a list of options with `optionlist` the user cannot create
+    new options; `creatable` has no effect.) Example:
+
+    | column | Genre | select | optionlist:drama,comedy,horror |
+    |:-------|:------|:-------|:-------------------------------|
 
   - `creatable:<true|false>` - this determines whether or not the user is
     allowed to create additional options that are not available in the options
     table. When the user creates an option its value will be appended to the
     options table in the `value` column, making it available as a suggested
-    option in the future. Example:
+    option in the future. Note that this option can _only_ be used with
+    `options`, not with `optionlist`. Example:
 
     | column | Category | select | options:categories | creatable:true |
     |:-------|:---------|:-------|:-------------------|:---------------|
@@ -157,6 +175,27 @@ listed at the end).
     will be used as the options menu for this select menu. If the user then
     picks a different state this select menu will be cleared and new options
     will be loaded.
+
+  - `multiple:<true|false>` - this determines whether or not the user is
+    allowed to select multiple options. When using the `options` parameter this
+    results in a multi-select drop-down; with using the `optionlist` parameter
+    this results in a collection of checkboxes rather than a group of radio
+    buttons> The default is `false`, meaning only one option can be selected.
+    Example:
+
+    | column | States | select | options:states | multiple:true |
+    |:-------|:-------|:-------|:---------------|:--------------|
+
+  - `serialization:<csv|json>` - when `multiple` is set to true this option
+    specifies how the muliple values should be serialized so as to occupy
+    a single cell in the resulting sheet. Selecting `csv` (the default) will
+    cause the multiple values to be serialized into a comma-separated list with
+    fields quoted with (`"`) as necessary; selecting `json` will cause the
+    multiple values to be serialized as a JSON array. Note that if `multiple`
+    is not set to `true` then this option has no impact. Example:
+
+    | column | States | select | options:states | multiple:true | serialization:json |
+    |:-------|:-------|:-------|:---------------|:--------------|:-------------------|
 
 General options that can be provided to any type of column:
 
@@ -225,3 +264,6 @@ then the following paths will be equivalent:
 /forms/my-form
 /d/1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT
 ```
+
+Note that the former will be treated as canonical; Harvester will redirect from
+the latter with a `301` to the former.

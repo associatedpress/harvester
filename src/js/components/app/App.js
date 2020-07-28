@@ -44,7 +44,12 @@ function App(props) {
   const submit = (data) => {
     const { globals, rows } = data
     const now = new Date()
-    const fullRows = Object.values(rows).map(row => [now, ...Object.values(globals), ...Object.values(row)])
+
+    const fullRows = Object.values(rows).map(row => {
+      const globalVals = Object.values(globals)
+      const rowVals = Object.values(row)
+      return [now, ...globalVals, ...rowVals]
+    })
 
     setSubmitting(true)
     processRows(rows)

@@ -23,6 +23,10 @@ export const BasicSelect = styled(ReactSelect).attrs({ classNamePrefix: 'custom-
     color: #727272;
   }
 
+  .custom-select__option--is-selected {
+    background-color: #ebebeb;
+  }
+
   .custom-select__control--is-focused {
     border-color: inherit;
     box-shadow: none;
@@ -59,6 +63,10 @@ export const BasicCreatable = styled(ReactSelectCreatable).attrs({ classNamePref
     color: #727272;
   }
 
+  .custom-select__option--is-selected {
+    background-color: #ebebeb;
+  }
+
   .custom-select__control--is-focused {
     border-color: inherit;
     box-shadow: none;
@@ -81,4 +89,24 @@ export const Select = styled(BasicSelect)`
 export const Creatable = styled(BasicCreatable)`
   width: 100%;
   max-width: 100%;
+`
+
+export const BoxLabel = styled.span`
+  margin-left: 0.2em;
+`
+
+export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+  font-size: 0.9em;
+  padding: 0;
+  padding-left: 0.4em;
+  box-sizing: border-box;
+  font-family: inherit;
+`
+
+export const Radio = styled.input.attrs({ type: 'radio' })`
+  font-size: 0.9em;
+  padding: 0;
+  padding-left: 0.4em;
+  box-sizing: border-box;
+  font-family: inherit;
 `

@@ -1,10 +1,11 @@
+const CSV = require('csv-string')
 const google = require('./google')
 
 const universalOptions = [
-  'default',  // default value for column
-  'global',   // whether or not column is global
-  'help',     // help text for the column
-  'key',      // unique ID for the column
+  'default', // default value for column
+  'global', // whether or not column is global
+  'help', // help text for the column
+  'key', // unique ID for the column
   'required', // whether or not the column is required
 ]
 const allowedOptions = {
@@ -27,8 +28,11 @@ const allowedOptions = {
   select: new Set([
     ...universalOptions,
     'creatable', // whether or not new options can be added
-    'options',   // sheet to pull select options from
-    'requires',  // column to parameterize async data request
+    'options', // sheet to pull select options from
+    'optionlist', // comma-separated list of options
+    'requires', // column to parameterize async data request
+    'multiple', // whether or not to allow multiple selections
+    'serialization', // csv or json
   ]),
 }
 
@@ -39,6 +43,13 @@ async function resolveOptions(docId, range) {
 
 async function parseConfig(docId, type, key, value, options) {
   const requires = options.some(o => /^requires:/.test(o))
+  const hasOptions = options.some(o => /^options:/.test(o))
+  const hasOptionList = options.some(o => /^optionlist:/.test(o))
+
+  if (hasOptions && hasOptionList) {
+    throw new Error('schema error: `options` and `optionlist` cannot both be given')
+  }
+
   switch (key) {
     case 'global':
       return value === 'true'
@@ -49,7 +60,11 @@ async function parseConfig(docId, type, key, value, options) {
         range: value,
         options: requires ? [] : await resolveOptions(docId, value),
       }
+    case 'optionlist':
+      return CSV.parse(value)[0]
     case 'creatable':
+      return value === 'true'
+    case 'multiple':
       return value === 'true'
     default:
       return value
@@ -82,7 +97,7 @@ async function parseColumnSchema(docId, schema, id) {
 async function parseSchema(docId, configs) {
   const schema = {}
   for (let config of configs) {
-    const [configType, ...cfg] = config
+    const [configType, ...cfg] = config.filter(c => c)
     if (configType === 'column') {
       schema.columns = schema.columns || []
       const column = await parseColumnSchema(docId, cfg, schema.columns.length)

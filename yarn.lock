@@ -2901,6 +2901,11 @@ csstype@^2.5.7, csstype@^2.6.7:
   resolved "https://artifactory.ap.org:443/api/npm/npm/csstype/-/csstype-2.6.10.tgz#e63af50e66d7c266edb6b32909cfd0aabe03928b"
   integrity sha1-5jr1DmbXwmbttrMpCc/Qqr4Dkos=
 
+csv-string@^4.0.1:
+  version "4.0.1"
+  resolved "https://artifactory.ap.org:443/api/npm/npm/csv-string/-/csv-string-4.0.1.tgz#1fb4a88c869badad056d55247f57336e1e748b00"
+  integrity sha1-H7SojIabra0FbVUkf1czbh50iwA=
+
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://artifactory.ap.org:443/api/npm/npm/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"

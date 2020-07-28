@@ -19,6 +19,7 @@ function Global(props) {
       <Label>{label}</Label>
       <Value>
         <TypedInput
+          colId={schema.id}
           type={type}
           value={values[schema.id]}
           values={values}

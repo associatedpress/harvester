@@ -50,6 +50,8 @@ function Page(props) {
                 </Label>
                 <Value>
                   <TypedInput
+                    rowId={rowId}
+                    colId={col.id}
                     type={type}
                     onChange={v => onChange(rowId, col.id, v)}
                     value={values[col.id]}
