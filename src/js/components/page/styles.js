@@ -14,11 +14,14 @@ export const Row = styled.div`
   display: flex;
   align-items: baseline;
   margin-bottom: 0.2em;
+  min-height: 2.2em;
 `
 
 export const Label = styled.div`
   margin-right: 1em;
   min-width: 120px;
+  padding-top: 0.2em;
+  align-self: center;
 `
 
 export const Value = styled.div`
