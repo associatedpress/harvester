@@ -80,7 +80,7 @@ router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
 router.post(`/api/${docIdParam}/entry`, async (req, res) => {
   try {
     const { docId } = req.params
-    const { range = 'entry' } = req.query
+    const { range = 'entry!A1' } = req.query
     const rows = req.body
     const googleRsp = await google.appendRows(docId, rows, { range })
     res.json({ rows: rows.length })
