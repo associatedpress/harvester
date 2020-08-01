@@ -88,5 +88,7 @@ export const Chatter = styled.div`
 export const NavButton = styled.div`
   text-transform: uppercase;
   float: right;
-  cursor: pointer;
+  margin-left: 1em;
+  cursor: ${props => props.active ? 'auto': 'pointer'};
+  border-bottom: ${props => props.active ? '1px solid #2c2c2c' : undefined};
 `

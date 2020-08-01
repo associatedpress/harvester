@@ -86,6 +86,7 @@ function App(props) {
         <FlexStatic>
           {showSearch ? (
             <>
+              <NavButton active>Search</NavButton>
               <NavButton onClick={() => setShowSearch(false)}>Form</NavButton>
               {headline && <H1>{headline} Search</H1>}
               <Chatter>
@@ -101,6 +102,7 @@ function App(props) {
           ) : (
             <>
               {search && <NavButton onClick={() => setShowSearch(true)}>Search</NavButton>}
+              {search && <NavButton active>Form</NavButton>}
               {headline && <H1>{headline}</H1>}
               {chatter && <Chatter>{chatter}</Chatter>}
               {done ? (
@@ -113,11 +115,11 @@ function App(props) {
                   submit={submit}
                 />
               )}
-              <Footer
-                credit='The Data Team'
-              />
             </>
           )}
+          <Footer
+            credit='The Data Team'
+          />
         </FlexStatic>
       </FlexInteractive>
     </DocContext.Provider>
