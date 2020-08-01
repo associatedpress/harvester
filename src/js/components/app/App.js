@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done, DocContext, Loading } from 'js/components'
-import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
+import { Form, Done, DocContext, Loading, Search } from 'js/components'
+import { FlexInteractive, FlexStatic, H1, Chatter, NavButton } from './styles'
 
 function App(props) {
   const {
@@ -14,6 +14,7 @@ function App(props) {
   const [formId, setFormId] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [showSearch, setShowSearch] = useState(false)
 
   const bust = url => `${url}?_=${formId}`
 
@@ -77,26 +78,46 @@ function App(props) {
   }
 
   const { headline, chatter, columns } = schema
+  const search = columns.some(c => c.config.search)
 
   return (
     <DocContext.Provider value={docId}>
       <FlexInteractive className={className}>
         <FlexStatic>
-          {headline && <H1>{headline}</H1>}
-          {chatter && <Chatter>{chatter}</Chatter>}
-          {done ? (
-            <Done restart={restart} />
+          {showSearch ? (
+            <>
+              <NavButton onClick={() => setShowSearch(false)}>Form</NavButton>
+              {headline && <H1>{headline} Search</H1>}
+              <Chatter>
+                Enter your search values below and results will show up at the bottom.
+              </Chatter>
+              <Search
+                key={formId}
+                schema={columns}
+                submitting={submitting}
+                submit={submit}
+              />
+            </>
           ) : (
-            <Form
-              key={formId}
-              schema={columns}
-              submitting={submitting}
-              submit={submit}
-            />
+            <>
+              {search && <NavButton onClick={() => setShowSearch(true)}>Search</NavButton>}
+              {headline && <H1>{headline}</H1>}
+              {chatter && <Chatter>{chatter}</Chatter>}
+              {done ? (
+                <Done restart={restart} />
+              ) : (
+                <Form
+                  key={formId}
+                  schema={columns}
+                  submitting={submitting}
+                  submit={submit}
+                />
+              )}
+              <Footer
+                credit='The Data Team'
+              />
+            </>
           )}
-          <Footer
-            credit='The Data Team'
-          />
         </FlexStatic>
       </FlexInteractive>
     </DocContext.Provider>

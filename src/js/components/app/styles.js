@@ -58,6 +58,7 @@ export const H1 = styled.h1`
   margin-top: 0.1em;
   margin-bottom: 0.1em;
   font-size: 1.2em;
+  text-transform: uppercase;
 
   @media screen and(min-width: 580px) {
     font-size: 1.4em;
@@ -82,4 +83,10 @@ export const Chatter = styled.div`
   @media screen and (min-width: 720px) {
     font-size: 1em;
   }
+`
+
+export const NavButton = styled.div`
+  text-transform: uppercase;
+  float: right;
+  cursor: pointer;
 `

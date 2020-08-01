@@ -6,6 +6,7 @@ import Global from './global'
 import Page from './page'
 import DocContext from './doc_context'
 import Loading from './loading'
+import Search from './search'
 
 export {
   App,
@@ -15,7 +16,8 @@ export {
   Global,
   Page,
   DocContext,
-  Loading
+  Loading,
+  Search
 }
 
 export default App

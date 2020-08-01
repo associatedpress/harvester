@@ -6,11 +6,13 @@ function NumberInput(props) {
   const {
     onChange,
     value,
+    readOnly,
   } = props
 
   return (
     <Input
       value={value}
+      readOnly={readOnly}
       onChange={e => onChange(e.target.value)}
     />
   )
@@ -22,10 +24,12 @@ NumberInput.propTypes = {
     PropTypes.number,
     PropTypes.string,
   ]),
+  readOnly: PropTypes.bool,
 }
 
 NumberInput.defaultProps = {
   value: '',
+  readOnly: false,
 }
 
 export default NumberInput

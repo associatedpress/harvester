@@ -6,12 +6,19 @@ function StringInput(props) {
   const {
     value,
     onChange,
+    readOnly,
   } = props
+
+  let handler
+  if (!readOnly) {
+    handler = e => onChange(e.target.value)
+  }
 
   return (
     <Input
       value={value}
-      onChange={e => onChange(e.target.value)}
+      readOnly={readOnly}
+      onChange={handler}
     />
   )
 }
@@ -19,10 +26,12 @@ function StringInput(props) {
 StringInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  readOnly: PropTypes.bool,
 }
 
 StringInput.defaultProps = {
   value: '',
+  readOnly: false,
 }
 
 export default StringInput

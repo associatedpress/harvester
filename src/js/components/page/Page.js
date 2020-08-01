@@ -12,6 +12,8 @@ function Page(props) {
     keys,
     onChange,
     deleteRow,
+    readOnly,
+    timestamp,
   } = props
 
   const [isOpen, setIsOpen] = useState(true)
@@ -35,7 +37,8 @@ function Page(props) {
             {preview}
           </div>
         )}
-        <Delete onClick={deleteRow} />
+        {timestamp && <div>{timestamp.toLocaleString()}</div>}
+        {!readOnly && <Delete onClick={deleteRow} />}
       </Controls>
       {isOpen && (
         <Body>
@@ -57,6 +60,7 @@ function Page(props) {
                     value={values[col.id]}
                     values={{ ...values, ...globals }}
                     keys={keys}
+                    readOnly={readOnly}
                     {...config}
                   />
                 </Value>
@@ -75,8 +79,12 @@ Page.propTypes = {
   values: PropTypes.object,
   onChange: PropTypes.func,
   deleteRow: PropTypes.func,
+  readOnly: PropTypes.bool,
+  timestamp: PropTypes.object,
 }
 
-Page.defaultProps = {}
+Page.defaultProps = {
+  readOnly: false,
+}
 
 export default Page

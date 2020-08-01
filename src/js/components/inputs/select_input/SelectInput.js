@@ -19,6 +19,7 @@ function SelectInput(props) {
     serialization,
     requires,
     keys,
+    readOnly,
   } = props
 
   const docId = useContext(DocContext)
@@ -30,7 +31,9 @@ function SelectInput(props) {
   const requireOpts = useData(url, { initial: [] })
 
   useEffect(() => {
-    onChange(null)
+    if (!readOnly) {
+      onChange()
+    }
   }, [reqVal])
 
   const serialize = val => {
@@ -97,6 +100,7 @@ function SelectInput(props) {
               name={`select-${rowId}-${colId}`}
               checked={isChecked(opt.value)}
               onChange={() => handleChange(opt, isChecked(opt.value))}
+              readOnly={readOnly}
               onClick={multiple ? undefined : () => {
                 if (isChecked(opt.value)) {
                   handleChange(opt, true)
@@ -120,6 +124,8 @@ function SelectInput(props) {
       getNewOptionData={value => ({ value })}
       isClearable
       isMulti={multiple}
+      readOnly={readOnly}
+      isDisabled={readOnly}
       onChange={opt => onChange(opt && serialize(opt))}
     />
   )

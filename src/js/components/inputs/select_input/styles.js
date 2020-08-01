@@ -32,6 +32,14 @@ export const BasicSelect = styled(ReactSelect).attrs({ classNamePrefix: 'custom-
     box-shadow: none;
   }
 
+  .custom-select__control--is-disabled {
+    color: inherit;
+  }
+
+  .custom-select__single-value--is-disabled {
+    color: inherit;
+  }
+
   .custom-select__input {
     font-size: 0.9em;
     color: #727272;
