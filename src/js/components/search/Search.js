@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Global, Page, Loading, DocContext } from 'js/components'
-import { formatDate } from 'js/components/inputs/date_input'
 import { ButtonContainer, SubmitButton } from 'js/components/form/styles'
 
 function Search(props) {
@@ -45,8 +44,6 @@ function Search(props) {
     }), {})
     const q = new URLSearchParams({ ...params, headers: 'false' })
     const url = `/api/${docId}/sheet/entry?${q}`
-    console.log(params)
-    console.log(url)
     fetch(url)
       .then(rsp => rsp.json())
       .then(results => {

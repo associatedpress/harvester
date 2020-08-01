@@ -7,6 +7,7 @@ import Page from './page'
 import DocContext from './doc_context'
 import Loading from './loading'
 import Search from './search'
+import Current from './current'
 
 export {
   App,
@@ -17,7 +18,8 @@ export {
   Page,
   DocContext,
   Loading,
-  Search
+  Search,
+  Current
 }
 
 export default App

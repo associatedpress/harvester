@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done, DocContext, Loading, Search } from 'js/components'
+import { Form, Done, DocContext, Loading, Search, Current } from 'js/components'
 import { FlexInteractive, FlexStatic, H1, Chatter, NavButton } from './styles'
 
 function App(props) {
@@ -14,7 +14,7 @@ function App(props) {
   const [formId, setFormId] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
+  const [view, setView] = useState('form')
 
   const bust = url => `${url}?_=${formId}`
 
@@ -77,32 +77,36 @@ function App(props) {
     return <Loading />
   }
 
-  const { headline, chatter, columns } = schema
+  const { headline, chatter, index, columns } = schema
   const search = columns.some(c => c.config.search)
 
   return (
     <DocContext.Provider value={docId}>
       <FlexInteractive className={className}>
         <FlexStatic>
-          {showSearch ? (
+          {index && <NavButton active={view === 'current'} onClick={() => setView('current')}>Current</NavButton>}
+          {search && <NavButton active={view === 'search'} onClick={() => setView('search')}>Search</NavButton>}
+          <NavButton active={view === 'form'} onClick={() => setView('form')}>Form</NavButton>
+          {view === 'search' && (
             <>
-              <NavButton active>Search</NavButton>
-              <NavButton onClick={() => setShowSearch(false)}>Form</NavButton>
               {headline && <H1>{headline} Search</H1>}
               <Chatter>
                 Enter your search values below and results will show up at the bottom.
               </Chatter>
-              <Search
-                key={formId}
+              <Search schema={columns} />
+            </>
+          )}
+          {view === 'current' && (
+            <>
+              {headline && <H1>{headline} Current Values</H1>}
+              <Current
+                index={index}
                 schema={columns}
-                submitting={submitting}
-                submit={submit}
               />
             </>
-          ) : (
+          )}
+          {view === 'form' && (
             <>
-              {search && <NavButton onClick={() => setShowSearch(true)}>Search</NavButton>}
-              {search && <NavButton active>Form</NavButton>}
               {headline && <H1>{headline}</H1>}
               {chatter && <Chatter>{chatter}</Chatter>}
               {done ? (

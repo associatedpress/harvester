@@ -15,8 +15,8 @@ function Loading(props) {
 
   return (
     <Center>
-      <Message>
-        {s.slice(0, tick)}
+      <Message style={{ visibility: tick === 0 ? 'hidden' : undefined }}>
+        {tick === 0 ? s : s.slice(0, tick)}
       </Message>
     </Center>
   )
