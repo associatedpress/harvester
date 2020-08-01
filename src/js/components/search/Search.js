@@ -60,6 +60,16 @@ function Search(props) {
       .catch(() => setSubmitting(false))
   }
 
+  const sortedResults = results && results
+    .map(row => {
+      const timestamp = new Date(row.timestamp)
+      return {
+        ...row,
+        timestamp,
+      }
+    })
+    .sort((a, b) => b.timestamp - a.timestamp)
+
   return (
     <article>
       <section>
@@ -76,14 +86,14 @@ function Search(props) {
           <div />
           <SubmitButton onClick={handleSubmit} disabled={submitting}>Search</SubmitButton>
         </ButtonContainer>
-        {results && (
+        {sortedResults && (
           <>
-            <div>RESULTS ({results.length})</div>
+            <div>RESULTS ({sortedResults.length})</div>
             {submitting ? (
               <Loading />
             ) : (
-              results.length ? (
-                results.map((row, i) => (
+              sortedResults.length ? (
+                sortedResults.map((row, i) => (
                   <Page
                     key={i}
                     rowId={i}
