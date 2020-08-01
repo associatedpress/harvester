@@ -10,19 +10,14 @@ function BoolInput(props) {
   } = props
 
   const val = (typeof value === 'string')
-    ? value.match(/^true$/i)
+    ? /^true$/i.test(value)
     : value
-
-  let handler
-  if (!readOnly) {
-    handler = e => onChange(e.target.checked)
-  }
 
   return (
     <Input
       checked={val}
       readOnly={readOnly}
-      onChange={handler}
+      onChange={e => !readOnly && onChange(e.target.checked)}
     />
   )
 }

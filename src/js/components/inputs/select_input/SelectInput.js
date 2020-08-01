@@ -99,10 +99,10 @@ function SelectInput(props) {
             <C
               name={`select-${rowId}-${colId}`}
               checked={isChecked(opt.value)}
-              onChange={() => handleChange(opt, isChecked(opt.value))}
+              onChange={() => !readOnly && handleChange(opt, isChecked(opt.value))}
               readOnly={readOnly}
               onClick={multiple ? undefined : () => {
-                if (isChecked(opt.value)) {
+                if (!readOnly && isChecked(opt.value)) {
                   handleChange(opt, true)
                 }
               }}
