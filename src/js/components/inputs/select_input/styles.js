@@ -80,6 +80,14 @@ export const BasicCreatable = styled(ReactSelectCreatable).attrs({ classNamePref
     box-shadow: none;
   }
 
+  .custom-select__control--is-disabled {
+    color: inherit;
+  }
+
+  .custom-select__single-value--is-disabled {
+    color: inherit;
+  }
+
   .custom-select__input {
     font-size: 0.9em;
     color: #727272;

@@ -16,7 +16,7 @@ function StringInput(props) {
 
   return (
     <Input
-      value={value}
+      value={value || ''}
       readOnly={readOnly}
       onChange={handler}
     />

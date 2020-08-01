@@ -12,7 +12,7 @@ function TextInput(props) {
 
   return (
     <Input
-      value={value}
+      value={value || ''}
       rows={rows}
       readOnly={readOnly}
       onChange={e => onChange(e.target.value)}
