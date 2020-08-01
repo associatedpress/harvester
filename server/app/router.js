@@ -68,8 +68,18 @@ router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
   try {
     const { docId } = req.params
     const range = req.params.sheet.toLowerCase()
-    const filters = req.query
-    const data = await google.getRange(docId, { range, filters })
+    const {
+      headers = 'true',
+      ...filters
+    } = req.query
+    const data = await google.getRange(
+      docId,
+      {
+        headers: headers === 'true',
+        range,
+        filters,
+      }
+    )
     res.json(data)
   } catch (error) {
     logger.error('Error from Google:', error)
