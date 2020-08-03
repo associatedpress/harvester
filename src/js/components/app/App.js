@@ -47,9 +47,9 @@ function App(props) {
     const now = new Date()
 
     const fullRows = Object.values(rows).map(row => {
-      const globalVals = Object.values(globals)
-      const rowVals = Object.values(row)
-      return [now, ...globalVals, ...rowVals]
+      const vals = { ...globals, ...row }
+      const sortedVals = Object.entries(vals).sort((a, b) => +a[0] - +b[0]).map(c => c[1])
+      return [now, ...sortedVals]
     })
 
     setSubmitting(true)
