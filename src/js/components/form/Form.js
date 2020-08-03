@@ -123,7 +123,7 @@ function Form(props) {
     }, {})
     if (Object.keys(errors).length) {
       setGlobalErrors(errors)
-    } else if (confirm('Submit data? Values cannot be changed after submission.')) {
+    } else if (confirm('Submit data? Please make sure entered data is correct.')) {
       submit({ globals, rows })
       setDirty(false)
     }

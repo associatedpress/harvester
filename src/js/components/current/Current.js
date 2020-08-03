@@ -105,8 +105,10 @@ function Current(props) {
   }
 
   const handleSubmit = () => {
-    setDirty(false)
-    submit({ rows: [currentRow] })
+    if (confirm('Submit data? Please make sure entered data is correct.')) {
+      setDirty(false)
+      submit({ rows: [currentRow] })
+    }
   }
 
   const missingSearch = Object.values(indexIds).some(k => !searches[k] && searches[k] !== 0)
