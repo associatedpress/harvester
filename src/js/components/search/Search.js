@@ -20,18 +20,23 @@ function Search(props) {
     }
     return ks
   }, {})
+  const reqLookup = schema.reduce((ks, s) => {
+    const { requires } = s.config
+    if (requires) {
+      ks[keys[requires]] = [...(ks[requires] || []), s.id]
+    }
+    return ks
+  }, {})
 
   const [searches, setSearches] = useState({})
   const setSearch = (id, val) => {
-    if (!val && val !== 0) {
-      const {
-        [id]: _,
-        ...newSearches
-      } = searches
-      setSearches(newSearches)
-    } else {
-      setSearches({ ...searches, [id]: val })
+    const newSearches = { ...searches, [id]: val }
+    if (reqLookup[id]) {
+      reqLookup[id].forEach(r => {
+        delete newSearches[r]
+      })
     }
+    setSearches(newSearches)
   }
 
   const handleSubmit = () => {

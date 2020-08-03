@@ -38,7 +38,7 @@ function Page(props) {
           </div>
         )}
         {timestamp && <div>{timestamp.toLocaleString()}</div>}
-        {!readOnly && <Delete onClick={deleteRow} />}
+        {deleteRow && <Delete onClick={deleteRow} />}
       </Controls>
       {isOpen && (
         <Body>

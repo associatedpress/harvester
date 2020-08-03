@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
@@ -19,6 +19,13 @@ function App(props) {
   const bust = url => `${url}?_=${formId}`
 
   const schema = useData(bust(`/api/${docId}/schema`), { onError: e => e })
+  const { headline, chatter, index, columns } = schema || {}
+
+  useEffect(() => {
+    if (index) {
+      setView('current')
+    }
+  }, [index])
 
   const processRows = async (rows) => {
     const creatableSelects = schema.columns.filter(col => (
@@ -43,7 +50,7 @@ function App(props) {
   }
 
   const submit = (data) => {
-    const { globals, rows } = data
+    const { globals = {}, rows = {} } = data
     const now = new Date()
 
     const fullRows = Object.values(rows).map(row => {
@@ -77,7 +84,6 @@ function App(props) {
     return <Loading />
   }
 
-  const { headline, chatter, index, columns } = schema
   const search = columns.some(c => c.config.search)
 
   return (
@@ -99,10 +105,17 @@ function App(props) {
           {view === 'current' && (
             <>
               {headline && <H1>{headline} Current Values</H1>}
-              <Current
-                index={index}
-                schema={columns}
-              />
+              {done ? (
+                <Done restart={restart} />
+              ) : (
+                <Current
+                  key={formId}
+                  index={index}
+                  schema={columns}
+                  submitting={submitting}
+                  submit={submit}
+                />
+              )}
             </>
           )}
           {view === 'form' && (

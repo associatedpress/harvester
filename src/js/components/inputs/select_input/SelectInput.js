@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Select, Creatable, Checkbox, Radio, BoxLabel } from './styles'
 import { useData } from 'ap-react-hooks'
@@ -28,13 +28,8 @@ function SelectInput(props) {
   const reqVal = values[reqId]
   const q = new URLSearchParams({ [requires]: reqVal })
   const url = reqVal ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
+  const [mounted, setMounted] = useState(false)
   const requireOpts = useData(url, { initial: [] })
-
-  useEffect(() => {
-    if (!readOnly) {
-      onChange()
-    }
-  }, [reqVal])
 
   const serialize = val => {
     if (multiple) {
