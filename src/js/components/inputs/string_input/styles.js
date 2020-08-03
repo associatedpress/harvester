@@ -12,6 +12,10 @@ export const Input = styled.input.attrs({ type: 'text' })`
   font-family: inherit;
 
   &:hover {
-    border-color: #aaa;
+    border-color: ${props => props.readOnly ? '#ebebeb' : '#aaa'};
+  }
+
+  &:focus {
+    outline: ${props => props.readOnly ? 'none' : undefined};
   }
 `

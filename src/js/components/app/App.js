@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useData } from 'ap-react-hooks'
 import { Footer } from 'ap-react-components'
-import { Form, Done, DocContext, Loading } from 'js/components'
-import { FlexInteractive, FlexStatic, H1, Chatter } from './styles'
+import { Form, Done, DocContext, Loading, Search, Current } from 'js/components'
+import { FlexInteractive, FlexStatic, H1, Chatter, NavButton } from './styles'
 
 function App(props) {
   const {
@@ -14,6 +14,7 @@ function App(props) {
   const [formId, setFormId] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
+  const [view, setView] = useState('form')
 
   const bust = url => `${url}?_=${formId}`
 
@@ -46,9 +47,9 @@ function App(props) {
     const now = new Date()
 
     const fullRows = Object.values(rows).map(row => {
-      const globalVals = Object.values(globals)
-      const rowVals = Object.values(row)
-      return [now, ...globalVals, ...rowVals]
+      const vals = { ...globals, ...row }
+      const sortedVals = Object.entries(vals).sort((a, b) => +a[0] - +b[0]).map(c => c[1])
+      return [now, ...sortedVals]
     })
 
     setSubmitting(true)
@@ -76,23 +77,49 @@ function App(props) {
     return <Loading />
   }
 
-  const { headline, chatter, columns } = schema
+  const { headline, chatter, index, columns } = schema
+  const search = columns.some(c => c.config.search)
 
   return (
     <DocContext.Provider value={docId}>
       <FlexInteractive className={className}>
         <FlexStatic>
-          {headline && <H1>{headline}</H1>}
-          {chatter && <Chatter>{chatter}</Chatter>}
-          {done ? (
-            <Done restart={restart} />
-          ) : (
-            <Form
-              key={formId}
-              schema={columns}
-              submitting={submitting}
-              submit={submit}
-            />
+          {index && <NavButton active={view === 'current'} onClick={() => setView('current')}>Current</NavButton>}
+          {search && <NavButton active={view === 'search'} onClick={() => setView('search')}>Search</NavButton>}
+          <NavButton active={view === 'form'} onClick={() => setView('form')}>Form</NavButton>
+          {view === 'search' && (
+            <>
+              {headline && <H1>{headline} Search</H1>}
+              <Chatter>
+                Enter your search values below and results will show up at the bottom.
+              </Chatter>
+              <Search schema={columns} />
+            </>
+          )}
+          {view === 'current' && (
+            <>
+              {headline && <H1>{headline} Current Values</H1>}
+              <Current
+                index={index}
+                schema={columns}
+              />
+            </>
+          )}
+          {view === 'form' && (
+            <>
+              {headline && <H1>{headline}</H1>}
+              {chatter && <Chatter>{chatter}</Chatter>}
+              {done ? (
+                <Done restart={restart} />
+              ) : (
+                <Form
+                  key={formId}
+                  schema={columns}
+                  submitting={submitting}
+                  submit={submit}
+                />
+              )}
+            </>
           )}
           <Footer
             credit='The Data Team'

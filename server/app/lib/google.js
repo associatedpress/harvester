@@ -36,7 +36,7 @@ async function getRange(spreadsheetId, options = {}) {
   }
   const rsp = await sheets.spreadsheets.values.get(request)
   const { data } = rsp
-  const { values } = data
+  const { values = [] } = data
 
   if (headers) {
     const heads = values[0]
@@ -51,7 +51,10 @@ async function getRange(spreadsheetId, options = {}) {
       return vals
     }, [])
   }
-  return values
+
+  return values.filter(row => {
+    return Object.keys(filters).every(k => filters[k] === row[k])
+  })
 }
 
 async function appendRows(spreadsheetId, rows, options = {}) {

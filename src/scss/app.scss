@@ -126,8 +126,20 @@
       border-bottom: 1px solid #ebebeb;
       font-family: inherit;
 
-      &:hover {
-        border-color: #aaa;
+      &.editable {
+        &:hover {
+          border-color: #aaa;
+        }
+      }
+
+      &.read-only {
+        &:hover {
+          border-color: #ebebeb;
+        }
+
+        &:focus {
+          outline: none;
+        }
       }
     }
   }

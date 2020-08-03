@@ -17,6 +17,10 @@ export const Input = styled.textarea`
   margin-bottom: 0.1em;
 
   &:hover {
-    border-color: #aaa;
+    border-color: ${props => props.readOnly ? '#ebebeb' : '#aaa'};
+  }
+
+  &:focus {
+    outline: ${props => props.readOnly ? 'none' : undefined};
   }
 `

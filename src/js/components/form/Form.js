@@ -10,7 +10,7 @@ import {
   NewRowButton,
   SubmitButton
 } from './styles'
-import { Global, Row, Page } from 'js/components'
+import { Global, Page } from 'js/components'
 import { formatDate } from 'js/components/inputs/date_input'
 
 function Form(props) {
@@ -50,25 +50,23 @@ function Form(props) {
   const [globals, setGlobals] = useState(globalSchema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {}))
   const setGlobal = (id, val) => {
     if (globalErrors[id]) {
-      const newGlobalErrors = { ...globalErrors }
-      delete newGlobalErrors[id]
+      const {
+        [id]: _,
+        ...newGlobalErrors
+      } = globalErrors
       setGlobalErrors(newGlobalErrors)
     }
     const newGlobals = {
       ...globals,
       [id]: val,
     }
-
-    const { key } = schema[id].config
-    if (key) {
-      setGlobalRequires({
-        ...globalRequires,
-        [key]: val,
-      })
+    if (typeof val === 'undefined') {
+      delete newGlobals[id]
+    } else {
+      setDirty(true)
     }
 
     setGlobals(newGlobals)
-    setDirty(true)
   }
 
   const defaultRow = tableSchema.reduce((p, c) => ({ ...p, [c.id]: getDefault(c) }), {})
@@ -80,12 +78,16 @@ function Form(props) {
       ...row,
       [colId]: val,
     }
+    if (typeof val === 'undefined') {
+      delete newRow[colId]
+    } else {
+      setDirty(true)
+    }
     const newRows = {
       ...rows,
       [rowId]: newRow,
     }
     setRows(newRows)
-    setDirty(true)
   }
 
   const addRow = () => {

@@ -62,6 +62,15 @@ Three attribute types are currently supported:
   | chatter | Here's what you should do with this form. |
   |:--------|:------------------------------------------|
 
+* `index` - this defines a (possibly compound) index that uniquely identifies
+  an entity in the dataset. An index consists of one or more column keys joined
+  by `+`. When an index is specified the user can access a "Current" view where
+  they can speficy all component pieces of an index and get back the collapsed
+  "current" value of all columns for the given entity. Example:
+
+  | index | state+city |
+  |:------|:-----------|
+
 * `column` - this defines the main building block of the form: a single field
   that the user will input. The details of the `column` type are below, but
   every column requires the type `column` in the first cell, the name of the
@@ -233,6 +242,16 @@ General options that can be provided to any type of column:
 
   | column | Number of people | number | required:true |
   |:-------|:-----------------|:-------|:--------------|
+
+* `search:<true|false>` - whether or not a column can be used to search for
+  form entries (default is `false`). If at least one field can be used to
+  search then the user will be presented with a "Search" view where they can
+  specify values for the search columns and get back all the form entries that
+  match the values exactly. (Note that the match _must_ be exact, meaning that
+  free text entry fields must match, including case and whitespace.) Example:
+
+  | column | State | select | options:states | search:true |
+  |:-------|:------|:-------|:---------------|:------------|
 
 ## App-level Configuration
 

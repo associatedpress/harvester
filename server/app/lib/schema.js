@@ -7,6 +7,7 @@ const universalOptions = [
   'help', // help text for the column
   'key', // unique ID for the column
   'required', // whether or not the column is required
+  'search',
 ]
 const allowedOptions = {
   date: new Set([
@@ -65,6 +66,8 @@ async function parseConfig(docId, type, key, value, options) {
     case 'creatable':
       return value === 'true'
     case 'multiple':
+      return value === 'true'
+    case 'search':
       return value === 'true'
     default:
       return value

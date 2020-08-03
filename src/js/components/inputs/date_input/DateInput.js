@@ -14,11 +14,14 @@ function DateInput(props) {
   const {
     onChange,
     value,
+    readOnly,
   } = props
 
   return (
     <DatePicker
+      className={readOnly ? 'read-only' : 'editable'}
       selected={value && new Date(value)}
+      readOnly={readOnly}
       onChange={d => onChange(formatDate(d))}
     />
   )
@@ -26,9 +29,12 @@ function DateInput(props) {
 
 DateInput.propTypes = {
   onChange: PropTypes.func,
+  readOnly: PropTypes.bool,
   value: PropTypes.string,
 }
 
-DateInput.defaultProps = {}
+DateInput.defaultProps = {
+  readOnly: false,
+}
 
 export default DateInput
