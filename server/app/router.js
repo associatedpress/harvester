@@ -113,7 +113,7 @@ router.get(`/api/${docIdParam}/current`, async (req, res) => {
     const schema = await parseSchema(docId, rawSchema)
     const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
     const curr = current(schema, entries, { history: history.match(/^true$/i) })
-    res.json(index ? curr[index] : curr)
+    res.json(index ? (curr[index] || {}) : curr)
   } catch (error) {
     logger.error('Error:', error)
     res.status(500).json({ message: error.message })

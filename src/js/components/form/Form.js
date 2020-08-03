@@ -35,6 +35,13 @@ function Form(props) {
     }
     return ks
   }, {})
+  const reqLookup = schema.reduce((ks, s) => {
+    const { requires } = s.config
+    if (requires) {
+      ks[keys[requires]] = [...(ks[requires] || []), s.id]
+    }
+    return ks
+  }, {})
 
   const getDefault = c => {
     const val = c.config.default
@@ -60,12 +67,12 @@ function Form(props) {
       ...globals,
       [id]: val,
     }
-    if (typeof val === 'undefined') {
-      delete newGlobals[id]
-    } else {
-      setDirty(true)
+    if (reqLookup[id]) {
+      reqLookup[id].forEach(r => {
+        delete newGlobals[r]
+      })
     }
-
+    setDirty(true)
     setGlobals(newGlobals)
   }
 
@@ -78,11 +85,12 @@ function Form(props) {
       ...row,
       [colId]: val,
     }
-    if (typeof val === 'undefined') {
-      delete newRow[colId]
-    } else {
-      setDirty(true)
+    if (reqLookup[colId]) {
+      reqLookup[colId].forEach(r => {
+        delete newRow[r]
+      })
     }
+    setDirty(true)
     const newRows = {
       ...rows,
       [rowId]: newRow,

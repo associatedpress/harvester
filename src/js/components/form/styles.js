@@ -69,11 +69,14 @@ export const Button = styled.button`
 
 export const NewRowButton = styled(Button)`
   float: left;
+  border: none;
+  background-color: #ebebeb;
 `
 
 export const SubmitButton = styled(Button)`
   float: right;
-  background-color: #117da5;
-  border-color: #117da5;
+  background-color: ${props => props.disabled ? '#aaa' : '#117da5'};
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  border: none;
   color: #fff;
 `
