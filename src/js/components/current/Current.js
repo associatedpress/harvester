@@ -10,6 +10,7 @@ function Current(props) {
     index,
     submit,
     submitting,
+    childrenPosition,
   } = props
 
   const docId = useContext(DocContext)
@@ -154,6 +155,8 @@ function Current(props) {
   const missingSearch = Object.values(indexIds).some(k => !searches[k] && (searches[k] !== 0))
   const searchDisabled = searching || missingSearch
 
+  const ci = childrenPosition > -1 ? childrenPosition : globalSchema.length
+
   return (
     <article>
       <section>
@@ -180,7 +183,7 @@ function Current(props) {
               <Loading />
             ) : (
               <>
-                {globals && globalSchema.map(g => (
+                {globals && globalSchema.slice(0, ci).map(g => (
                   <Global
                     key={g.id}
                     schema={g}
@@ -200,12 +203,22 @@ function Current(props) {
                     onChange={setRowValue}
                   />
                 ))}
-                <ButtonContainer>
-                  {tableSchema.length > 0 ? (
+                {tableSchema.length > 0 && (
+                  <ButtonContainer>
                     <NewRowButton onClick={addRow}>New Row</NewRowButton>
-                  ) : (
-                    <div />
-                  )}
+                  </ButtonContainer>
+                )}
+                {globals && globalSchema.slice(ci).map(g => (
+                  <Global
+                    key={g.id}
+                    schema={g}
+                    values={globals}
+                    keys={keys}
+                    onChange={d => setGlobal(g.id, d)}
+                  />
+                ))}
+                <ButtonContainer>
+                  <div />
                   <SubmitButton onClick={handleSubmit} disabled={submitting}>Update</SubmitButton>
                 </ButtonContainer>
               </>
@@ -220,8 +233,11 @@ function Current(props) {
 Current.propTypes = {
   schema: PropTypes.array,
   index: PropTypes.string,
+  childrenPosition: PropTypes.number,
 }
 
-Current.defaultProps = {}
+Current.defaultProps = {
+  childrenPosition: -1,
+}
 
 export default Current
