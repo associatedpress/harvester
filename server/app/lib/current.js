@@ -71,7 +71,7 @@ function currentRows(schema, entries) {
       const c = schema.columns.reduce((p, s, i) => {
         return [...p, data[i] || latest[i]]
       }, [])
-      coll[row] = [lastEntry.timestamp.toString(), ...c]
+      coll[row] = [lastEntry.timestamp.toISOString(), ...c]
       return coll
     }, {})
     return [...c, ...Object.values(collapsed)]
