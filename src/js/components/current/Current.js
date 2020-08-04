@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Global, Page, Loading, DocContext } from 'js/components'
-import { ButtonContainer, SubmitButton } from 'js/components/form/styles'
+import { ButtonContainer, SubmitButton, NewRowButton } from 'js/components/form/styles'
 import { formatDate } from 'js/components/inputs/date_input'
 
 function Current(props) {
@@ -16,6 +16,9 @@ function Current(props) {
   const [searching, setSearching] = useState(false)
   const [result, setResult] = useState(null)
   const [dirty, setDirty] = useState(false)
+
+  const globalSchema = schema.filter(s => s.config.global)
+  const tableSchema = schema.filter(s => !s.config.global)
 
   const keys = schema.reduce((ks, s) => {
     const { key } = s.config
@@ -33,12 +36,7 @@ function Current(props) {
   }, {})
 
   const indexKeys = index.split('+')
-  const indexIds = schema.reduce((ids, s, i) => {
-    if (s.config.key) {
-      ids[s.config.key] = i
-    }
-    return ids
-  }, {})
+  const indexIds = indexKeys.reduce((p, k) => ({ ...p, [k]: keys[k] }), {})
 
   const [searches, setSearches] = useState({})
   const setSearch = (id, val) => {
@@ -61,24 +59,43 @@ function Current(props) {
     }
     return val
   }
-  const defaultRow = schema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {})
-  const [currentRow, setCurrentRow] = useState({})
-  const setCurrentRowVal = (_, id, val) => {
-    const res = (result && result.current) ? result.current : []
-    const newVals = {
-      ...defaultRow,
-      ...searches,
-      ...res,
-      ...currentRow,
+  const defaultGlobals = globalSchema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {})
+  const defaultRow = tableSchema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {})
+
+  const [globals, setGlobals] = useState(null)
+  const setGlobal = (id, val) => {
+    const newGlobals = {
+      ...globals,
       [id]: val,
     }
     if (reqLookup[id]) {
       reqLookup[id].forEach(r => {
-        delete newVals[r]
+        delete newGlobals[r]
       })
     }
     setDirty(true)
-    setCurrentRow(newVals)
+    setGlobals(newGlobals)
+  }
+
+  const [rows, setRows] = useState(null)
+  const [addedRows, setAddedRows] = useState([])
+  const setRowValue = (rowId, colId, val) => {
+    const row = rows[rowId] || {}
+    const newRow = {
+      ...row,
+      [colId]: val,
+    }
+    if (reqLookup[colId]) {
+      reqLookup[colId].forEach(r => {
+        delete newRow[r]
+      })
+    }
+    setDirty(true)
+    const newRows = {
+      ...rows,
+      [rowId]: newRow,
+    }
+    setRows(newRows)
   }
 
   const handleSearch = () => {
@@ -93,25 +110,48 @@ function Current(props) {
       .then(res => {
         setSearching(false)
         setResult(res)
-        const curr = res.current || []
-        const newVals = {
-          ...defaultRow,
-          ...searches,
-          ...curr,
-        }
-        setCurrentRow(newVals)
+        const curr = res.current || {}
+        const gs = curr.globals || {}
+        const rs = curr.rows || { 0: defaultRow }
+        setGlobals({
+          ...defaultGlobals,
+          ...gs,
+        })
+        setRows(Object.entries(rs).reduce((p, [id, r]) => ({ ...p, [id]: { ...defaultRow, ...r } }), {}))
       })
-      .catch(() => setSearching(false))
+      .catch(err => {
+        console.error(err)
+        setSearching(false)
+      })
   }
 
   const handleSubmit = () => {
     if (confirm('Submit data? Please make sure entered data is correct.')) {
       setDirty(false)
-      submit({ rows: [currentRow] })
+      submit({ globals, rows })
     }
   }
 
-  const missingSearch = Object.values(indexIds).some(k => !searches[k] && searches[k] !== 0)
+  const deleteRow = (id) => {
+    if (confirm('Delete row? Values will be lost.')) {
+      const newRows = { ...rows }
+      delete newRows[id]
+      setRows(newRows)
+      setAddedRows(addedRows.filter(r => r !== id))
+    }
+  }
+
+  const addRow = () => {
+    const nextRowId = Math.max(...Object.keys(rows).map(k => +k)) + 1
+    console.log({ nextRowId })
+    setRows({
+      ...rows,
+      [nextRowId]: defaultRow,
+    })
+    setAddedRows([...addedRows, nextRowId])
+  }
+
+  const missingSearch = Object.values(indexIds).some(k => !searches[k] && (searches[k] !== 0))
   const searchDisabled = searching || missingSearch
 
   return (
@@ -140,16 +180,32 @@ function Current(props) {
               <Loading />
             ) : (
               <>
-                <Page
-                  rowId={0}
-                  schema={schema}
-                  values={currentRow}
-                  keys={keys}
-                  timestamp={new Date(result.lastUpdated)}
-                  onChange={setCurrentRowVal}
-                />
+                {globals && globalSchema.map(g => (
+                  <Global
+                    key={g.id}
+                    schema={g}
+                    values={globals}
+                    keys={keys}
+                    onChange={d => setGlobal(g.id, d)}
+                  />
+                ))}
+                {rows && tableSchema.length > 0 && Object.entries(rows).map(([rowId, row]) => (
+                  <Page
+                    key={rowId}
+                    rowId={rowId}
+                    schema={tableSchema}
+                    values={row}
+                    keys={keys}
+                    deleteRow={addedRows.includes(+rowId) ? () => deleteRow(+rowId) : undefined}
+                    onChange={setRowValue}
+                  />
+                ))}
                 <ButtonContainer>
-                  <div />
+                  {tableSchema.length > 0 ? (
+                    <NewRowButton onClick={addRow}>New Row</NewRowButton>
+                  ) : (
+                    <div />
+                  )}
                   <SubmitButton onClick={handleSubmit} disabled={submitting}>Update</SubmitButton>
                 </ButtonContainer>
               </>
