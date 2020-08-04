@@ -19,7 +19,7 @@ function App(props) {
   const bust = url => `${url}?_=${formId}`
 
   const schema = useData(bust(`/api/${docId}/schema`), { onError: e => e })
-  const { headline, chatter, index, children_position, columns } = schema || {}
+  const { headline, chatter, index, children_position, row_name, columns } = schema || {}
 
   useEffect(() => {
     if (index) {
@@ -115,6 +115,7 @@ function App(props) {
                   submitting={submitting}
                   submit={submit}
                   childrenPosition={children_position && +children_position}
+                  rowName={row_name}
                 />
               )}
             </>

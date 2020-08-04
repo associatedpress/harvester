@@ -11,6 +11,7 @@ function Current(props) {
     submit,
     submitting,
     childrenPosition,
+    rowName,
   } = props
 
   const docId = useContext(DocContext)
@@ -205,7 +206,7 @@ function Current(props) {
                 ))}
                 {tableSchema.length > 0 && (
                   <ButtonContainer>
-                    <NewRowButton onClick={addRow}>New Row</NewRowButton>
+                    <NewRowButton onClick={addRow}>New {rowName}</NewRowButton>
                   </ButtonContainer>
                 )}
                 {globals && globalSchema.slice(ci).map(g => (
@@ -219,7 +220,7 @@ function Current(props) {
                 ))}
                 <ButtonContainer>
                   <div />
-                  <SubmitButton onClick={handleSubmit} disabled={submitting}>Update</SubmitButton>
+                  <SubmitButton onClick={handleSubmit} disabled={submitting}>Submit</SubmitButton>
                 </ButtonContainer>
               </>
             )}
@@ -234,10 +235,12 @@ Current.propTypes = {
   schema: PropTypes.array,
   index: PropTypes.string,
   childrenPosition: PropTypes.number,
+  rowName: PropTypes.string,
 }
 
 Current.defaultProps = {
   childrenPosition: -1,
+  rowName: 'Row',
 }
 
 export default Current
