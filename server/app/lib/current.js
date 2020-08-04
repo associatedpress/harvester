@@ -1,8 +1,4 @@
-function current(schema, entries, opts = {}) {
-  const {
-    history = false,
-  } = opts
-
+function group(schema, entries) {
   if (!schema.index) {
     throw new Error('data endpoint not available without index')
   }
@@ -15,7 +11,7 @@ function current(schema, entries, opts = {}) {
     return ids
   }, {})
 
-  const grouped = entries.reduce((g, d) => {
+  return entries.reduce((g, d) => {
     const indexVal = indexKeys.map(k => d[keyIds[k]]).join('--')
     g[indexVal] = g[indexVal] || []
     const [timestamp, row, ...data] = d
@@ -26,6 +22,14 @@ function current(schema, entries, opts = {}) {
     })
     return g
   }, {})
+}
+
+function current(schema, entries, opts = {}) {
+  const {
+    history = false,
+  } = opts
+
+  const grouped = group(schema, entries)
 
   return Object.entries(grouped).reduce((c, [idx, hist]) => {
     const sortedHist = hist.sort((a, b) => a.timestamp - b.timestamp)
@@ -55,4 +59,26 @@ function current(schema, entries, opts = {}) {
   }, {})
 }
 
-module.exports = current
+function currentRows(schema, entries) {
+  const grouped = group(schema, entries)
+
+  return Object.entries(grouped).reduce((c, [idx, hist]) => {
+    const sortedHist = hist.sort((a, b) => a.timestamp - b.timestamp)
+    const [lastEntry] = sortedHist.slice(-1)
+    const collapsed = sortedHist.reduce((coll, d) => {
+      const { row, data } = d
+      const latest = coll[row] || []
+      const c = schema.columns.reduce((p, s, i) => {
+        return [...p, data[i] || latest[i]]
+      }, [])
+      coll[row] = [lastEntry.timestamp.toString(), ...c]
+      return coll
+    }, {})
+    return [...c, ...Object.values(collapsed)]
+  }, [])
+}
+
+module.exports = {
+  current,
+  currentRows,
+}

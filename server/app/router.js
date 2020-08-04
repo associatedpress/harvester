@@ -1,4 +1,5 @@
 const express = require('express')
+const CSV = require('csv-string')
 const router = express.Router()
 const google = require('./lib/google')
 const logger = require('./logger')
@@ -112,8 +113,27 @@ router.get(`/api/${docIdParam}/current`, async (req, res) => {
     const rawSchema = await google.getRange(docId, { range, headers: false }) || []
     const schema = await parseSchema(docId, rawSchema)
     const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
-    const curr = current(schema, entries, { history: history.match(/^true$/i) })
+    const curr = current.current(schema, entries, { history: history.match(/^true$/i) })
     res.json(index ? (curr[index] || {}) : curr)
+  } catch (error) {
+    logger.error('Error:', error)
+    res.status(500).json({ message: error.message })
+  }
+})
+
+router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
+  try {
+    const { docId } = req.params
+    const {
+      history = 'false',
+      index,
+    } = req.query
+    const range = 'schema'
+    const rawSchema = await google.getRange(docId, { range, headers: false }) || []
+    const schema = await parseSchema(docId, rawSchema)
+    const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
+    const curr = current.currentRows(schema, entries)
+    res.send(Buffer.from(CSV.stringify(curr)))
   } catch (error) {
     logger.error('Error:', error)
     res.status(500).json({ message: error.message })
