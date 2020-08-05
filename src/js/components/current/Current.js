@@ -58,6 +58,8 @@ function Current(props) {
         return null
       }
       return formatDate(val ? new Date(val) : new Date())
+    } else if (c.type === 'bool') {
+      return !!val
     }
     return val
   }
