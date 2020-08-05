@@ -19,7 +19,7 @@ function App(props) {
   const bust = url => `${url}?_=${formId}`
 
   const schema = useData(bust(`/api/${docId}/schema`), { onError: e => e })
-  const { headline, chatter, index, columns } = schema || {}
+  const { headline, chatter, index, children_position, row_name, columns } = schema || {}
 
   useEffect(() => {
     if (index) {
@@ -53,10 +53,10 @@ function App(props) {
     const { globals = {}, rows = {} } = data
     const now = new Date()
 
-    const fullRows = Object.values(rows).map(row => {
+    const fullRows = Object.entries(rows).map(([rowId, row]) => {
       const vals = { ...globals, ...row }
       const sortedVals = Object.entries(vals).sort((a, b) => +a[0] - +b[0]).map(c => c[1])
-      return [now, ...sortedVals]
+      return [now, rowId, ...sortedVals]
     })
 
     setSubmitting(true)
@@ -92,7 +92,7 @@ function App(props) {
         <FlexStatic>
           {index && <NavButton active={view === 'current'} onClick={() => setView('current')}>Current</NavButton>}
           {search && <NavButton active={view === 'search'} onClick={() => setView('search')}>Search</NavButton>}
-          <NavButton active={view === 'form'} onClick={() => setView('form')}>Form</NavButton>
+          {!index && <NavButton active={view === 'form'} onClick={() => setView('form')}>Form</NavButton>}
           {view === 'search' && (
             <>
               {headline && <H1>{headline} Search</H1>}
@@ -114,6 +114,8 @@ function App(props) {
                   schema={columns}
                   submitting={submitting}
                   submit={submit}
+                  childrenPosition={children_position && +children_position}
+                  rowName={row_name}
                 />
               )}
             </>

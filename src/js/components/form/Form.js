@@ -23,8 +23,6 @@ function Form(props) {
   const [globalErrors, setGlobalErrors] = useState({})
   const [dirty, setDirty] = useState(false)
 
-  const [globalRequires, setGlobalRequires] = useState({})
-
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
 
@@ -50,6 +48,8 @@ function Form(props) {
         return null
       }
       return formatDate(val ? new Date(val) : new Date())
+    } else if (c.type === 'bool') {
+      return !!val
     }
     return val
   }

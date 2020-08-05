@@ -45,7 +45,7 @@ function Search(props) {
     const clean = val => (typeof val === 'boolean') ? val.toString().toUpperCase() : val
     const params = Object.keys(searches).reduce((p, k) => ({
       ...p,
-      [+k + 1]: clean(searches[k]),
+      [+k + 2]: clean(searches[k]),
     }), {})
     const q = new URLSearchParams({ ...params, headers: 'false' })
     const url = `/api/${docId}/sheet/entry?${q}`
@@ -54,7 +54,7 @@ function Search(props) {
       .then(results => {
         setSubmitting(false)
         setResults(results.map(row => {
-          const r = row.slice(1).reduce((vals, d, i) => ({ ...vals, [i]: d }), {})
+          const r = row.slice(2).reduce((vals, d, i) => ({ ...vals, [i]: d }), {})
           r.timestamp = row[0]
           return r
         }))
