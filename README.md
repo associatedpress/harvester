@@ -92,7 +92,9 @@ options that they support (note that all columns support the general options
 listed at the end).
 
 * `bool` - a boolean flag that renders as a checkbox. This column type does not
-  support any specific options. Example:
+  support any specific options. **Note that a `bool` field is a true, binary
+  boolean. If you need a nullable boolean you should use a `select` field with
+  the three options you need ("true", "false", and "null").** Example:
 
   | column | Retiring | bool |
   |:-------|:---------|:-----|
