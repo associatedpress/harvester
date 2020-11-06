@@ -2,8 +2,6 @@ FROM node:12
 
 WORKDIR /app/
 
-ARG GOOGLE_CREDS
-ARG GOOGLE_APPLICATION_CREDENTIALS
 ARG PORT
 
 RUN yarn config set "strict-ssl" false --global && \
@@ -15,11 +13,9 @@ RUN yarn install
 
 COPY . ./
 
-RUN yarn build
+RUN yarn build:app
 
 EXPOSE $PORT
-
-RUN echo "$GOOGLE_CREDS" > "$GOOGLE_APPLICATION_CREDENTIALS"
 
 ENTRYPOINT ["bin/harvester"]
 CMD ["run"]
