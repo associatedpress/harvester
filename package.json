@@ -7,11 +7,15 @@
   "license": "ISC",
   "sideEffects": false,
   "scripts": {
+    "release": "bin/push && echo 'Successfully released docker image!'",
+    "prerelease": "yarn version && yarn build",
+    "postversion": "git push --tags && git push",
+    "build": "bin/build",
     "dev": "babel-watch ./server/index.js",
     "start": "npm-run-all --parallel server serveapp",
     "serveapp": "webpack-dev-server --config webpack-dev.config.js --proxy 8473",
     "server": "node server/index.js",
-    "build": "webpack --mode=production --config webpack-prod.config.js",
+    "build:app": "webpack --mode=production --config webpack-prod.config.js",
     "test": "jest --coverage",
     "lint": "eslint \"src/**/*.js\""
   },
