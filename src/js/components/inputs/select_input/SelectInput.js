@@ -20,6 +20,7 @@ function SelectInput(props) {
     requires,
     keys,
     readOnly,
+    created,
   } = props
 
   const docId = useContext(DocContext)
@@ -58,7 +59,7 @@ function SelectInput(props) {
   const parsedValue = parse(value)
 
   const listOptions = optionlist && optionlist.map(value => ({ value }))
-  const opts = listOptions || (requires ? requireOpts : options.options)
+  const opts = listOptions || (requires ? requireOpts : [...options.options, ...(created[colId] || [])])
 
   const getLabel = opt => opt.label || opt.value
   const selected = multiple
@@ -139,6 +140,7 @@ SelectInput.propTypes = {
   creatable: PropTypes.bool,
   multiple: PropTypes.bool,
   serialization: PropTypes.string,
+  created: PropTypes.object,
 }
 
 SelectInput.defaultProps = {

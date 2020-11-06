@@ -14,6 +14,7 @@ function Page(props) {
     deleteRow,
     readOnly,
     timestamp,
+    created,
   } = props
 
   const [isOpen, setIsOpen] = useState(true)
@@ -61,6 +62,7 @@ function Page(props) {
                     values={{ ...values, ...globals }}
                     keys={keys}
                     readOnly={readOnly}
+                    created={created}
                     {...config}
                   />
                 </Value>
@@ -81,6 +83,7 @@ Page.propTypes = {
   deleteRow: PropTypes.func,
   readOnly: PropTypes.bool,
   timestamp: PropTypes.object,
+  created: PropTypes.object,
 }
 
 Page.defaultProps = {
