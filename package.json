@@ -1,6 +1,6 @@
 {
   "name": "protest-arrests-data-entry",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "./src/js/main-app.js",
   "description": "Code for the Protest Arrests Data Entry interactive",
   "repository": "git@gitlab.inside.ap.org:newsapps/protest-arrests-data-entry",
