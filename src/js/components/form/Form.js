@@ -22,6 +22,7 @@ function Form(props) {
 
   const [globalErrors, setGlobalErrors] = useState({})
   const [dirty, setDirty] = useState(false)
+  const [created, setCreated] = useState({})
 
   const globalSchema = schema.filter(s => s.config.global)
   const tableSchema = schema.filter(s => !s.config.global)
@@ -54,6 +55,19 @@ function Form(props) {
     return val
   }
 
+  const processNewValue = (colId, value) => {
+    const col = schema.find(s => s.id === colId)
+    if (col.type !== 'select' || !col.config.creatable) return
+    const newValue = { value }
+    const alreadyCreated = created[colId] || []
+    const opts = [...col.config.options.options, ...alreadyCreated]
+    if (opts.find(opt => opt.value === value)) return
+    setCreated({
+      ...created,
+      [colId]: [...alreadyCreated, newValue],
+    })
+  }
+
   const [globals, setGlobals] = useState(globalSchema.reduce((p, s) => ({ ...p, [s.id]: getDefault(s) }), {}))
   const setGlobal = (id, val) => {
     if (globalErrors[id]) {
@@ -63,6 +77,7 @@ function Form(props) {
       } = globalErrors
       setGlobalErrors(newGlobalErrors)
     }
+    processNewValue(id, val)
     const newGlobals = {
       ...globals,
       [id]: val,
@@ -85,6 +100,7 @@ function Form(props) {
       ...row,
       [colId]: val,
     }
+    processNewValue(colId, val)
     if (reqLookup[colId]) {
       reqLookup[colId].forEach(r => {
         delete newRow[r]
@@ -141,6 +157,7 @@ function Form(props) {
             key={g.id}
             schema={g}
             values={globals}
+            created={created}
             keys={keys}
             error={globalErrors[g.id]}
             onChange={d => setGlobal(g.id, d)}
@@ -153,6 +170,7 @@ function Form(props) {
             schema={tableSchema}
             values={row}
             globals={globals}
+            created={created}
             keys={keys}
             deleteRow={() => deleteRow(rowId)}
             onChange={setRowValue}

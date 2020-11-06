@@ -10,6 +10,7 @@ function Global(props) {
     keys,
     error,
     onChange,
+    created,
   } = props
 
   const { type, label, config } = schema
@@ -25,6 +26,7 @@ function Global(props) {
           values={values}
           keys={keys}
           onChange={onChange}
+          created={created}
           {...config}
         />
         {error && <Error>{error}</Error>}
@@ -38,6 +40,7 @@ Global.propTypes = {
   value: PropTypes.any,
   error: PropTypes.string,
   onChange: PropTypes.func,
+  created: PropTypes.object,
 }
 
 Global.defaultProps = {}
