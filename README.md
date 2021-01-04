@@ -66,10 +66,15 @@ Three attribute types are currently supported:
   an entity in the dataset. An index consists of one or more column keys joined
   by `+`. When an index is specified the user can access a "Current" view where
   they can speficy all component pieces of an index and get back the collapsed
-  "current" value of all columns for the given entity. Example:
+  "current" value of all columns for the given entity. Note that the values
+  referenced in the index are column keys created with the `key:<string>`
+  option (see below). Example:
 
   | index | state+city |
   |:------|:-----------|
+
+  This example assumes the existence of two columns, one with `key:state` and
+  another with `key:city`.
 
 * `column` - this defines the main building block of the form: a single field
   that the user will input. The details of the `column` type are below, but
