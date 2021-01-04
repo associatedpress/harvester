@@ -58,8 +58,14 @@ function SelectInput(props) {
 
   const parsedValue = parse(value)
 
-  const listOptions = optionlist && optionlist.map(value => ({ value }))
-  const opts = listOptions || (requires ? requireOpts : [...options.options, ...(created[colId] || [])])
+  const getOpts = () => {
+    const listOptions = optionlist && optionlist.map(value => ({ value }))
+    if (listOptions) return listOptions
+    if (requires) return requireOpts
+    const createdOpts = (created && created[colId]) || []
+    return [...options.options, ...createdOpts]
+  }
+  const opts = getOpts()
 
   const getLabel = opt => opt.label || opt.value
   const selected = multiple
