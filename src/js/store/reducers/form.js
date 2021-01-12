@@ -3,7 +3,6 @@ import { SET_SCHEMA, SET_FIELD, SET_ERROR } from '../actions/form'
 
 const schemaReducer = (schema = {}, action) => {
   switch (action.type) {
-
     case SET_SCHEMA:
       return action.payload
 
@@ -14,7 +13,6 @@ const schemaReducer = (schema = {}, action) => {
 
 const fieldValueReducer = (fields = {}, action) => {
   switch (action.type) {
-
     case SET_FIELD:
       return { ...fields, [action.meta.fieldId]: action.payload }
 
@@ -25,7 +23,6 @@ const fieldValueReducer = (fields = {}, action) => {
 
 const fieldErrorReducer = (errors = {}, action) => {
   switch (action.type) {
-
     case SET_ERROR:
       return { ...errors, [action.meta.fieldId]: action.payload }
 

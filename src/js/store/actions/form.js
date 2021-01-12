@@ -19,7 +19,7 @@ export const fetchSchema = ({ id }) => ({
 export const setSchema = ({ schema }) => ({
   type: SET_SCHEMA,
   payload: schema,
-  meta: { feature: SCHEMA },
+  meta: { feature: FORM },
 })
 
 export const setField = ({ fieldId, value }) => ({
@@ -35,13 +35,13 @@ export const setError = ({ fieldId, errors }) => ({
 })
 
 export const validateField = ({ fieldId }) => ({
-  type: VAILDATE_FIELD,
-  payload: fieldID,
+  type: VALIDATE_FIELD,
+  payload: fieldId,
   meta: { feature: FORM },
 })
 
 export const validateForm = () => ({
-  type: VAILDATE_FORM,
+  type: VALIDATE_FORM,
   meta: { feature: FORM },
 })
 

@@ -1,7 +1,6 @@
 import { removeNotification, SET_NOTIFICATION, setNotification } from '../../actions/notification'
 
 export const notificationMiddleware = () => (next) => (action) => {
-
   if (action.type.includes(SET_NOTIFICATION)) {
     const { payload, meta } = action
     const id = Date.now()
@@ -9,7 +8,7 @@ export const notificationMiddleware = () => (next) => (action) => {
     // enrich the original payload with an id
     const notification = {
       id,
-      message: payload
+      message: payload,
     }
 
     // fire a new action with the enriched payload
@@ -19,8 +18,7 @@ export const notificationMiddleware = () => (next) => (action) => {
     // dispatch a clear action after a given time
     setTimeout(() => {
       next(removeNotification({ notificationId: id, feature: meta.feature }))
-    }, 1000)
-
+    }, meta.duration || 5000)
   } else {
     next(action)
   }
