@@ -1,8 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-import { schemaReducer } from './reducers/schema'
-import { schemaMiddleware } from './middleware/feature/schema'
-import { fieldReducer } from './reducers/field'
-import { fieldMiddleware } from './middleware/feature/field'
+import { formReducer } from './reducers/form'
+import { schemaMiddleware, validateMiddleware } from './middleware/feature/form'
 import { apiMiddleware } from './middleware/core/api'
 import { uiReducer } from './reducers/ui'
 import { notificationsReducer } from './reducers/notification'
@@ -11,15 +9,14 @@ import { loggerMiddleware } from './middleware/core/logger'
 import { actionSplitterMiddleware } from './middleware/core/actionSplitter'
 
 const rootReducer = combineReducers({
-  schema: schemaReducer,
-  fields: fieldReducer,
+  form: formReducer,
   ui: uiReducer,
   notification: notificationsReducer,
 })
 
 const featureMiddleware = [
   schemaMiddleware,
-  fieldMiddleware,
+  validateMiddleware,
 ]
 
 const coreMiddleware = [
