@@ -7,6 +7,7 @@ import StringInput from './string_input'
 import NumberInput from './number_input'
 import DateInput from './date_input'
 import TextInput from './text_input'
+import SelectInput from './select_input'
 
 export {
   App,
@@ -17,7 +18,8 @@ export {
   StringInput,
   NumberInput,
   DateInput,
-  TextInput
+  TextInput,
+  SelectInput
 }
 
 export default App

@@ -6,7 +6,7 @@ import {
   FieldErrors,
   NumberInput,
   DateInput,
-  //SelectInput,
+  SelectInput,
   StringInput,
   TextInput
 } from 'js/components'
@@ -25,7 +25,7 @@ function Field(props) {
     number: NumberInput,
     date: DateInput,
     text: TextInput,
-    //select: SelectInput,
+    select: SelectInput,
   }
 
   const Input = typeInputs[schema.type]
