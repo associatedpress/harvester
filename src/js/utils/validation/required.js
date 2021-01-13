@@ -1,5 +1,5 @@
 export default function required(value) {
-  if (!value && value !== 0) {
+  if (value == null) {
     return 'field is required'
   }
 }

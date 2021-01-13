@@ -5,6 +5,8 @@ import Field from './field'
 import FieldErrors from './field_errors'
 import StringInput from './string_input'
 import NumberInput from './number_input'
+import DateInput from './date_input'
+import TextInput from './text_input'
 
 export {
   App,
@@ -13,7 +15,9 @@ export {
   Field,
   FieldErrors,
   StringInput,
-  NumberInput
+  NumberInput,
+  DateInput,
+  TextInput
 }
 
 export default App

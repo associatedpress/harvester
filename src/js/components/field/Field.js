@@ -4,12 +4,11 @@ import { connect } from 'react-redux'
 import { setField, validateField } from 'js/store/actions/form'
 import {
   FieldErrors,
-  //BoolInput,
   NumberInput,
-  //DateInput,
+  DateInput,
   //SelectInput,
   StringInput,
-  //TextInput
+  TextInput
 } from 'js/components'
 
 function Field(props) {
@@ -24,10 +23,9 @@ function Field(props) {
   const typeInputs = {
     string: StringInput,
     number: NumberInput,
-    //bool: BoolInput,
-    //date: DateInput,
+    date: DateInput,
+    text: TextInput,
     //select: SelectInput,
-    //text: TextInput,
   }
 
   const Input = typeInputs[schema.type]
@@ -37,6 +35,7 @@ function Field(props) {
       <FieldErrors errors={errors}>
         <div>{schema.label}</div>
         <Input
+          {...schema.config}
           schema={schema}
           value={value}
           setField={value => setField({ fieldId: schema.id, value })}

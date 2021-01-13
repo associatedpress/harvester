@@ -2,11 +2,13 @@ import { compose } from 'redux'
 import {
   FORM,
   FETCH_SCHEMA,
+  SET_SCHEMA,
   SET_FIELD,
   VALIDATE_FIELD,
   VALIDATE_FORM,
   validateField,
   setError,
+  setField,
   setSchema
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
@@ -32,7 +34,9 @@ export const schemaMiddleware = () => next => action => {
       next([
         setSchema({ schema: action.payload }),
         setLoader({ state: false, feature: FORM }),
-      ])
+      ].concat(action.payload.columns.map(col => {
+        return setField({ fieldId: col.id, value: col.config.default || null })
+      })))
       break
 
     case `${FORM} ${API_ERROR}`:
@@ -55,7 +59,6 @@ export const fieldMiddleware = ({ getState }) => next => action => {
     const state = getState()
     const fieldSchema = getFieldSchema(state, fieldId)
     const fieldValue = getFieldValue(state, fieldId)
-    console.log({ fieldSchema, fieldValue })
     next(setError({ fieldId, errors: validate(fieldSchema, fieldValue) }))
   } else if (action.type === VALIDATE_FORM) {
     const state = getState()
