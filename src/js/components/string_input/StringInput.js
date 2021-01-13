@@ -6,12 +6,14 @@ function StringInput(props) {
   const {
     value,
     setField,
+    validateField,
   } = props
 
   return (
     <Input
       value={value || ''}
       onChange={e => setField(e.target.value)}
+      onBlur={validateField}
     />
   )
 }

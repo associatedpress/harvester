@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import { formReducer } from './reducers/form'
-import { formMiddleware } from './middleware/feature/form'
+import { schemaMiddleware, fieldMiddleware } from './middleware/feature/form'
 import { apiMiddleware } from './middleware/core/api'
 import { uiReducer } from './reducers/ui'
 import { notificationsReducer } from './reducers/notification'
@@ -15,14 +15,15 @@ const rootReducer = combineReducers({
 })
 
 const featureMiddleware = [
-  formMiddleware,
+  schemaMiddleware,
+  fieldMiddleware,
 ]
 
 const coreMiddleware = [
   actionSplitterMiddleware,
   apiMiddleware,
   notificationMiddleware,
-  loggerMiddleware,
+  //loggerMiddleware,
 ]
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

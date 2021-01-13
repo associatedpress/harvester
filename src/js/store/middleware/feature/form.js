@@ -12,7 +12,8 @@ import {
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
 import { setLoader, setFormDirty } from '../../actions/ui'
 import { setNotification } from '../../actions/notification'
-import { getFieldSchema } from '../../selectors/form'
+import { getFieldSchema, getFieldValue } from '../../selectors/form'
+import validate from 'js/utils/validation'
 
 const schemaURL = id => `/api/${id}/schema`
 
@@ -47,12 +48,15 @@ export const fieldMiddleware = ({ getState }) => next => action => {
   if (action.type === SET_FIELD) {
     next([
       action,
-      setFormDirty(),
+      setFormDirty({ state: true, feature: FORM }),
     ])
   } else if (action.type === VALIDATE_FIELD) {
     const fieldId = action.payload
-    const fieldSchema = getFieldSchema(getState(), fieldId)
-    next(setError({ fieldId, errrors: validateField(fieldSchema, action.payload) }))
+    const state = getState()
+    const fieldSchema = getFieldSchema(state, fieldId)
+    const fieldValue = getFieldValue(state, fieldId)
+    console.log({ fieldSchema, fieldValue })
+    next(setError({ fieldId, errors: validate(fieldSchema, fieldValue) }))
   } else if (action.type === VALIDATE_FORM) {
     const state = getState()
     const { columns } = state.form.schema
@@ -61,5 +65,3 @@ export const fieldMiddleware = ({ getState }) => next => action => {
     next(action)
   }
 }
-
-export const formMiddleware = compose(schemaMiddleware, fieldMiddleware)

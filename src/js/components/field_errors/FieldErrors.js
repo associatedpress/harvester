@@ -7,8 +7,11 @@ function FieldErrors(props) {
     children,
   } = props
 
+  const hasError = errors && (errors.length > 0)
+
   return (
     <div>
+      {hasError && <div>{`Error: ${errors.join(', ')}`}</div>}
       {children}
     </div>
   )

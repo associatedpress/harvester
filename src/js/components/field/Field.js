@@ -22,11 +22,11 @@ function Field(props) {
   } = props
 
   const typeInputs = {
-    //bool: BoolInput,
+    string: StringInput,
     number: NumberInput,
+    //bool: BoolInput,
     //date: DateInput,
     //select: SelectInput,
-    string: StringInput,
     //text: TextInput,
   }
 
@@ -35,11 +35,12 @@ function Field(props) {
   return (
     <div>
       <FieldErrors errors={errors}>
+        <div>{schema.label}</div>
         <Input
           schema={schema}
           value={value}
-          setField={setField}
-          validateField={validateField}
+          setField={value => setField({ fieldId: schema.id, value })}
+          validateField={() => validateField({ fieldId: schema.id })}
         />
       </FieldErrors>
     </div>

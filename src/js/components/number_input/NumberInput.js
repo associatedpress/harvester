@@ -8,10 +8,13 @@ function NumberInput(props) {
     setField,
   } = props
 
+  const val = (value || value === 0) ? value : ''
+  const set = v => setField(v ? +v : null)
+
   return (
     <Input
-      value={value}
-      onChange={e => setField(e.target.value)}
+      value={val}
+      onChange={e => set(e.target.value)}
     />
   )
 }
@@ -21,8 +24,6 @@ NumberInput.propTypes = {
   setField: PropTypes.func,
 }
 
-NumberInput.defaultProps = {
-  value: '',
-}
+NumberInput.defaultProps = {}
 
 export default NumberInput
