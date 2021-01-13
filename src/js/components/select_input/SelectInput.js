@@ -1,88 +1,57 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BoxLabel, Checkbox, Radio } from './styles'
-import * as CSV from 'csv-string'
-
-function parseValue(value, opts = {}) {
-  const {
-    multiple = false,
-    serialization = 'json',
-  } = opts
-  if (!multiple) return value
-  const parsers = {
-    csv: v => CSV.parse(v)[0],
-    json: JSON.parse,
-  }
-  const fn = parsers[serialization] || parsers.json
-  return value ? fn(value) : []
-}
-
-function serializeValue(value, opts = {}) {
-  const {
-    multiple = false,
-    serialization = 'json',
-  } = opts
-  if (!multiple) return value
-  const serializers = {
-    csv: CSV.stringify,
-    json: JSON.stringify,
-  }
-  const fn = serializers[serialization] || serializers.json
-  return value && fn(value).trim()
-}
+import ChoiceInput from './ChoiceInput'
+import { parseValue, serializeValue } from './utils'
 
 function SelectInput(props) {
+  if (props.optionlist) return <ChoiceInput {...props} />
+
   const {
-    schema,
     value,
     setField,
     validateField,
     multiple,
-    optionlist,
+    creatable,
     serialization,
   } = props
 
-  const Input = multiple ? Checkbox : Radio
-  const parsedValue = parseValue(value, { multiple, serialization })
-  const selectedOption = multiple
-    ? optionlist.filter(opt => parsedValue.includes(opt))
-    : optionlist.find(opt => opt === parsedValue)
+  return null
+  //const reqId = requires && keys[requires]
+  //const reqVal = values[reqId]
+  //const q = new URLSearchParams({ [requires]: reqVal })
+  //const url = reqVal ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
+  //const requireOpts = useData(url, { initial: [] })
 
-  const getNewSelected = (opt, alreadyChecked) => {
-    if (!multiple) return (alreadyChecked ? null : opt)
-    const newSelected = alreadyChecked
-      ? selectedOption.filter(o => o !== opt)
-      : [...selectedOption, opt]
-    return (newSelected.length ? newSelected : null)
-  }
+  //const parsedValue = parseValue(value)
 
-  const handleChange = (opt, checked) => {
-    setField(serializeValue(getNewSelected(opt, checked), { multiple, serialization }))
-  }
+  //const getOpts = () => {
+  //  if (requires) return requireOpts
+  //  const createdOpts = (created && created[colId]) || []
+  //  return [...options.options, ...createdOpts]
+  //}
+  //const opts = getOpts()
 
-  return (
-    <div>
-      {optionlist.map((opt, i) => {
-        const checked = multiple
-          ? selectedOption.includes(opt)
-          : (selectedOption === opt)
-        return (
-          <div key={i}>
-            <Input
-              name={`select-${schema.id}`}
-              checked={checked}
-              onChange={() => handleChange(opt, checked)}
-              onBlur={validateField}
-              onClick={multiple ? undefined : () => {
-                checked && handleChange(opt, true)
-              }}
-            />
-            <BoxLabel>{opt}</BoxLabel>
-          </div>
-        )
-      })}
-    </div>
-  )
+  //const getLabel = opt => opt.label || opt.value
+  //const selected = multiple
+  //  ? opts.filter(opt => parsedValue.includes(opt.value))
+  //  : opts.find(opt => opt.value === parsedValue)
+
+  //const C = creatable ? Creatable : Select
+
+  //return (
+  //  <C
+  //    value={selected || null}
+  //    options={opts}
+  //    getOptionLabel={getLabel}
+  //    getNewOptionData={value => ({ value })}
+  //    isClearable
+  //    isMulti={multiple}
+  //    readOnly={readOnly}
+  //    isDisabled={readOnly}
+  //    onChange={opt => onChange(opt && serialize(opt))}
+  //  />
+  //)
+
 }
 
 SelectInput.propTypes = {

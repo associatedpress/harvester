@@ -1,5 +1,15 @@
 import { combineReducers } from 'redux'
-import { SET_SCHEMA, SET_FIELD, SET_ERROR } from '../actions/form'
+import { FETCH_SCHEMA, SET_SCHEMA, SET_FIELD, SET_ERROR } from '../actions/form'
+
+const formIdReducer = (formId = null, action) => {
+  switch (action.type) {
+    case FETCH_SCHEMA:
+      return action.payload
+
+    default:
+      return formId
+  }
+}
 
 const schemaReducer = (schema = {}, action) => {
   switch (action.type) {
@@ -32,6 +42,7 @@ const fieldErrorReducer = (errors = {}, action) => {
 }
 
 export const formReducer = combineReducers({
+  id: formIdReducer,
   schema: schemaReducer,
   fields: fieldValueReducer,
   errors: fieldErrorReducer,
