@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { FETCH_SCHEMA, SET_SCHEMA, SET_OPTIONS, SET_FIELD, SET_ERROR } from '../actions/form'
+import { FETCH_SCHEMA, SET_SCHEMA, SET_OPTIONS, CREATE_OPTION, SET_FIELD, SET_ERROR } from '../actions/form'
 
 const formIdReducer = (formId = null, action) => {
   switch (action.type) {
@@ -41,10 +41,23 @@ const fieldErrorReducer = (errors = {}, action) => {
   }
 }
 
-const optionsReducer = (options = {}, action) => {
+const loadedOptionsReducer = (options = {}, action) => {
   switch (action.type) {
     case SET_OPTIONS:
       return { ...options, [action.meta.fieldId]: action.payload }
+
+    default:
+      return options
+  }
+}
+
+const createdOptionsReducer = (options = {}, action) => {
+  switch (action.type) {
+    case CREATE_OPTION:
+      return {
+        ...options,
+        [action.meta.fieldId]: [...(options[action.meta.fieldId] || []), action.payload],
+      }
 
     default:
       return options
@@ -56,5 +69,8 @@ export const formReducer = combineReducers({
   schema: schemaReducer,
   fields: fieldValueReducer,
   errors: fieldErrorReducer,
-  options: optionsReducer,
+  options: combineReducers({
+    loaded: loadedOptionsReducer,
+    created: createdOptionsReducer,
+  }),
 })

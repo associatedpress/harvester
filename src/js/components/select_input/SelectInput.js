@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import ChoiceInput from './ChoiceInput'
 import { parseValue, serializeValue } from './utils'
 import { Select, Creatable } from './styles'
-import { fetchOptions } from 'js/store/actions/form'
+import { fetchOptions, createOption } from 'js/store/actions/form'
 import { getFieldOptions } from 'js/store/selectors/form'
 
 function SelectInput(props) {
@@ -14,6 +14,7 @@ function SelectInput(props) {
     setField,
     validateField,
     fetchOptions,
+    createOption,
     options,
   } = props
 
@@ -32,7 +33,7 @@ function SelectInput(props) {
 
   if (optionlist) return <ChoiceInput {...props} />
 
-  const parsedValue = parseValue(value)
+  const parsedValue = parseValue(value, { multiple, serialization })
 
   const getLabel = opt => opt.label || opt.value
   const selected = multiple
@@ -40,6 +41,14 @@ function SelectInput(props) {
     : options.find(opt => opt.value === parsedValue)
 
   const Input = creatable ? Creatable : Select
+
+  const onChange = (opt, action) => {
+    const newValue = opt && (multiple ? opt.map(o => o.value) : opt.value)
+    setField(serializeValue(newValue, { multiple, serialization }))
+    if (action.action === 'create-option') {
+      createOption({ fieldId: schema.id, option: opt })
+    }
+  }
 
   return (
     <Input
@@ -49,7 +58,7 @@ function SelectInput(props) {
       getNewOptionData={value => ({ value })}
       isClearable
       isMulti={multiple}
-      onChange={opt => setField(serializeValue(opt, { multiple, serialization }))}
+      onChange={onChange}
       onBlur={validateField}
     />
   )
@@ -61,6 +70,7 @@ SelectInput.propTypes = {
   setField: PropTypes.func,
   validateField: PropTypes.func,
   fetchOptions: PropTypes.func,
+  createOption: PropTypes.func,
   options: PropTypes.array,
 }
 
@@ -75,4 +85,4 @@ function mapStateToProps(state, { schema }) {
   }
 }
 
-export default connect(mapStateToProps, { fetchOptions })(SelectInput)
+export default connect(mapStateToProps, { fetchOptions, createOption })(SelectInput)

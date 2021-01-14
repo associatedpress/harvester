@@ -11,5 +11,7 @@ export const getFieldErrors = (state, fieldId) => {
 }
 
 export const getFieldOptions = (state, fieldId) => {
-  return state.form.options[fieldId]
+  const loaded = state.form.options.loaded[fieldId] || []
+  const created = state.form.options.created[fieldId] || []
+  return [...loaded, ...created]
 }

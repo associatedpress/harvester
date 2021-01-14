@@ -9,6 +9,7 @@ export const SET_ERROR = `${FORM} SET_ERROR`
 export const VALIDATE_FIELD = `${FORM} VALIDATE_FIELD`
 export const VALIDATE_FORM = `${FORM} VALIDATE_FORM`
 export const FETCH_OPTIONS = `${FORM} FETCH_OPTIONS`
+export const CREATE_OPTION = `${FORM} CREATE_OPTION`
 export const SET_OPTIONS = `${FORM} SET_OPTIONS`
 export const SUBMIT = `${FORM} SUBMIT`
 
@@ -50,6 +51,12 @@ export const validateForm = () => ({
 export const fetchOptions = ({ fieldId, range }) => ({
   type: FETCH_OPTIONS,
   payload: range,
+  meta: { fieldId, feature: FORM },
+})
+
+export const createOption = ({ fieldId, option }) => ({
+  type: CREATE_OPTION,
+  payload: option,
   meta: { fieldId, feature: FORM },
 })
 
