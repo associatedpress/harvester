@@ -48,10 +48,10 @@ export const validateForm = () => ({
   meta: { feature: FORM },
 })
 
-export const fetchOptions = ({ fieldId, range }) => ({
+export const fetchOptions = ({ fieldId, range, requires, requireValue }) => ({
   type: FETCH_OPTIONS,
   payload: range,
-  meta: { fieldId, feature: FORM },
+  meta: { fieldId, requires, requireValue, feature: FORM },
 })
 
 export const createOption = ({ fieldId, option }) => ({

@@ -18,7 +18,13 @@ import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
 
 const schemaURL = id => `/api/${id}/schema`
-const optionsURL = (id, range) => `/api/${id}/sheet/${range}`
+const optionsURL = (id, range, opts = {}) => {
+  const baseURL = `/api/${id}/sheet/${range}`
+  const { requires, requireValue } = opts
+  if (!requires) return baseURL
+  const qs = new URLSearchParams({ [requires]: requireValue })
+  return `${baseURL}?${qs}`
+}
 
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
@@ -46,9 +52,20 @@ const handleApiError = (store, next, action) => {
   ])
 }
 
+const handleSetField = (store, next, action) => {
+  const state = store.getState()
+  const fieldSchema = getFieldSchema(state, action.meta.fieldId)
+  const key = fieldSchema.config.key
+  const requirers = state.form.schema.columns.filter(col => key && col.config.requires === key)
+  next([
+    setFormDirty({ state: true, feature: FORM }),
+    ...requirers.map(col => setField({ fieldId: col.id, value: null })),
+  ])
+}
+
 const handleFetchOptions = (store, next, action) => {
   const state = store.getState()
-  const url = optionsURL(state.form.id, action.payload)
+  const url = optionsURL(state.form.id, action.payload, action.meta)
   next([
     apiRequest({
       body: null,
@@ -100,10 +117,7 @@ export const formMiddleware = store => next => action => {
       break
 
     case SET_FIELD:
-      next([
-        action,
-        setFormDirty({ state: true, feature: FORM }),
-      ])
+      handleSetField(store, next, action)
       break
 
     case FETCH_OPTIONS:

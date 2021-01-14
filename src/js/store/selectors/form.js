@@ -6,6 +6,12 @@ export const getFieldValue = (state, fieldId) => {
   return state.form.fields[fieldId]
 }
 
+export const getFieldIdByKey = (state, key) => {
+  if (!key) return
+  const col = state.form.schema.columns.find(c => c.config.key === key)
+  return col && col.id
+}
+
 export const getFieldErrors = (state, fieldId) => {
   return state.form.errors[fieldId]
 }

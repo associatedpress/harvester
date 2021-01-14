@@ -5,7 +5,7 @@ import ChoiceInput from './ChoiceInput'
 import { parseValue, serializeValue } from './utils'
 import { Select, Creatable } from './styles'
 import { fetchOptions, createOption } from 'js/store/actions/form'
-import { getFieldOptions } from 'js/store/selectors/form'
+import { getFieldOptions, getFieldValue, getFieldIdByKey } from 'js/store/selectors/form'
 
 function SelectInput(props) {
   const {
@@ -16,6 +16,7 @@ function SelectInput(props) {
     fetchOptions,
     createOption,
     options,
+    requireValue,
   } = props
 
   const fieldId = schema.id
@@ -24,12 +25,14 @@ function SelectInput(props) {
     multiple,
     creatable,
     serialization,
+    requires,
   } = schema.config
+
   useEffect(() => {
-    if (!optionlist) {
-      fetchOptions({ fieldId, range: schema.config.options.range })
-    }
-  }, [fieldId, optionlist])
+    if (optionlist) return
+    if (requires && requireValue == null) return
+    fetchOptions({ fieldId, range: schema.config.options.range, requires, requireValue })
+  }, [fieldId, optionlist, requires, requireValue])
 
   if (optionlist) return <ChoiceInput {...props} />
 
@@ -80,8 +83,10 @@ SelectInput.defaultProps = {
 }
 
 function mapStateToProps(state, { schema }) {
+  const requireFieldId = getFieldIdByKey(state, schema.config.requires)
   return {
     options: getFieldOptions(state, schema.id),
+    requireValue: getFieldValue(state, requireFieldId),
   }
 }
 
