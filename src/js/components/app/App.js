@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchSchema } from 'js/store/actions/form'
+import { fetchSchema, submit } from 'js/store/actions/form'
 import { Header, Form } from 'js/components'
+import { getNotifications } from 'js/store/selectors/notification'
 
 function App(props) {
   const {
     className,
     docId,
     fetchSchema,
+    submit,
     schema,
+    notifications,
   } = props
 
   useEffect(() => { fetchSchema({ id: docId }) }, [])
@@ -17,7 +20,15 @@ function App(props) {
   return (
     <div className={className}>
       <Header />
+      <ul>
+        {notifications.map(note => (
+          <li key={note.id}>{note.message}</li>
+        ))}
+      </ul>
       <Form fields={schema.columns} />
+      <div>
+        <button onClick={submit}>Submit</button>
+      </div>
     </div>
   )
 }
@@ -27,14 +38,18 @@ App.propTypes = {
   docId: PropTypes.string,
   fetchSchema: PropTypes.func,
   schema: PropTypes.object,
+  notifications: PropTypes.array,
 }
 
-App.defaultProps = {}
+App.defaultProps = {
+  notifications: [],
+}
 
 function mapStateToProps(state) {
   return {
     schema: state.form.schema,
+    notifications: getNotifications(state),
   }
 }
 
-export default connect(mapStateToProps, { fetchSchema })(App)
+export default connect(mapStateToProps, { fetchSchema, submit })(App)

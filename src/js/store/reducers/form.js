@@ -1,5 +1,13 @@
 import { combineReducers } from 'redux'
-import { FETCH_SCHEMA, SET_SCHEMA, SET_OPTIONS, CREATE_OPTION, SET_FIELD, SET_ERROR } from '../actions/form'
+import {
+  CLEAR,
+  FETCH_SCHEMA,
+  SET_SCHEMA,
+  SET_OPTIONS,
+  CREATE_OPTION,
+  SET_FIELD,
+  SET_ERROR
+} from '../actions/form'
 
 const formIdReducer = (formId = null, action) => {
   switch (action.type) {
@@ -26,6 +34,9 @@ const fieldValueReducer = (fields = {}, action) => {
     case SET_FIELD:
       return { ...fields, [action.meta.fieldId]: action.payload }
 
+    case CLEAR:
+      return {}
+
     default:
       return fields
   }
@@ -36,6 +47,9 @@ const fieldErrorReducer = (errors = {}, action) => {
     case SET_ERROR:
       return { ...errors, [action.meta.fieldId]: action.payload }
 
+    case CLEAR:
+      return {}
+
     default:
       return errors
   }
@@ -45,6 +59,9 @@ const loadedOptionsReducer = (options = {}, action) => {
   switch (action.type) {
     case SET_OPTIONS:
       return { ...options, [action.meta.fieldId]: action.payload }
+
+    case CLEAR:
+      return {}
 
     default:
       return options
@@ -58,6 +75,9 @@ const createdOptionsReducer = (options = {}, action) => {
         ...options,
         [action.meta.fieldId]: [...(options[action.meta.fieldId] || []), action.payload],
       }
+
+    case CLEAR:
+      return {}
 
     default:
       return options

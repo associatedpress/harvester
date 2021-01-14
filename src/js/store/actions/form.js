@@ -12,6 +12,7 @@ export const FETCH_OPTIONS = `${FORM} FETCH_OPTIONS`
 export const CREATE_OPTION = `${FORM} CREATE_OPTION`
 export const SET_OPTIONS = `${FORM} SET_OPTIONS`
 export const SUBMIT = `${FORM} SUBMIT`
+export const CLEAR = `${CLEAR} CLEAR`
 
 // action creators
 export const fetchSchema = ({ id }) => ({
@@ -68,5 +69,10 @@ export const setOptions = ({ fieldId, options }) => ({
 
 export const submit = () => ({
   type: SUBMIT,
+  meta: { feature: FORM },
+})
+
+export const clear = () => ({
+  type: CLEAR,
   meta: { feature: FORM },
 })

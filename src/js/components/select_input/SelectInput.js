@@ -49,7 +49,9 @@ function SelectInput(props) {
     const newValue = opt && (multiple ? opt.map(o => o.value) : opt.value)
     setField(serializeValue(newValue, { multiple, serialization }))
     if (action.action === 'create-option') {
-      createOption({ fieldId: schema.id, option: opt })
+      [opt].flat().forEach(newOpt => {
+        createOption({ fieldId: schema.id, option: newOpt })
+      })
     }
   }
 

@@ -5,7 +5,12 @@ import {
   SET_FIELD,
   VALIDATE_FIELD,
   VALIDATE_FORM,
+  SUBMIT,
+  CLEAR,
+  clear,
+  fetchSchema,
   validateField,
+  validateForm,
   setError,
   setField,
   setSchema,
@@ -23,6 +28,12 @@ const optionsURL = (id, range, opts = {}) => {
   const { requires, requireValue } = opts
   if (!requires) return baseURL
   const qs = new URLSearchParams({ [requires]: requireValue })
+  return `${baseURL}?${qs}`
+}
+const submitURL = (id, range) => {
+  const baseURL = `/api/${id}/entry`
+  if (!range) return baseURL
+  const qs = new URLSearchParams({ range })
   return `${baseURL}?${qs}`
 }
 
@@ -47,6 +58,14 @@ const handleApiSuccess = (store, next, action) => {
 
     case FETCH_OPTIONS:
       next(setOptions({ fieldId: referrer.meta.fieldId, options: action.payload }))
+      break
+
+    case SUBMIT:
+      next([
+        setNotification({ message: 'Form submission successful', feature: FORM }),
+        clear(),
+        fetchSchema({ id: store.getState().form.id }),
+      ])
       break
   }
 }
@@ -94,7 +113,40 @@ const handleValidateField = (store, next, action) => {
 const handleValidateForm = (store, next, action) => {
   const state = store.getState()
   const { columns } = state.form.schema
-  columns.forEach(col => next(validateField({ fieldId: col.id })))
+  columns.forEach(col => store.dispatch(validateField({ fieldId: col.id })))
+}
+
+const handleSubmit = (store, next, action) => {
+  store.dispatch(validateForm())
+  const state = store.getState()
+  if (Object.values(state.form.errors).some(e => e.length)) {
+    const message = 'Correct errors before submission'
+    return next(setNotification({ message, feature: FORM }))
+  }
+  next(Object.entries(state.form.options.created).map(([fieldId, options]) => {
+    const schema = getFieldSchema(state, fieldId)
+    return apiRequest({
+      body: JSON.stringify([options.map(opt => opt.value)]),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      url: submitURL(state.form.id, schema.config.options.range),
+      referrer: action,
+      feature: FORM,
+    })
+  }))
+  const row = state.form.schema.columns
+    .map(col => col.id)
+    .sort()
+    .map(fieldId => getFieldValue(state, fieldId))
+  const now = new Date()
+  next(apiRequest({
+    body: JSON.stringify([[now, ...row]]),
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    url: submitURL(state.form.id),
+    referrer: action,
+    feature: FORM,
+  }))
 }
 
 export const formMiddleware = store => next => action => {
@@ -136,6 +188,14 @@ export const formMiddleware = store => next => action => {
 
     case VALIDATE_FORM:
       handleValidateForm(store, next, action)
+      break
+
+    case SUBMIT:
+      handleSubmit(store, next, action)
+      break
+
+    case CLEAR:
+      next(setFormDirty({ state: false, feature: FORM }))
       break
   }
 }
