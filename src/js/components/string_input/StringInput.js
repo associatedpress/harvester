@@ -21,6 +21,7 @@ function StringInput(props) {
 StringInput.propTypes = {
   value: PropTypes.string,
   setField: PropTypes.func,
+  validateField: PropTypes.func,
 }
 
 StringInput.defaultProps = {

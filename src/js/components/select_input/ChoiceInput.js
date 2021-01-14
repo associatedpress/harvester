@@ -61,8 +61,10 @@ function ChoiceInput(props) {
 }
 
 ChoiceInput.propTypes = {
+  schema: PropTypes.object,
   value: PropTypes.string,
   setField: PropTypes.func,
+  validateField: PropTypes.func,
 }
 
 ChoiceInput.defaultProps = {

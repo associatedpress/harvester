@@ -39,10 +39,6 @@ function SelectInput(props) {
     ? options.filter(opt => parsedValue.includes(opt.value))
     : options.find(opt => opt.value === parsedValue)
 
-  const handleChange = (opt, checked) => {
-    setField(serializeValue(getNewSelected(opt, checked), { multiple, serialization }))
-  }
-
   const Input = creatable ? Creatable : Select
 
   return (
@@ -60,6 +56,7 @@ function SelectInput(props) {
 }
 
 SelectInput.propTypes = {
+  schema: PropTypes.object,
   value: PropTypes.string,
   setField: PropTypes.func,
   validateField: PropTypes.func,

@@ -25,6 +25,7 @@ function TextInput(props) {
 }
 
 TextInput.propTypes = {
+  schema: PropTypes.object,
   value: PropTypes.string,
   setField: PropTypes.func,
   validateField: PropTypes.func,

@@ -1,9 +1,7 @@
-import { compose } from 'redux'
 import {
   FORM,
   FETCH_OPTIONS,
   FETCH_SCHEMA,
-  SET_SCHEMA,
   SET_FIELD,
   VALIDATE_FIELD,
   VALIDATE_FORM,

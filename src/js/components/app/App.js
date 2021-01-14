@@ -26,6 +26,7 @@ App.propTypes = {
   className: PropTypes.string,
   docId: PropTypes.string,
   fetchSchema: PropTypes.func,
+  schema: PropTypes.object,
 }
 
 App.defaultProps = {}

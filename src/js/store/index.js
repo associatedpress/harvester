@@ -5,7 +5,6 @@ import { apiMiddleware } from './middleware/core/api'
 import { uiReducer } from './reducers/ui'
 import { notificationsReducer } from './reducers/notification'
 import { notificationMiddleware } from './middleware/core/notification'
-import { loggerMiddleware } from './middleware/core/logger'
 import { actionSplitterMiddleware } from './middleware/core/actionSplitter'
 
 const rootReducer = combineReducers({
@@ -22,7 +21,6 @@ const coreMiddleware = [
   actionSplitterMiddleware,
   apiMiddleware,
   notificationMiddleware,
-  //loggerMiddleware,
 ]
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
