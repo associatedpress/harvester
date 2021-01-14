@@ -8,8 +8,8 @@ export const apiMiddleware = ({ dispatch }) => next => action => {
 
     fetch(url, { body, method, headers })
       .then(response => Promise.all([response, response.json()]))
-      .then(([status, response]) => {
-        dispatch(apiSuccess({ status, response, referrer, feature }))
+      .then(([rsp, response]) => {
+        dispatch(apiSuccess({ status: rsp.status, response, referrer, feature }))
       })
       .catch(error => {
         console.error(error)
