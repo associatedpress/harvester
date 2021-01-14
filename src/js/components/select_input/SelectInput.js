@@ -1,66 +1,81 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChoiceInput from './ChoiceInput'
 import { parseValue, serializeValue } from './utils'
+import { Select, Creatable } from './styles'
+import { fetchOptions } from 'js/store/actions/form'
+import { getFieldOptions } from 'js/store/selectors/form'
 
 function SelectInput(props) {
-  if (props.optionlist) return <ChoiceInput {...props} />
-
   const {
+    schema,
     value,
     setField,
     validateField,
+    fetchOptions,
+    options,
+  } = props
+
+  const fieldId = schema.id
+  const {
+    optionlist,
     multiple,
     creatable,
     serialization,
-  } = props
+  } = schema.config
+  useEffect(() => {
+    if (!optionlist) {
+      fetchOptions({ fieldId, range: schema.config.options.range })
+    }
+  }, [fieldId, optionlist])
 
-  return null
-  //const reqId = requires && keys[requires]
-  //const reqVal = values[reqId]
-  //const q = new URLSearchParams({ [requires]: reqVal })
-  //const url = reqVal ? `/api/${docId}/sheet/${options.range}?${q}` : undefined
-  //const requireOpts = useData(url, { initial: [] })
+  if (optionlist) return <ChoiceInput {...props} />
 
-  //const parsedValue = parseValue(value)
+  const parsedValue = parseValue(value)
 
-  //const getOpts = () => {
-  //  if (requires) return requireOpts
-  //  const createdOpts = (created && created[colId]) || []
-  //  return [...options.options, ...createdOpts]
-  //}
-  //const opts = getOpts()
+  const getLabel = opt => opt.label || opt.value
+  const selected = multiple
+    ? options.filter(opt => parsedValue.includes(opt.value))
+    : options.find(opt => opt.value === parsedValue)
 
-  //const getLabel = opt => opt.label || opt.value
-  //const selected = multiple
-  //  ? opts.filter(opt => parsedValue.includes(opt.value))
-  //  : opts.find(opt => opt.value === parsedValue)
+  const handleChange = (opt, checked) => {
+    setField(serializeValue(getNewSelected(opt, checked), { multiple, serialization }))
+  }
 
-  //const C = creatable ? Creatable : Select
+  const Input = creatable ? Creatable : Select
 
-  //return (
-  //  <C
-  //    value={selected || null}
-  //    options={opts}
-  //    getOptionLabel={getLabel}
-  //    getNewOptionData={value => ({ value })}
-  //    isClearable
-  //    isMulti={multiple}
-  //    readOnly={readOnly}
-  //    isDisabled={readOnly}
-  //    onChange={opt => onChange(opt && serialize(opt))}
-  //  />
-  //)
-
+  return (
+    <Input
+      value={selected || null}
+      options={options}
+      getOptionLabel={getLabel}
+      getNewOptionData={value => ({ value })}
+      isClearable
+      isMulti={multiple}
+      onChange={opt => setField(serializeValue(opt, { multiple, serialization }))}
+      onBlur={validateField}
+    />
+  )
 }
 
 SelectInput.propTypes = {
   value: PropTypes.string,
   setField: PropTypes.func,
+  validateField: PropTypes.func,
+  fetchOptions: PropTypes.func,
+  options: PropTypes.array,
 }
 
 SelectInput.defaultProps = {
   value: '',
+  options: [],
 }
 
-export default SelectInput
+function mapStateToProps(state, { schema }) {
+  return {
+    options: getFieldOptions(state, schema.id),
+  }
+}
+
+export default connect(mapStateToProps, { fetchOptions })(SelectInput)

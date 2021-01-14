@@ -5,3 +5,11 @@ export const getFieldSchema = (state, fieldId) => {
 export const getFieldValue = (state, fieldId) => {
   return state.form.fields[fieldId]
 }
+
+export const getFieldErrors = (state, fieldId) => {
+  return state.form.errors[fieldId]
+}
+
+export const getFieldOptions = (state, fieldId) => {
+  return state.form.options[fieldId]
+}

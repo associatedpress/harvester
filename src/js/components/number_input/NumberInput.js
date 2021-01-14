@@ -6,6 +6,7 @@ function NumberInput(props) {
   const {
     value,
     setField,
+    validateField,
   } = props
 
   const val = (value || value === 0) ? value : ''
@@ -15,6 +16,7 @@ function NumberInput(props) {
     <Input
       value={val}
       onChange={e => set(e.target.value)}
+      onBlur={validateField}
     />
   )
 }
@@ -22,6 +24,7 @@ function NumberInput(props) {
 NumberInput.propTypes = {
   value: PropTypes.number,
   setField: PropTypes.func,
+  validateField: PropTypes.func,
 }
 
 NumberInput.defaultProps = {}

@@ -4,20 +4,20 @@ export const API_SUCCESS = 'API_SUCCESS'
 export const API_ERROR = 'API_ERROR'
 
 // action creators
-export const apiRequest = ({ body, method, url, feature }) => ({
+export const apiRequest = ({ body, method, url, referrer, feature }) => ({
   type: `${feature} ${API_REQUEST}`,
   payload: body,
-  meta: { method, url, feature },
+  meta: { method, url, referrer, feature },
 })
 
-export const apiSuccess = ({ status, response, feature }) => ({
+export const apiSuccess = ({ status, response, referrer, feature }) => ({
   type: `${feature} ${API_SUCCESS}`,
   payload: response,
-  meta: { status, feature },
+  meta: { status, referrer, feature },
 })
 
-export const apiError = ({ error, feature }) => ({
+export const apiError = ({ error, referrer, feature }) => ({
   type: `${feature} ${API_ERROR}`,
   payload: error,
-  meta: { feature },
+  meta: { referrer, feature },
 })

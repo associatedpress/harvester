@@ -9,10 +9,13 @@ function ChoiceInput(props) {
     value,
     setField,
     validateField,
+  } = props
+
+  const {
     multiple,
     optionlist,
     serialization,
-  } = props
+  } = schema.config
 
   const Input = multiple ? Checkbox : Radio
   const parsedValue = parseValue(value, { multiple, serialization })

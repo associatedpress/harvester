@@ -4,11 +4,15 @@ import { Input } from './styles'
 
 function TextInput(props) {
   const {
+    schema,
     value,
     setField,
     validateField,
-    rows,
   } = props
+
+  const {
+    rows = 2,
+  } = schema.config
 
   return (
     <Input
@@ -22,17 +26,12 @@ function TextInput(props) {
 
 TextInput.propTypes = {
   value: PropTypes.string,
-  rows: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
   setField: PropTypes.func,
   validateField: PropTypes.func,
 }
 
 TextInput.defaultProps = {
   value: '',
-  rows: 2,
 }
 
 export default TextInput
