@@ -26,6 +26,12 @@ const optionsURL = (id, range, opts = {}) => {
   return `${baseURL}?${qs}`
 }
 
+const parseDefault = (value, type) => {
+  if (value == null) return null
+  if (type === 'number') return +value
+  return value
+}
+
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
 
@@ -35,7 +41,7 @@ const handleApiSuccess = (store, next, action) => {
         setSchema({ schema: action.payload }),
         setLoader({ state: false, feature: FORM }),
       ].concat(action.payload.columns.map(col => {
-        return setField({ fieldId: col.id, value: col.config.default || null })
+        return setField({ fieldId: col.id, value: parseDefault(col.config.default, col.type) })
       })))
       break
 
