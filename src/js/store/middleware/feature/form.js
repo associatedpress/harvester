@@ -77,11 +77,12 @@ const handleApiSuccess = (store, next, action) => {
       break
 
     case LOAD_INDEX:
-      Object.entries(action.payload.current.rows[0]).forEach(([fieldId, value]) => {
-        const state = store.getState()
-        const schema = getFieldSchema(state, fieldId)
-        store.dispatch(setField({ fieldId, value: parseDefault(value, schema.type) }))
-      })
+      action.payload.current && Object.entries(action.payload.current.rows[0])
+        .forEach(([fieldId, value]) => {
+          const state = store.getState()
+          const schema = getFieldSchema(state, fieldId)
+          store.dispatch(setField({ fieldId, value: parseDefault(value, schema.type) }))
+        })
       next(setIndexLoaded({ state: true, feature: FORM }))
       break
   }

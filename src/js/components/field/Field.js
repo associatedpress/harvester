@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   FieldErrors,
+  FieldHelp,
   NumberInput,
   DateInput,
   SelectInput,
@@ -32,6 +33,7 @@ function Field(props) {
     <div>
       <FieldErrors errors={errors}>
         <div>{schema.label}</div>
+        <FieldHelp help={schema.config.help} />
         <Input
           schema={schema}
           value={value}

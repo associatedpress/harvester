@@ -10,6 +10,7 @@ import TextInput from './text_input'
 import SelectInput from './select_input'
 import Notifications from './notifications'
 import Controls from './controls'
+import FieldHelp from './field_help'
 
 export {
   App,
@@ -23,7 +24,8 @@ export {
   TextInput,
   SelectInput,
   Notifications,
-  Controls
+  Controls,
+  FieldHelp
 }
 
 export default App
