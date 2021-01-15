@@ -61,9 +61,9 @@ const handleApiSuccess = (store, next, action) => {
       break
 
     case SUBMIT:
+      store.dispatch(clear())
       next([
         setNotification({ message: 'Form submission successful', feature: FORM }),
-        clear(),
         fetchSchema({ id: store.getState().form.id }),
       ])
       break

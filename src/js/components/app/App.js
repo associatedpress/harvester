@@ -13,9 +13,14 @@ function App(props) {
     submit,
     schema,
     notifications,
+    dirty,
   } = props
 
   useEffect(() => { fetchSchema({ id: docId }) }, [])
+
+  useEffect(() => {
+    window.onbeforeunload = () => dirty ? true : undefined
+  }, [dirty])
 
   return (
     <div className={className}>
@@ -49,6 +54,7 @@ function mapStateToProps(state) {
   return {
     schema: state.form.schema,
     notifications: getNotifications(state),
+    dirty: state.ui.formDirty,
   }
 }
 
