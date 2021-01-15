@@ -2,9 +2,11 @@ import {
   FORM,
   FETCH_OPTIONS,
   FETCH_SCHEMA,
+  INPUT_FIELD,
   SET_FIELD,
   VALIDATE_FIELD,
   VALIDATE_FORM,
+  LOAD_INDEX,
   SUBMIT,
   CLEAR,
   clear,
@@ -17,7 +19,7 @@ import {
   setOptions
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
-import { setLoader, setFormDirty } from '../../actions/ui'
+import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
 import { setNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
@@ -30,6 +32,10 @@ const optionsURL = (id, range, opts = {}) => {
   if (!requires) return baseURL
   const qs = new URLSearchParams({ [requires]: requireValue })
   return `${baseURL}?${qs}`
+}
+const loadIndexURL = (id, index) => {
+  const qs = new URLSearchParams({ index })
+  return `/api/${id}/current?${qs}`
 }
 const submitURL = (id, range) => {
   const baseURL = `/api/${id}/entry`
@@ -69,6 +75,15 @@ const handleApiSuccess = (store, next, action) => {
         fetchSchema({ id: store.getState().form.id }),
       ])
       break
+
+    case LOAD_INDEX:
+      Object.entries(action.payload.current.rows[0]).forEach(([fieldId, value]) => {
+        const state = store.getState()
+        const schema = getFieldSchema(state, fieldId)
+        store.dispatch(setField({ fieldId, value: parseDefault(value, schema.type) }))
+      })
+      next(setIndexLoaded({ state: true, feature: FORM }))
+      break
   }
 }
 
@@ -85,7 +100,6 @@ const handleSetField = (store, next, action) => {
   const key = fieldSchema.config.key
   const requirers = state.form.schema.columns.filter(col => key && col.config.requires === key)
   next([
-    setFormDirty({ state: true, feature: FORM }),
     ...requirers.map(col => setField({ fieldId: col.id, value: null })),
   ])
 }
@@ -116,6 +130,27 @@ const handleValidateForm = (store, next, action) => {
   const state = store.getState()
   const { columns } = state.form.schema
   columns.forEach(col => store.dispatch(validateField({ fieldId: col.id })))
+}
+
+const handleLoadIndex = (store, next, action) => {
+  const state = store.getState()
+  const { index, columns } = state.form.schema
+  const indexKeys = index.split('+')
+  const indexFields = columns.reduce((cols, col) => {
+    if (!indexKeys.includes(col.config.key)) return cols
+    return { ...cols, [col.config.key]: col }
+  }, {})
+  const indexValue = indexKeys.map(k => state.form.fields[indexFields[k].id]).join('--')
+  next([
+    apiRequest({
+      body: null,
+      method: 'GET',
+      url: loadIndexURL(state.form.id, indexValue),
+      referrer: action,
+      feature: FORM,
+    }),
+    setLoader({ state: true, feature: FORM }),
+  ])
 }
 
 const handleSubmit = (store, next, action) => {
@@ -176,6 +211,11 @@ export const formMiddleware = store => next => action => {
       handleApiError(store, next, action)
       break
 
+    case INPUT_FIELD:
+      store.dispatch(setField({ fieldId: action.meta.fieldId, value: action.payload }))
+      next(setFormDirty({ state: true, feature: FORM }))
+      break
+
     case SET_FIELD:
       handleSetField(store, next, action)
       break
@@ -190,6 +230,10 @@ export const formMiddleware = store => next => action => {
 
     case VALIDATE_FORM:
       handleValidateForm(store, next, action)
+      break
+
+    case LOAD_INDEX:
+      handleLoadIndex(store, next, action)
       break
 
     case SUBMIT:

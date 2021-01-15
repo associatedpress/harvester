@@ -3,6 +3,7 @@ export const SET_LOADER = 'SET_LOADER'
 export const SET_SUBMITTING = 'SET_SUBMITTING'
 export const SET_FORM_DIRTY = 'SET_FORM_DIRTY'
 export const SET_FORM_READY = 'SET_FORM_READY'
+export const SET_INDEX_LOADED = 'SET_INDEX_LOADED'
 
 // action creators
 export const setLoader = ({ state, feature }) => ({
@@ -25,6 +26,12 @@ export const setFormDirty = ({ state, feature }) => ({
 
 export const setFormReady = ({ state, feature }) => ({
   type: `${feature} ${SET_FORM_READY}`,
+  payload: state,
+  meta: { feature },
+})
+
+export const setIndexLoaded = ({ state, feature }) => ({
+  type: `${feature} ${SET_INDEX_LOADED}`,
   payload: state,
   meta: { feature },
 })

@@ -1,10 +1,11 @@
-import { SET_LOADER, SET_SUBMITTING, SET_FORM_DIRTY, SET_FORM_READY } from '../actions/ui'
+import { SET_LOADER, SET_SUBMITTING, SET_FORM_DIRTY, SET_FORM_READY, SET_INDEX_LOADED } from '../actions/ui'
 
 const initState = {
   loading: false,
   submitting: false,
   formDirty: false,
   formReady: false,
+  indexLoaded: false,
 }
 
 export const uiReducer = (ui = initState, action) => {
@@ -20,6 +21,9 @@ export const uiReducer = (ui = initState, action) => {
 
     case action.type.includes(SET_FORM_READY):
       return { ...ui, formReady: action.payload }
+
+    case action.type.includes(SET_INDEX_LOADED):
+      return { ...ui, indexLoaded: action.payload }
 
     default:
       return ui

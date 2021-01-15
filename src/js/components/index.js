@@ -8,6 +8,8 @@ import NumberInput from './number_input'
 import DateInput from './date_input'
 import TextInput from './text_input'
 import SelectInput from './select_input'
+import Notifications from './notifications'
+import Controls from './controls'
 
 export {
   App,
@@ -19,7 +21,9 @@ export {
   NumberInput,
   DateInput,
   TextInput,
-  SelectInput
+  SelectInput,
+  Notifications,
+  Controls
 }
 
 export default App

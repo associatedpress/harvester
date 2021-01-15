@@ -77,11 +77,11 @@ SelectInput.propTypes = {
   fetchOptions: PropTypes.func,
   createOption: PropTypes.func,
   options: PropTypes.array,
+  requireValue: PropTypes.any,
 }
 
 SelectInput.defaultProps = {
   value: '',
-  options: [],
 }
 
 function mapStateToProps(state, { schema }) {

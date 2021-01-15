@@ -1,8 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { setField, validateField } from 'js/store/actions/form'
-import { getFieldValue, getFieldErrors } from 'js/store/selectors/form'
 import {
   FieldErrors,
   NumberInput,
@@ -38,8 +35,8 @@ function Field(props) {
         <Input
           schema={schema}
           value={value}
-          setField={value => setField({ fieldId: schema.id, value })}
-          validateField={() => validateField({ fieldId: schema.id })}
+          setField={setField}
+          validateField={validateField}
         />
       </FieldErrors>
     </div>
@@ -56,11 +53,4 @@ Field.propTypes = {
 
 Field.defaultProps = {}
 
-function mapStateToProps(state, { schema }) {
-  return {
-    value: getFieldValue(state, schema.id),
-    errors: getFieldErrors(state, schema.id),
-  }
-}
-
-export default connect(mapStateToProps, { setField, validateField })(Field)
+export default Field
