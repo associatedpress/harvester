@@ -21,6 +21,7 @@ import { setLoader, setFormDirty } from '../../actions/ui'
 import { setNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
+import { formatDate } from 'js/utils/date'
 
 const schemaURL = id => `/api/${id}/schema`
 const optionsURL = (id, range, opts = {}) => {
@@ -40,6 +41,7 @@ const submitURL = (id, range) => {
 const parseDefault = (value, type) => {
   if (value == null) return null
   if (type === 'number') return +value
+  if (type === 'date' && value === 'today') return formatDate(new Date())
   return value
 }
 

@@ -1,7 +1,3 @@
-import DateInput, { formatDate } from './DateInput'
-
-export {
-  formatDate
-}
+import DateInput from './DateInput'
 
 export default DateInput
