@@ -293,3 +293,9 @@ then the following paths will be equivalent:
 
 Note that the former will be treated as canonical; Harvester will redirect from
 the latter with a `301` to the former.
+
+Our instance of Harvester is configured to use [this sheet for custom
+URLs][config-sheet]. If you need to be granted access, please contact
+@amilligan, @jmyers, or @tthibodeaux.
+
+[config-sheet]: https://docs.google.com/spreadsheets/d/1em6MB9S-rRL81Sh128xrVft9SpTCqRtL2K2zoPVx9PQ/edit#gid=0
