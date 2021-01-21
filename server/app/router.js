@@ -111,7 +111,7 @@ router.get(`/api/${docIdParam}/current`, async (req, res) => {
     } = req.query
     const range = 'schema'
     const rawSchema = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema(docId, rawSchema)
+    const schema = await parseSchema(rawSchema)
     const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
     const curr = current.current(schema, entries, { history: history.match(/^true$/i) })
     res.json(index ? (curr[index] || {}) : curr)
@@ -130,7 +130,7 @@ router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
     } = req.query
     const range = 'schema'
     const rawSchema = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema(docId, rawSchema)
+    const schema = await parseSchema(rawSchema)
     const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
     const curr = current.currentRows(schema, entries)
     res.send(Buffer.from(CSV.stringify(curr)))
