@@ -6,6 +6,10 @@ export const getFieldValue = (state, fieldId) => {
   return state.form.fields[fieldId]
 }
 
+export const getRelativeSchema = (state, relative) => {
+  return state.form.schema.relatives[relative]
+}
+
 export const getFieldIdByKey = (state, key) => {
   if (!key) return
   const col = state.form.schema.columns.find(c => c.config.key === key)

@@ -7,7 +7,8 @@ import {
   DateInput,
   SelectInput,
   StringInput,
-  TextInput
+  TextInput,
+  HasManyInput
 } from 'js/components'
 
 function Field(props) {
@@ -25,6 +26,7 @@ function Field(props) {
     date: DateInput,
     text: TextInput,
     select: SelectInput,
+    has_many: HasManyInput,
   }
 
   const Input = typeInputs[schema.type]
@@ -53,6 +55,8 @@ Field.propTypes = {
   validateField: PropTypes.func,
 }
 
-Field.defaultProps = {}
+Field.defaultProps = {
+  validateField: () => {},
+}
 
 export default Field

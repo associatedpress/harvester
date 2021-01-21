@@ -11,6 +11,7 @@ import SelectInput from './select_input'
 import Notifications from './notifications'
 import Controls from './controls'
 import FieldHelp from './field_help'
+import HasManyInput from './has_many_input'
 
 export {
   App,
@@ -25,7 +26,8 @@ export {
   SelectInput,
   Notifications,
   Controls,
-  FieldHelp
+  FieldHelp,
+  HasManyInput
 }
 
 export default App
