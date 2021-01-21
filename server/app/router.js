@@ -58,7 +58,7 @@ router.get(`/api/${docIdParam}/schema`, async (req, res) => {
     const { docId } = req.params
     const range = 'schema'
     const data = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema(docId, data)
+    const schema = await parseSchema(data)
     res.json(schema)
   } catch (error) {
     logger.error('Error:', error)
