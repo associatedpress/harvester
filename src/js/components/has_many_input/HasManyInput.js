@@ -32,6 +32,7 @@ function HasManyInput(props) {
       newRelatives.splice(idx, 1)
       const serialized = serializeValue(newRelatives, { multiple: true, serialization })
       setField(serialized)
+      validateField()
     }
   }
 
@@ -52,6 +53,7 @@ function HasManyInput(props) {
           schema={relativeSchema}
           values={values}
           setField={setRelative(i)}
+          validateField={validateField}
           destroy={destroyRelative(i)}
         />
       ))}

@@ -4,10 +4,10 @@ import { Field } from 'js/components'
 
 function Relative(props) {
   const {
-    id,
     schema,
     values,
     setField,
+    validateField,
     destroy,
   } = props
 
@@ -27,6 +27,7 @@ function Relative(props) {
           schema={column}
           value={values[i]}
           setField={setRelativeField(i)}
+          validateField={validateField}
         />
       ))}
       <button onClick={destroy}>Destroy</button>
@@ -35,9 +36,11 @@ function Relative(props) {
 }
 
 Relative.propTypes = {
-  id: PropTypes.any,
   schema: PropTypes.array,
   values: PropTypes.array,
+  setField: PropTypes.func,
+  validateField: PropTypes.func,
+  destroy: PropTypes.func,
 }
 
 Relative.defaultProps = {}
