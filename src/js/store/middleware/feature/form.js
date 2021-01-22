@@ -1,6 +1,7 @@
 import {
   FORM,
   FETCH_OPTIONS,
+  SUBMIT_CREATED_OPTIONS,
   FETCH_SCHEMA,
   INPUT_FIELD,
   SET_FIELD,
@@ -16,7 +17,8 @@ import {
   setError,
   setField,
   setSchema,
-  setOptions
+  setOptions,
+  submitCreatedOptions
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
 import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
@@ -119,6 +121,19 @@ const handleFetchOptions = (store, next, action) => {
   ])
 }
 
+const handleSubmitCreatedOptions = (store, next, action) => {
+  const state = store.getState()
+  const schema = getFieldSchema(state, action.meta.fieldId)
+  next(apiRequest({
+    body: JSON.stringify([action.payload.map(opt => opt.value)]),
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    url: submitURL(state.form.id, schema.config.options.range),
+    referrer: action,
+    feature: FORM,
+  }))
+}
+
 const handleValidateField = (store, next, action) => {
   const fieldId = action.payload
   const state = store.getState()
@@ -161,17 +176,9 @@ const handleSubmit = (store, next, action) => {
     const message = 'Correct errors before submission'
     return next(setNotification({ message, feature: FORM }))
   }
-  next(Object.entries(state.form.options.created).map(([fieldId, options]) => {
-    const schema = getFieldSchema(state, fieldId)
-    return apiRequest({
-      body: JSON.stringify([options.map(opt => opt.value)]),
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      url: submitURL(state.form.id, schema.config.options.range),
-      referrer: action,
-      feature: FORM,
-    })
-  }))
+  Object.entries(state.form.options.created).forEach(([fieldId, options]) => {
+    store.dispatch(submitCreatedOptions({ fieldId, options }))
+  })
   const row = state.form.schema.columns
     .map(col => col.id)
     .sort()
@@ -225,6 +232,10 @@ export const formMiddleware = store => next => action => {
       handleFetchOptions(store, next, action)
       break
 
+    case SUBMIT_CREATED_OPTIONS:
+      handleSubmitCreatedOptions(store, next, action)
+      break
+
     case VALIDATE_FIELD:
       handleValidateField(store, next, action)
       break
@@ -242,7 +253,10 @@ export const formMiddleware = store => next => action => {
       break
 
     case CLEAR:
-      next(setFormDirty({ state: false, feature: FORM }))
+      next([
+        setFormDirty({ state: false, feature: FORM }),
+        setIndexLoaded({ state: false, feature: FORM }),
+      ])
       break
   }
 }

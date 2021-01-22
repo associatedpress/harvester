@@ -11,6 +11,7 @@ export const VALIDATE_FIELD = `${FORM} VALIDATE_FIELD`
 export const VALIDATE_FORM = `${FORM} VALIDATE_FORM`
 export const FETCH_OPTIONS = `${FORM} FETCH_OPTIONS`
 export const CREATE_OPTION = `${FORM} CREATE_OPTION`
+export const SUBMIT_CREATED_OPTIONS = `${FORM} SUBMIT_CREATED_OPTIONS`
 export const SET_OPTIONS = `${FORM} SET_OPTIONS`
 export const LOAD_INDEX = `${FORM} LOAD_INDEX`
 export const SUBMIT = `${FORM} SUBMIT`
@@ -66,6 +67,12 @@ export const fetchOptions = ({ fieldId, range, requires, requireValue }) => ({
 export const createOption = ({ fieldId, option }) => ({
   type: CREATE_OPTION,
   payload: option,
+  meta: { fieldId, feature: FORM },
+})
+
+export const submitCreatedOptions = ({ fieldId, options }) => ({
+  type: SUBMIT_CREATED_OPTIONS,
+  payload: options,
   meta: { fieldId, feature: FORM },
 })
 
