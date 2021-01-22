@@ -185,7 +185,7 @@ const handleSubmit = (store, next, action) => {
     .map(fieldId => getFieldValue(state, fieldId))
   const now = new Date()
   next(apiRequest({
-    body: JSON.stringify([[now, ...row]]),
+    body: JSON.stringify([[now, 0, ...row]]),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     url: submitURL(state.form.id),
