@@ -20,8 +20,10 @@ export const getFieldErrors = (state, fieldId) => {
   return state.form.errors[fieldId]
 }
 
-export const getFieldOptions = (state, fieldId) => {
-  const loaded = state.form.options.loaded[fieldId] || []
-  const created = state.form.options.created[fieldId] || []
-  return [...loaded, ...created]
+export const getFieldLoadedOptions = (state, fieldId) => {
+  return state.form.options.loaded[fieldId]
+}
+
+export const getFieldCreatedOptions = (state, fieldId) => {
+  return state.form.options.created[fieldId]
 }

@@ -5,7 +5,12 @@ import ChoiceInput from './ChoiceInput'
 import { parseValue, serializeValue } from './utils'
 import { Select, Creatable } from './styles'
 import { fetchOptions, createOption } from 'js/store/actions/form'
-import { getFieldOptions, getFieldValue, getFieldIdByKey } from 'js/store/selectors/form'
+import {
+  getFieldLoadedOptions,
+  getFieldCreatedOptions,
+  getFieldValue,
+  getFieldIdByKey
+} from 'js/store/selectors/form'
 
 function SelectInput(props) {
   const {
@@ -15,7 +20,8 @@ function SelectInput(props) {
     validateField,
     fetchOptions,
     createOption,
-    options,
+    loadedOptions,
+    createdOptions,
     requireValue,
   } = props
 
@@ -31,11 +37,13 @@ function SelectInput(props) {
   useEffect(() => {
     if (optionlist) return
     if (requires && requireValue == null) return
+    if (loadedOptions) return
     fetchOptions({ fieldId, range: schema.config.options.range, requires, requireValue })
-  }, [fieldId, optionlist, requires, requireValue])
+  }, [fieldId, optionlist, requires, requireValue, loadedOptions])
 
   if (optionlist) return <ChoiceInput {...props} />
 
+  const options = [...(loadedOptions || []), ...(createdOptions || [])]
   const parsedValue = parseValue(value, { multiple, serialization })
 
   const getLabel = opt => opt.label || opt.value
@@ -76,7 +84,8 @@ SelectInput.propTypes = {
   validateField: PropTypes.func,
   fetchOptions: PropTypes.func,
   createOption: PropTypes.func,
-  options: PropTypes.array,
+  loadedOptions: PropTypes.array,
+  createdOptions: PropTypes.array,
   requireValue: PropTypes.any,
 }
 
@@ -87,7 +96,8 @@ SelectInput.defaultProps = {
 function mapStateToProps(state, { schema }) {
   const requireFieldId = getFieldIdByKey(state, schema.config.requires)
   return {
-    options: getFieldOptions(state, schema.id),
+    loadedOptions: getFieldLoadedOptions(state, schema.id),
+    createdOptions: getFieldCreatedOptions(state, schema.id),
     requireValue: getFieldValue(state, requireFieldId),
   }
 }
