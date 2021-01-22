@@ -20,10 +20,19 @@ function HasManyInput(props) {
 
   const parsedValue = parseValue(value, { multiple: true, serialization })
 
-  const createNewRelative = () => {
+  const createRelative = () => {
     const newValue = [...parsedValue, relativeSchema.map(c => null)]
     const serializedValue = serializeValue(newValue, { multiple: true, serialization })
     setField(serializedValue)
+  }
+
+  const destroyRelative = idx => {
+    return () => {
+      const newRelatives = [...parsedValue]
+      newRelatives.splice(idx, 1)
+      const serialized = serializeValue(newRelatives, { multiple: true, serialization })
+      setField(serialized)
+    }
   }
 
   const setRelative = idx => {
@@ -43,9 +52,10 @@ function HasManyInput(props) {
           schema={relativeSchema}
           values={values}
           setField={setRelative(i)}
+          destroy={destroyRelative(i)}
         />
       ))}
-      <button onClick={createNewRelative}>New</button>
+      <button onClick={createRelative}>New</button>
     </div>
   )
 }

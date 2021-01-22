@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Field } from 'js/components'
 
@@ -7,12 +7,9 @@ function Relative(props) {
     id,
     schema,
     values,
-    isNew,
     setField,
     destroy,
   } = props
-
-  const [editing, setEditing] = useState(isNew)
 
   const setRelativeField = idx => {
     return value => {
@@ -32,6 +29,7 @@ function Relative(props) {
           setField={setRelativeField(i)}
         />
       ))}
+      <button onClick={destroy}>Destroy</button>
     </div>
   )
 }
@@ -40,11 +38,8 @@ Relative.propTypes = {
   id: PropTypes.any,
   schema: PropTypes.array,
   values: PropTypes.array,
-  isNew: PropTypes.bool,
 }
 
-Relative.defaultProps = {
-  isNew: false,
-}
+Relative.defaultProps = {}
 
 export default Relative
