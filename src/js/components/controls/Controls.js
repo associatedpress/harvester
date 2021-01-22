@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Well, PrimaryButton, Button } from './styles'
 
 function Controls(props) {
   const {
@@ -11,11 +12,18 @@ function Controls(props) {
   }
 
   return (
-    <div>
-      {buttons.map(({ label, onClick, disabled }, i) => (
-        <button key={i} onClick={onClick} disabled={disabled}>{label}</button>
+    <Well>
+      {buttons.map(({ label, onClick, disabled, primary }, i) => (
+        <Button
+          key={i}
+          onClick={onClick}
+          disabled={disabled}
+          primary={primary}
+        >
+          {label}
+        </Button>
       ))}
-    </div>
+    </Well>
   )
 }
 
@@ -24,6 +32,7 @@ Controls.propTypes = {
     label: PropTypes.string,
     onClick: PropTypes.func,
     disabled: PropTypes.bool,
+    primary: PropTypes.bool,
   })),
 }
 

@@ -2,8 +2,9 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
-import { Header, Notifications, Form } from 'js/components'
+import { Navbar, Header, Notifications, Form } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
+import { Container } from './styles'
 
 function App(props) {
   const {
@@ -38,27 +39,30 @@ function App(props) {
   return (
     <div className={className}>
       <Notifications notifications={notifications} />
-      <Header />
-      <Form
-        fields={indexFields}
-        controls={[{
-          label: 'Search',
-          onClick: loadIndex,
-          disabled: indexMissing,
-        }]}
-        values={values}
-        setField={setField}
-      />
-      {indexLoaded && (
+      <Navbar />
+      <Container>
+        <Header />
         <Form
-          fields={schema.columns}
-          controls={[{ label: 'Submit', onClick: submit }]}
+          fields={indexFields}
+          controls={[{
+            label: 'Search',
+            onClick: loadIndex,
+            disabled: indexMissing,
+          }]}
           values={values}
-          errors={errors}
-          setField={inputField}
-          validateField={validateField}
+          setField={setField}
         />
-      )}
+        {indexLoaded && (
+          <Form
+            fields={schema.columns}
+            controls={[{ label: 'Submit', onClick: submit, primary: true }]}
+            values={values}
+            errors={errors}
+            setField={inputField}
+            validateField={validateField}
+          />
+        )}
+      </Container>
     </div>
   )
 }

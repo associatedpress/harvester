@@ -10,6 +10,7 @@ import {
   TextInput,
   HasManyInput
 } from 'js/components'
+import { Label } from './styles'
 
 function Field(props) {
   const {
@@ -32,18 +33,16 @@ function Field(props) {
   const Input = typeInputs[schema.type]
 
   return (
-    <div>
-      <FieldErrors errors={errors}>
-        <div>{schema.label}</div>
-        <FieldHelp help={schema.config.help} />
-        <Input
-          schema={schema}
-          value={value}
-          setField={setField}
-          validateField={validateField}
-        />
-      </FieldErrors>
-    </div>
+    <FieldErrors errors={errors}>
+      <Label>{schema.label}</Label>
+      <FieldHelp help={schema.config.help} />
+      <Input
+        schema={schema}
+        value={value}
+        setField={setField}
+        validateField={validateField}
+      />
+    </FieldErrors>
   )
 }
 

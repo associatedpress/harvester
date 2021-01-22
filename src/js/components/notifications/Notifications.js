@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Notes, Note } from './styles'
 
 function Notifications(props) {
   const {
@@ -11,11 +12,11 @@ function Notifications(props) {
   }
 
   return (
-    <ul>
+    <Notes>
       {notifications.map(note => (
-        <li key={note.id}>{note.message}</li>
+        <Note key={note.id}>{note.message}</Note>
       ))}
-    </ul>
+    </Notes>
   )
 }
 

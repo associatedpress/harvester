@@ -12,6 +12,7 @@ import Notifications from './notifications'
 import Controls from './controls'
 import FieldHelp from './field_help'
 import HasManyInput from './has_many_input'
+import Navbar from './navbar'
 
 export {
   App,
@@ -27,7 +28,8 @@ export {
   Notifications,
   Controls,
   FieldHelp,
-  HasManyInput
+  HasManyInput,
+  Navbar
 }
 
 export default App

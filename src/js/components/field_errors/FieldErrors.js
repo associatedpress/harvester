@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Container, Message } from './styles'
 
 function FieldErrors(props) {
   const {
@@ -10,10 +11,10 @@ function FieldErrors(props) {
   const hasError = errors && (errors.length > 0)
 
   return (
-    <div>
-      {hasError && <div>{`Error: ${errors.join(', ')}`}</div>}
+    <Container hasError={hasError}>
       {children}
-    </div>
+      <Message>{hasError && `Error: ${errors.join(', ')}`}</Message>
+    </Container>
   )
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Help } from './styles'
 
 function FieldHelp(props) {
   const {
@@ -9,7 +10,7 @@ function FieldHelp(props) {
   if (!help) return null
 
   return (
-    <div>{help}</div>
+    <Help>{help}</Help>
   )
 }
 

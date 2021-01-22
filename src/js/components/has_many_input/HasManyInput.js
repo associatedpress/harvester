@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { getRelativeSchema } from 'js/store/selectors/form'
 import Relative from './Relative'
 import { parseValue, serializeValue } from '../select_input/utils'
+import { Controls, NewButton } from './styles'
 
 function HasManyInput(props) {
   const {
@@ -57,7 +58,9 @@ function HasManyInput(props) {
           destroy={destroyRelative(i)}
         />
       ))}
-      <button onClick={createRelative}>New</button>
+      <Controls>
+        <NewButton onClick={createRelative}>New</NewButton>
+      </Controls>
     </div>
   )
 }

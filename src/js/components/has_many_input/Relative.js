@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field } from 'js/components'
+import { RelativeContainer, Form, DestroyButton } from './styles'
 
 function Relative(props) {
   const {
@@ -20,18 +21,20 @@ function Relative(props) {
   }
 
   return (
-    <div>
-      {schema.map((column, i) => (
-        <Field
-          key={column.id}
-          schema={column}
-          value={values[i]}
-          setField={setRelativeField(i)}
-          validateField={validateField}
-        />
-      ))}
-      <button onClick={destroy}>Destroy</button>
-    </div>
+    <RelativeContainer>
+      <Form>
+        {schema.map((column, i) => (
+          <Field
+            key={column.id}
+            schema={column}
+            value={values[i]}
+            setField={setRelativeField(i)}
+            validateField={validateField}
+          />
+        ))}
+      </Form>
+      <DestroyButton onClick={destroy}>X</DestroyButton>
+    </RelativeContainer>
   )
 }
 
