@@ -45,7 +45,7 @@ async function getRange(spreadsheetId, options = {}) {
         ...rec,
         [head]: d[i],
       }), {})
-      if (Object.keys(filters).every(k => filters[k] === row[k])) {
+      if (Object.keys(filters).every(k => [filters[k]].flat().includes(row[k]))) {
         return [...vals, row]
       }
       return vals
@@ -53,7 +53,7 @@ async function getRange(spreadsheetId, options = {}) {
   }
 
   return values.filter(row => {
-    return Object.keys(filters).every(k => filters[k] === row[k])
+    return Object.keys(filters).every(k => [filters[k]].flat().includes(row[k]))
   })
 }
 
