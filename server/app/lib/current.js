@@ -62,20 +62,13 @@ function current(schema, entries, opts = {}) {
 function currentRows(schema, entries) {
   const grouped = group(schema, entries)
 
-  return Object.entries(grouped).reduce((c, [idx, hist]) => {
-    const sortedHist = hist.sort((a, b) => a.timestamp - b.timestamp)
-    const [lastEntry] = sortedHist.slice(-1)
-    const collapsed = sortedHist.reduce((coll, d) => {
-      const { row, data } = d
-      const latest = coll[row] || []
-      const c = schema.columns.reduce((p, s, i) => {
-        return [...p, data[i] || latest[i]]
-      }, [])
-      coll[row] = [lastEntry.timestamp.toISOString(), ...c]
-      return coll
-    }, {})
-    return [...c, ...Object.values(collapsed)]
+  const dataset = Object.entries(grouped).map(([idx, hist]) => {
+    const [lastEntry] = hist.sort((a, b) => b.timestamp - a.timestamp)
+    return lastEntry.data
   }, [])
+
+  const headers = schema.columns.map(col => col.label)
+  return [headers, ...dataset]
 }
 
 module.exports = {
