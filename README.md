@@ -21,8 +21,8 @@ Sheet (e.g., `1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY`). For example, the
 following sheet URL and harvester URL would work together:
 
 ```
-https://docs.google.com/spreadsheets/d/1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY/edit#gid=1046478843
-http://harvester.inside.ap.org/d/1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY
+https://docs.google.com/spreadsheets/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE/edit#gid=24297097
+http://harvester.inside.ap.org/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE
 ```
 
 Harvester expects the sheet that drives it to have a few important properties:
@@ -62,13 +62,13 @@ Three attribute types are currently supported:
   | chatter | Here's what you should do with this form. |
   |:--------|:------------------------------------------|
 
-* `index` - this defines a (possibly compound) index that uniquely identifies
-  an entity in the dataset. An index consists of one or more column keys joined
-  by `+`. When an index is specified the user can access a "Current" view where
-  they can speficy all component pieces of an index and get back the collapsed
-  "current" value of all columns for the given entity. Note that the values
-  referenced in the index are column keys created with the `key:<string>`
-  option (see below). Example:
+* `index` (required) - this defines a (possibly compound) index that uniquely
+  identifies an entity in the dataset. An index consists of one or more column
+  keys joined by `+`. When an index is specified the user can access
+  a "Current" view where they can speficy all component pieces of an index and
+  get back the collapsed "current" value of all columns for the given entity.
+  Note that the values referenced in the index are column keys created with the
+  `key:<string>` option (see below). Example:
 
   | index | state+city |
   |:------|:-----------|
@@ -85,24 +85,32 @@ Three attribute types are currently supported:
   | column | Age | number |
   |:-------|:----|:-------|
 
+* `relative_column` - this defines a sub-field of a secondary model, and
+  behaves like a `column` but defines the field on a secondary or "relative"
+  model rather than on the primary model. A relative field corresponds to one
+  sub-field of a complex `has_many` field. Note that a `relative_column`
+  requires that the `relative:` option be set. Example:
+
+  | relative_column | Name | string | relative:albums |
+  |:----------------|:-----|:-------|:----------------|
+
+  This `relative_column` would define a field on a secondary model (`albums`)
+  that would be used if there is a `has_many` field defined in the schema (see
+  below) with `relative:albums`. Example:
+
+  | column | Albums | has_many | relative:albums |
+  |:-------|:-------|:---------|:----------------|
+
 ### Column Definitions
 
 The definitions of columns can get a little more complicated than the rest
 because they define the meat of the form. Beyond the name of the column (which
-is what shows up as the field label on the form) and they type of the column
+is what shows up as the field label on the form) and the type of the column
 (which is what determines how the actual input field is rendered), each column
 can accept some additional options in subsequent cells in any order (specified
 as `<key>:<value>`). The supported column types are listed below along with the
 options that they support (note that all columns support the general options
 listed at the end).
-
-* `bool` - a boolean flag that renders as a checkbox. This column type does not
-  support any specific options. **Note that a `bool` field is a true, binary
-  boolean. If you need a nullable boolean you should use a `select` field with
-  the three options you need ("true", "false", and "null").** Example:
-
-  | column | Retiring | bool |
-  |:-------|:---------|:-----|
 
 * `date` - a date input that renders as a date picker. This column type does
   not support any specific options.
@@ -202,16 +210,38 @@ listed at the end).
     | column | States | select | options:states | multiple:true |
     |:-------|:-------|:-------|:---------------|:--------------|
 
-  - `serialization:<csv|json>` - when `multiple` is set to true this option
+  - `serialization:<json|csv>` - when `multiple` is set to true this option
     specifies how the muliple values should be serialized so as to occupy
-    a single cell in the resulting sheet. Selecting `csv` (the default) will
-    cause the multiple values to be serialized into a comma-separated list with
-    fields quoted with (`"`) as necessary; selecting `json` will cause the
-    multiple values to be serialized as a JSON array. Note that if `multiple`
-    is not set to `true` then this option has no impact. Example:
+    a single cell in the resulting sheet. Selecting `csv` will cause the
+    multiple values to be serialized into a comma-separated list with fields
+    quoted with (`"`) as necessary; selecting `json` (the default) will cause
+    the multiple values to be serialized as a JSON array. Note that if
+    `multiple` is not set to `true` then this option has no impact. Example:
 
     | column | States | select | options:states | multiple:true | serialization:json |
     |:-------|:-------|:-------|:---------------|:--------------|:-------------------|
+
+* `has_many` - an input that allows a user to provide sub-fields for one or
+  more "relative" or "secondary" models of a certain type. A `has_many` column
+  must include the `relative:<relative_key>` opition, which specifies which
+  collection of `relative_column` definitions make up the schema of the
+  secondary model. All `relative_column` definitions with a matching
+  `relative:<relative_key>` configuration in order will define the secondary
+  model's schema.
+
+  - `relative:<relative_key>` (required) - specifies the relative key that will
+    be used to locate `relative_column` definitions for the corresponding
+    secondary model that should be used for this `has_many` field. Example:
+
+    | column | Albums | has_many | relative:albums |
+    |:-------|:-------|:---------|:----------------|
+
+    This `has_many` field then assumes that there will be one or more
+    `relative_column` fields defined in the schema with `relative:albums`, like
+    this:
+
+    | relative_column | Name | string | relative:albums |
+    |:----------------|:-----|:-------|:----------------|
 
 General options that can be provided to any type of column:
 
@@ -222,12 +252,6 @@ General options that can be provided to any type of column:
 
   | column | Number of people | number | default:0 |
   |:-------|:-----------------|:-------|:----------|
-
-* `global:<true|false>` - global fields are included at the top of the form and
-  apply to all pages. (Default is `false`.) Example:
-
-  | column | Number of people | number | global:true |
-  |:-------|:-----------------|:-------|:------------|
 
 * `help:<help text>` - a string that will show up as hover text over an info
   icon next to the column label.
@@ -249,16 +273,6 @@ General options that can be provided to any type of column:
 
   | column | Number of people | number | required:true |
   |:-------|:-----------------|:-------|:--------------|
-
-* `search:<true|false>` - whether or not a column can be used to search for
-  form entries (default is `false`). If at least one field can be used to
-  search then the user will be presented with a "Search" view where they can
-  specify values for the search columns and get back all the form entries that
-  match the values exactly. (Note that the match _must_ be exact, meaning that
-  free text entry fields must match, including case and whitespace.) Example:
-
-  | column | State | select | options:states | search:true |
-  |:-------|:------|:-------|:---------------|:------------|
 
 ## App-level Configuration
 
