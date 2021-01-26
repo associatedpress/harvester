@@ -21,6 +21,7 @@ export const CLEAR = `${FORM} CLEAR`
 export const fetchSchema = ({ id }) => ({
   type: FETCH_SCHEMA,
   payload: id,
+  meta: { feature: FORM },
 })
 
 export const setSchema = ({ schema }) => ({
