@@ -52,7 +52,7 @@ function parseConfig(type, key, value, options) {
 
   switch (key) {
     case 'default':
-      return parseValue(type, value)
+      return parseDefault(type, value)
     case 'options':
       return {
         range: value,
