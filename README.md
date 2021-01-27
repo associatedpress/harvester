@@ -13,7 +13,7 @@ described in detail below.
 The main URL pattern that Harvester exposes is:
 
 ```
-http://harvester.inside.ap.org/d/<docId>
+http://harvester.ap.org/d/<docId>
 ```
 
 where `<docId>` is the the document ID that shows up in the URL of a Google
@@ -22,7 +22,7 @@ following sheet URL and harvester URL would work together:
 
 ```
 https://docs.google.com/spreadsheets/d/1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY/edit#gid=1046478843
-http://harvester.inside.ap.org/d/1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY
+http://harvester.ap.org/d/1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY
 ```
 
 Harvester expects the sheet that drives it to have a few important properties:
