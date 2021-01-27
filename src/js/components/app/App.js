@@ -30,11 +30,9 @@ function App(props) {
   }, [dirty])
 
   const { index } = schema
-  if (!index) return null
-
-  const indexKeys = index.split('+')
-  const indexFields = schema.columns.filter(col => indexKeys.includes(col.config.key))
-  const indexMissing = indexFields.some(col => values[col.id] == null)
+  const indexKeys = index && index.split('+')
+  const indexFields = index && schema.columns.filter(col => indexKeys.includes(col.config.key))
+  const indexMissing = index && indexFields.some(col => values[col.id] == null)
 
   return (
     <div className={className}>
@@ -42,16 +40,18 @@ function App(props) {
       <Navbar />
       <Container>
         <Header />
-        <Form
-          fields={indexFields}
-          controls={[{
-            label: 'Search',
-            onClick: loadIndex,
-            disabled: indexMissing,
-          }]}
-          values={values}
-          setField={setField}
-        />
+        {index && (
+          <Form
+            fields={indexFields}
+            controls={[{
+              label: 'Search',
+              onClick: loadIndex,
+              disabled: indexMissing,
+            }]}
+            values={values}
+            setField={setField}
+          />
+        )}
         {indexLoaded && (
           <Form
             fields={schema.columns}
