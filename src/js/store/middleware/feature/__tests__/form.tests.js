@@ -386,20 +386,52 @@ describe('form', () => {
       })
     })
 
-    it('should reset UI state on CLEAR', () => {
+    describe('CLEAR', () => {
+      it('should reset UI state on CLEAR resetting index if index set', () => {
         // GIVEN
+        const state = {
+          form: {
+            schema: {
+              index: 'foo',
+            },
+          },
+        }
+        const getState = () => state
         const next = jest.fn()
         const splitNext = actionSplitterMiddleware()(next)
         const action = actions.clear()
 
         // WHEN
-        form.formMiddleware()(splitNext)(action)
+        form.formMiddleware({ getState })(splitNext)(action)
 
         // THEN
         expect(next.mock.calls.length).toEqual(3)
         expect(next.mock.calls[0][0]).toEqual(action)
         expect(next.mock.calls[1][0]).toEqual(uiActions.setFormDirty({ state: false, feature: actions.FORM }))
         expect(next.mock.calls[2][0]).toEqual(uiActions.setIndexLoaded({ state: false, feature: actions.FORM }))
+      })
+
+      it('should reset UI state on CLEAR not resetting index if no index set', () => {
+        // GIVEN
+        const state = {
+          form: {
+            schema: {},
+          },
+        }
+        const getState = () => state
+        const next = jest.fn()
+        const splitNext = actionSplitterMiddleware()(next)
+        const action = actions.clear()
+
+        // WHEN
+        form.formMiddleware({ getState })(splitNext)(action)
+
+        // THEN
+        expect(next.mock.calls.length).toEqual(3)
+        expect(next.mock.calls[0][0]).toEqual(action)
+        expect(next.mock.calls[1][0]).toEqual(uiActions.setFormDirty({ state: false, feature: actions.FORM }))
+        expect(next.mock.calls[2][0]).toEqual(uiActions.setIndexLoaded({ state: true, feature: actions.FORM }))
+      })
     })
   })
 })

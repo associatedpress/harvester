@@ -126,6 +126,7 @@ router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
     const { docId } = req.params
     const {
       history = 'false',
+      headers = 'true',
       index,
     } = req.query
     const range = 'schema'
@@ -133,7 +134,8 @@ router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
     const schema = await parseSchema(rawSchema)
     const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
     const curr = current.currentRows(schema, entries)
-    res.send(Buffer.from(CSV.stringify(curr)))
+    const dataRows = (headers === 'true') ? curr : curr.slice(1)
+    res.send(Buffer.from(CSV.stringify(dataRows)))
   } catch (error) {
     logger.error('Error:', error)
     res.status(500).json({ message: error.message })

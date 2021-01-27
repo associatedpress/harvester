@@ -2,6 +2,7 @@ import {
   FORM,
   FETCH_OPTIONS,
   SUBMIT_CREATED_OPTIONS,
+  SET_SCHEMA,
   FETCH_SCHEMA,
   INPUT_FIELD,
   SET_FIELD,
@@ -53,17 +54,23 @@ const parseDefault = (value, type) => {
   return value
 }
 
+const handleSetSchema = (store, next, action) => {
+  const schema = action.payload
+  if (!schema.index) {
+    next(setIndexLoaded({ state: true, feature: FORM }))
+  }
+}
+
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
 
   switch (referrer.type) {
     case FETCH_SCHEMA:
-      next([
-        setSchema({ schema: action.payload }),
-        setLoader({ state: false, feature: FORM }),
-      ].concat(action.payload.columns.map(col => {
-        return setField({ fieldId: col.id, value: parseDefault(col.config.default, col.type) })
-      })))
+      next(setLoader({ state: false, feature: FORM }))
+      store.dispatch(setSchema({ schema: action.payload }))
+      action.payload.columns.forEach(col => {
+        store.dispatch(setField({ fieldId: col.id, value: parseDefault(col.config.default, col.type) }))
+      })
       break
 
     case FETCH_OPTIONS:
@@ -180,9 +187,7 @@ const handleSubmit = (store, next, action) => {
     store.dispatch(submitCreatedOptions({ fieldId, options }))
   })
   const row = state.form.schema.columns
-    .map(col => col.id)
-    .sort()
-    .map(fieldId => getFieldValue(state, fieldId))
+    .map(col => getFieldValue(state, col.id))
   const now = new Date()
   next(apiRequest({
     body: JSON.stringify([[now, 0, ...row]]),
@@ -192,6 +197,15 @@ const handleSubmit = (store, next, action) => {
     referrer: action,
     feature: FORM,
   }))
+}
+
+const handleClear = (store, next, action) => {
+  const state = store.getState()
+  const newIndexLoaded = !state.form.schema.index
+  next([
+    setFormDirty({ state: false, feature: FORM }),
+    setIndexLoaded({ state: newIndexLoaded, feature: FORM }),
+  ])
 }
 
 export const formMiddleware = store => next => action => {
@@ -209,6 +223,10 @@ export const formMiddleware = store => next => action => {
         }),
         setLoader({ state: true, feature: FORM }),
       ])
+      break
+
+    case SET_SCHEMA:
+      handleSetSchema(store, next, action)
       break
 
     case `${FORM} ${API_SUCCESS}`:
@@ -253,10 +271,7 @@ export const formMiddleware = store => next => action => {
       break
 
     case CLEAR:
-      next([
-        setFormDirty({ state: false, feature: FORM }),
-        setIndexLoaded({ state: false, feature: FORM }),
-      ])
+      handleClear(store, next, action)
       break
   }
 }
