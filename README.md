@@ -312,4 +312,81 @@ Our instance of Harvester is configured to use [this sheet for custom
 URLs][config-sheet]. If you need to be granted access, please contact
 @amilligan, @jmyers, or @tthibodeaux.
 
+## Development
+
+In order to get this project running locally you will first need to clone this
+repository. Having done that, assuming you have [a relatively recent version of
+Node installed][node], you can install the project's dependencies by running:
+
+```
+yarn install
+```
+
+Once all of the project's dependencies have installed successfully, you will
+need to configure your development environment, providing Harvester with Google
+service account credentials to use to access the sheets that drive it. You can
+[create your own service account to use for this][create-service-account] or
+ask @amilligan for the production credentials. Once you have the service
+account credentials (these should be in the form of a JSON file, canonically
+placed in the root of the project in a file called `.auth.json`) you should set
+the following environment variable:
+
+```
+GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
+```
+
+changing the value `.auth.json` if you use a different filename. This project
+is set up so that you can set environment variables in a `.env` file in the
+root of the project.
+
+If you would like to use a Harvester config sheet as well, you can also set the
+following environment variable (though this is optional):
+
+```
+HARVESTER_CONFIG_DOC_ID="<ID_OF_YOU_HARVESTER_CONFIG_SHEET>"
+```
+
+Once your environment is properly configured, you can run Harvester locally by
+running:
+
+```
+yarn start
+```
+
+This will start the project in development mode. Note that changes to the front
+end (code in the `/src` directory) will cause the browser to automatically
+refresh with the new code, but changes to the back end (code in the `/server`
+directory) will require a manual restart of the server.
+
+This project includes some tests, which you can run with the following:
+
+```
+yarn test
+```
+
+It also includes a linting configuration, which you can run with:
+
+```
+yarn lint
+```
+
+## Releasing
+
+Once a new version of the project is ready to be released, you can build a new
+Docker image of the project and publish it to our internal Artifactory by
+running:
+
+```
+yarn release
+```
+
+This will prompt you for a new version number, tag the release in git, build
+a new Docker image tagged with the new version number (e.g., `v2.0.1`), and
+push the image to our internal repository. Once the new image is available, you
+can deploy it as you see fit.
+
+Happy harvesting! :heart:
+
 [config-sheet]: https://docs.google.com/spreadsheets/d/1em6MB9S-rRL81Sh128xrVft9SpTCqRtL2K2zoPVx9PQ/edit#gid=0
+[node]: https://nodejs.org/en/
+[create-service-account]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
