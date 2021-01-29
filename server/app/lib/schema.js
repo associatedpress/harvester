@@ -30,6 +30,7 @@ const allowedOptions = {
     'requires', // column to parameterize async data request
     'multiple', // whether or not to allow multiple selections
     'serialization', // csv or json
+    'min', // min number of options that must be selected
   ]),
   has_many: new Set([
     ...universalOptions,
@@ -64,6 +65,8 @@ function parseConfig(type, key, value, options) {
     case 'multiple':
       return value === 'true'
     case 'rows':
+      return +value
+    case 'min':
       return +value
     default:
       return value
