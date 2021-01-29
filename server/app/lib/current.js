@@ -1,9 +1,15 @@
-function group(schema, entries) {
-  if (!schema.index) {
-    throw new Error('data endpoint not available without index')
+function dataRow(d) {
+  const [timestamp, row, ...data] = d
+  return {
+    timestamp: new Date(timestamp),
+    row,
+    data,
   }
+}
 
-  const indexKeys = schema.index.split('+')
+function group(schema, entries) {
+  const { index } = schema
+  const indexKeys = index && index.split('+')
   const keyIds = schema.columns.reduce((ids, s, i) => {
     if (s.config.key) {
       ids[s.config.key] = i + 2
@@ -11,15 +17,10 @@ function group(schema, entries) {
     return ids
   }, {})
 
-  return entries.reduce((g, d) => {
-    const indexVal = indexKeys.map(k => d[keyIds[k]]).join('--')
+  return entries.reduce((g, d, i) => {
+    const indexVal = index ? indexKeys.map(k => d[keyIds[k]]).join('--') : i
     g[indexVal] = g[indexVal] || []
-    const [timestamp, row, ...data] = d
-    g[indexVal].push({
-      timestamp: new Date(timestamp),
-      row,
-      data,
-    })
+    g[indexVal].push(dataRow(d))
     return g
   }, {})
 }
@@ -28,6 +29,10 @@ function current(schema, entries, opts = {}) {
   const {
     history = false,
   } = opts
+
+  if (!schema.index) {
+    throw new Error('current endpoint not available without index')
+  }
 
   const grouped = group(schema, entries)
 
@@ -62,20 +67,13 @@ function current(schema, entries, opts = {}) {
 function currentRows(schema, entries) {
   const grouped = group(schema, entries)
 
-  return Object.entries(grouped).reduce((c, [idx, hist]) => {
-    const sortedHist = hist.sort((a, b) => a.timestamp - b.timestamp)
-    const [lastEntry] = sortedHist.slice(-1)
-    const collapsed = sortedHist.reduce((coll, d) => {
-      const { row, data } = d
-      const latest = coll[row] || []
-      const c = schema.columns.reduce((p, s, i) => {
-        return [...p, data[i] || latest[i]]
-      }, [])
-      coll[row] = [lastEntry.timestamp.toISOString(), ...c]
-      return coll
-    }, {})
-    return [...c, ...Object.values(collapsed)]
+  const dataset = Object.entries(grouped).map(([idx, hist]) => {
+    const [lastEntry] = hist.sort((a, b) => b.timestamp - a.timestamp)
+    return lastEntry.data
   }, [])
+
+  const headers = schema.columns.map(col => col.label)
+  return [headers, ...dataset]
 }
 
 module.exports = {

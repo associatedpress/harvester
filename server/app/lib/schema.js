@@ -3,17 +3,13 @@ const google = require('./google')
 
 const universalOptions = [
   'default', // default value for column
-  'global', // whether or not column is global
   'help', // help text for the column
   'key', // unique ID for the column
   'required', // whether or not the column is required
-  'search',
+  'relative', // for relative columns
 ]
 const allowedOptions = {
   date: new Set([
-    ...universalOptions,
-  ]),
-  bool: new Set([
     ...universalOptions,
   ]),
   number: new Set([
@@ -35,15 +31,13 @@ const allowedOptions = {
     'multiple', // whether or not to allow multiple selections
     'serialization', // csv or json
   ]),
+  has_many: new Set([
+    ...universalOptions,
+    'serialization', // csv or json
+  ]),
 }
 
-async function resolveOptions(docId, range) {
-  const options = await google.getRange(docId, { range })
-  return options.map(opt => ({ value: opt.value, label: opt.label }))
-}
-
-async function parseConfig(docId, type, key, value, options) {
-  const requires = options.some(o => /^requires:/.test(o))
+function parseConfig(type, key, value, options) {
   const hasOptions = options.some(o => /^options:/.test(o))
   const hasOptionList = options.some(o => /^optionlist:/.test(o))
 
@@ -51,15 +45,17 @@ async function parseConfig(docId, type, key, value, options) {
     throw new Error('schema error: `options` and `optionlist` cannot both be given')
   }
 
+  const parseDefault = (type, value) => {
+    if (type === 'number') return +value
+    return value
+  }
+
   switch (key) {
-    case 'global':
-      return value === 'true'
     case 'default':
-      return (type === 'bool') ? (value === 'true') : value
+      return parseDefault(type, value)
     case 'options':
       return {
         range: value,
-        options: requires ? [] : await resolveOptions(docId, value),
       }
     case 'optionlist':
       return CSV.parse(value)[0]
@@ -67,14 +63,14 @@ async function parseConfig(docId, type, key, value, options) {
       return value === 'true'
     case 'multiple':
       return value === 'true'
-    case 'search':
-      return value === 'true'
+    case 'rows':
+      return +value
     default:
       return value
   }
 }
 
-async function parseColumnSchema(docId, schema, id) {
+function parseColumnSchema(schema, id) {
   const [label, type, ...options] = schema
   const allowed = allowedOptions[type]
 
@@ -91,20 +87,44 @@ async function parseColumnSchema(docId, schema, id) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
     }
 
-    config[key] = await parseConfig(docId, type, key, val, options)
+    config[key] = parseConfig(type, key, val, options)
   }
 
   return { id, label, type, config }
 }
 
-async function parseSchema(docId, configs) {
+function parseRelativeColumnSchema(schema) {
+  const type = schema[1]
+
+  if (type === 'has_many') {
+    throw new Error(`schema error: relative column must have primitive type`)
+  }
+
+  const config = parseColumnSchema(schema)
+  const relative = config.config.relative
+
+  if (!relative) {
+    throw new Error('schema error: relative column must specify relative')
+  }
+
+  return { ...config, relative }
+}
+
+function parseSchema(configs) {
   const schema = {}
   for (let config of configs) {
     const [configType, ...cfg] = config.filter(c => c)
     if (configType === 'column') {
       schema.columns = schema.columns || []
-      const column = await parseColumnSchema(docId, cfg, schema.columns.length)
+      const column = parseColumnSchema(cfg, schema.columns.length)
       schema.columns.push(column)
+    } else if (configType === 'relative_column') {
+      schema.relatives = schema.relatives || {}
+      const column = parseRelativeColumnSchema(cfg)
+      schema.relatives[column.relative] = schema.relatives[column.relative] || []
+      const relativeCols = schema.relatives[column.relative]
+      const id = relativeCols.length
+      relativeCols.push({  ...column, id })
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }

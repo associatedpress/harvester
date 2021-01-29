@@ -1,155 +1,102 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useData } from 'ap-react-hooks'
-import { Footer } from 'ap-react-components'
-import { Form, Done, DocContext, Loading, Search, Current } from 'js/components'
-import { FlexInteractive, FlexStatic, H1, Chatter, NavButton } from './styles'
+import { connect } from 'react-redux'
+import { fetchSchema, submit, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
+import { Navbar, Header, Notifications, Form } from 'js/components'
+import { getNotifications } from 'js/store/selectors/notification'
+import { Container } from './styles'
 
 function App(props) {
   const {
     className,
     docId,
+    fetchSchema,
+    schema,
+    submit,
+    loadIndex,
+    values,
+    errors,
+    notifications,
+    dirty,
+    indexLoaded,
+    setField,
+    inputField,
+    validateField,
   } = props
 
-  const [formId, setFormId] = useState(0)
-  const [submitting, setSubmitting] = useState(false)
-  const [done, setDone] = useState(false)
-  const [view, setView] = useState('form')
-
-  const bust = url => `${url}?_=${formId}`
-
-  const schema = useData(bust(`/api/${docId}/schema`), { onError: e => e })
-  const { headline, chatter, index, children_position, row_name, columns } = schema || {}
-
+  useEffect(() => { fetchSchema({ id: docId }) }, [])
   useEffect(() => {
-    if (index) {
-      setView('current')
-    }
-  }, [index])
+    window.onbeforeunload = () => dirty ? true : undefined
+  }, [dirty])
 
-  const processRows = async (rows) => {
-    const creatableSelects = schema.columns.filter(col => (
-      col.type === 'select' && col.config.creatable
-    ))
-    Object.values(rows).forEach(row => {
-      creatableSelects.forEach(({ id, config }) => {
-        const value = row[id]
-        const { options, range } = config.options
-        const optionValues = options.map(opt => opt.value)
-        if (!optionValues.includes(value)) {
-          const cfg = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify([[value]]),
-          }
-          const params = new URLSearchParams({ range })
-          fetch(`/api/${docId}/entry?${params.toString()}`, cfg)
-        }
-      })
-    })
-  }
-
-  const submit = (data) => {
-    const { globals = {}, rows = {} } = data
-    const now = new Date()
-
-    const fullRows = Object.entries(rows).map(([rowId, row]) => {
-      const vals = { ...globals, ...row }
-      const sortedVals = Object.entries(vals).sort((a, b) => +a[0] - +b[0]).map(c => c[1])
-      return [now, rowId, ...sortedVals]
-    })
-
-    setSubmitting(true)
-    processRows(rows)
-    const config = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fullRows),
-    }
-    fetch(`/api/${docId}/entry`, config)
-      .then(rsp => {
-        setSubmitting(false)
-        if (rsp.ok) {
-          setDone(true)
-        }
-      })
-  }
-
-  const restart = () => {
-    setDone(false)
-    setFormId(formId + 1)
-  }
-
-  if (!schema) {
-    return <Loading />
-  }
-
-  const search = columns.some(c => c.config.search)
+  const { index } = schema
+  const indexKeys = index && index.split('+')
+  const indexFields = index && schema.columns.filter(col => indexKeys.includes(col.config.key))
+  const indexMissing = index && indexFields.some(col => values[col.id] == null)
 
   return (
-    <DocContext.Provider value={docId}>
-      <FlexInteractive className={className}>
-        <FlexStatic>
-          {index && <NavButton active={view === 'current'} onClick={() => setView('current')}>Current</NavButton>}
-          {search && <NavButton active={view === 'search'} onClick={() => setView('search')}>Search</NavButton>}
-          {!index && <NavButton active={view === 'form'} onClick={() => setView('form')}>Form</NavButton>}
-          {view === 'search' && (
-            <>
-              {headline && <H1>{headline} Search</H1>}
-              <Chatter>
-                Enter your search values below and results will show up at the bottom.
-              </Chatter>
-              <Search schema={columns} />
-            </>
-          )}
-          {view === 'current' && (
-            <>
-              {headline && <H1>{headline} Current Values</H1>}
-              {done ? (
-                <Done restart={restart} />
-              ) : (
-                <Current
-                  key={formId}
-                  index={index}
-                  schema={columns}
-                  submitting={submitting}
-                  submit={submit}
-                  childrenPosition={children_position && +children_position}
-                  rowName={row_name}
-                />
-              )}
-            </>
-          )}
-          {view === 'form' && (
-            <>
-              {headline && <H1>{headline}</H1>}
-              {chatter && <Chatter>{chatter}</Chatter>}
-              {done ? (
-                <Done restart={restart} />
-              ) : (
-                <Form
-                  key={formId}
-                  schema={columns}
-                  submitting={submitting}
-                  submit={submit}
-                />
-              )}
-            </>
-          )}
-          <Footer
-            credit='The Data Team'
+    <div className={className}>
+      <Notifications notifications={notifications} />
+      <Navbar />
+      <Container>
+        <Header />
+        {index && (
+          <Form
+            fields={indexFields}
+            controls={[{
+              label: 'Search',
+              onClick: loadIndex,
+              disabled: indexMissing,
+            }]}
+            values={values}
+            setField={setField}
           />
-        </FlexStatic>
-      </FlexInteractive>
-    </DocContext.Provider>
+        )}
+        {indexLoaded && (
+          <Form
+            fields={schema.columns}
+            controls={[{ label: 'Submit', onClick: submit, primary: true }]}
+            values={values}
+            errors={errors}
+            setField={inputField}
+            validateField={validateField}
+          />
+        )}
+      </Container>
+    </div>
   )
 }
 
 App.propTypes = {
   className: PropTypes.string,
   docId: PropTypes.string,
+  schema: PropTypes.object,
+  values: PropTypes.object,
+  errors: PropTypes.object,
+  fetchSchema: PropTypes.func,
+  submit: PropTypes.func,
+  loadIndex: PropTypes.func,
+  inputField: PropTypes.func,
+  setField: PropTypes.func,
+  validateField: PropTypes.func,
+  notifications: PropTypes.array,
+  dirty: PropTypes.bool,
+  indexLoaded: PropTypes.bool,
 }
 
-App.defaultProps = {}
+App.defaultProps = {
+  notifications: [],
+}
 
-export default App
+function mapStateToProps(state) {
+  return {
+    schema: state.form.schema,
+    values: state.form.fields,
+    errors: state.form.errors,
+    notifications: getNotifications(state),
+    dirty: state.ui.formDirty,
+    indexLoaded: state.ui.indexLoaded,
+  }
+}
+
+export default connect(mapStateToProps, { fetchSchema, submit, loadIndex, setField, inputField, validateField })(App)
