@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getRelativeSchema } from 'js/store/selectors/form'
@@ -15,47 +15,90 @@ function HasManyInput(props) {
     relativeSchema,
   } = props
 
+  const [relatives, setRelatives] = useState([])
+  const updateRelatives = newRelatives => {
+    setRelatives(newRelatives)
+    const activeRelatives = newRelatives
+      .filter(rel => !rel.deleted)
+      .map(rel => rel.relative)
+    const serializedValue = serializeValue(
+      activeRelatives,
+      { multiple: true, serialization }
+    )
+    setField(serializedValue)
+    validateField()
+  }
+
   const {
     serialization,
   } = schema.config
 
   const parsedValue = parseValue(value, { multiple: true, serialization })
+  useEffect(() => {
+    setRelatives(parsedValue.map((relative, id) => ({
+      id,
+      relative,
+      deleted: false,
+    })))
+  }, [])
 
   const createRelative = () => {
-    const newValue = [...parsedValue, relativeSchema.map(c => null)]
-    const serializedValue = serializeValue(newValue, { multiple: true, serialization })
-    setField(serializedValue)
+    const newRelative = relativeSchema.map(c => null)
+    updateRelatives([
+      ...relatives,
+      { id: relatives.length, relative: newRelative, deleted: false },
+    ])
   }
 
-  const destroyRelative = idx => {
+  const destroyRelative = id => {
     return () => {
-      const newRelatives = [...parsedValue]
-      newRelatives.splice(idx, 1)
-      const serialized = serializeValue(newRelatives, { multiple: true, serialization })
-      setField(serialized)
-      validateField()
+      const newRelatives = relatives.map(relative => {
+        return {
+          ...relative,
+          deleted: relative.deleted || relative.id === id,
+        }
+      })
+      updateRelatives(newRelatives)
     }
   }
 
-  const setRelative = idx => {
+  const undoDestroyRelative = id => {
+    return () => {
+      const newRelatives = relatives.map(relative => {
+        return {
+          ...relative,
+          deleted: relative.id !== id && relative.deleted,
+        }
+      })
+      updateRelatives(newRelatives)
+    }
+  }
+
+  const setRelative = id => {
     return values => {
-      const newRelatives = [...parsedValue]
-      newRelatives.splice(idx, 1, values)
-      const serialized = serializeValue(newRelatives, { multiple: true, serialization })
-      setField(serialized)
+      const newRelatives = relatives.map(relative => {
+        if (relative.id !== id) return relative
+        return {
+          ...relative,
+          relative: values,
+        }
+      })
+      updateRelatives(newRelatives)
     }
   }
 
   return (
     <div>
-      {parsedValue.map((values, i) => (
+      {relatives.map(relative => (
         <Relative
-          key={i}
+          key={relative.id}
           schema={relativeSchema}
-          values={values}
-          setField={setRelative(i)}
+          values={relative.relative}
+          setField={setRelative(relative.id)}
           validateField={validateField}
-          destroy={destroyRelative(i)}
+          destroy={destroyRelative(relative.id)}
+          undoDestroy={undoDestroyRelative(relative.id)}
+          deleted={relative.deleted}
         />
       ))}
       <Controls>
