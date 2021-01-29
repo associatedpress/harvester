@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import ChoiceInput from './ChoiceInput'
-import { parseValue, serializeValue } from './utils'
+import { parseValue, serializeValue } from 'js/utils/serialize'
 import { Select, Creatable } from './styles'
 import { fetchOptions, createOption } from 'js/store/actions/form'
 import {

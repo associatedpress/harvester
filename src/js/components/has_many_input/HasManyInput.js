@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getRelativeSchema } from 'js/store/selectors/form'
 import Relative from './Relative'
-import { parseValue, serializeValue } from '../select_input/utils'
+import { parseValue, serializeValue } from 'js/utils/serialize'
 import { Controls, NewButton } from './styles'
 
 function HasManyInput(props) {
