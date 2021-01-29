@@ -61,6 +61,18 @@ const handleSetSchema = (store, next, action) => {
   }
 }
 
+const handleLoadIndexResponse = (store, next, action) => {
+  const state = store.getState()
+  const values = (action.payload.current && action.payload.current.data) || {}
+  state.form.schema.columns.forEach(col => {
+    const schema = getFieldSchema(state, col.id)
+    const indexValue = values[col.id]
+    const value =  (typeof indexValue === 'undefined') ? null : parseDefault(indexValue, schema.type)
+    store.dispatch(setField({ fieldId: col.id, value }))
+  })
+  next(setIndexLoaded({ state: true, feature: FORM }))
+}
+
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
 
@@ -86,13 +98,7 @@ const handleApiSuccess = (store, next, action) => {
       break
 
     case LOAD_INDEX:
-      action.payload.current && Object.entries(action.payload.current.rows[0])
-        .forEach(([fieldId, value]) => {
-          const state = store.getState()
-          const schema = getFieldSchema(state, fieldId)
-          store.dispatch(setField({ fieldId, value: parseDefault(value, schema.type) }))
-        })
-      next(setIndexLoaded({ state: true, feature: FORM }))
+      handleLoadIndexResponse(store, next, action)
       break
   }
 }

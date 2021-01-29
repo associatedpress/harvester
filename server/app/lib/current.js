@@ -37,28 +37,14 @@ function current(schema, entries, opts = {}) {
   const grouped = group(schema, entries)
 
   return Object.entries(grouped).reduce((c, [idx, hist]) => {
-    const sortedHist = hist.sort((a, b) => a.timestamp - b.timestamp)
+    const sortedHist = hist.sort((a, b) => a.timestamp - a.timestamp)
     const [lastEntry] = sortedHist.slice(-1)
-    const collapsed = sortedHist.reduce((coll, d) => {
-      const { row, data } = d
-      const latest = coll.rows[row] || []
-      const gs = coll.globals || {}
-      const c = schema.columns.reduce((p, s, i) => {
-        if (s.config.global) {
-          gs[s.id] = data[i] || latest[i]
-          return p
-        }
-        return { ...p, [s.id]: data[i] || latest[i] }
-      }, {})
-      coll.rows[row] = c
-      return coll
-    }, { globals: {}, rows: {} })
     c[idx] = {
       lastUpdated: lastEntry.timestamp,
-      current: collapsed,
+      current: lastEntry,
     }
     if (history) {
-      c[idx].history = sortedHist
+      c[idx].history = sortedHist.slice(0, -1)
     }
     return c
   }, {})
