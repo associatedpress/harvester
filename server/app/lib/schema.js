@@ -11,6 +11,7 @@ const universalOptions = [
 const allowedOptions = {
   date: new Set([
     ...universalOptions,
+    'min', // min viable date
   ]),
   number: new Set([
     ...universalOptions,
