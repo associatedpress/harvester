@@ -155,7 +155,7 @@ const handleValidateField = (store, next, action) => {
   next(setError({ fieldId, errors: validate(fieldSchema, fieldValue) }))
 }
 
-const handleValidateForm = (store, next, action) => {
+const handleValidateForm = (store) => {
   const state = store.getState()
   const { columns } = state.form.schema
   columns.forEach(col => store.dispatch(validateField({ fieldId: col.id })))
@@ -205,7 +205,7 @@ const handleSubmit = (store, next, action) => {
   }))
 }
 
-const handleClear = (store, next, action) => {
+const handleClear = (store, next) => {
   const state = store.getState()
   const newIndexLoaded = !state.form.schema.index
   next([

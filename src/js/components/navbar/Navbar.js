@@ -1,7 +1,7 @@
 import React from 'react'
 import { Nav, Brand } from './styles'
 
-function Navbar(props) {
+function Navbar() {
   return (
     <Nav>
       <Brand>Harvester</Brand>
