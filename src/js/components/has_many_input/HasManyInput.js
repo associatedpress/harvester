@@ -22,7 +22,7 @@ function HasManyInput(props) {
   const parsedValue = parseValue(value, { multiple: true, serialization })
 
   const createRelative = () => {
-    const newValue = [...parsedValue, relativeSchema.map(c => null)]
+    const newValue = [...parsedValue, relativeSchema.map(() => null)]
     const serializedValue = serializeValue(newValue, { multiple: true, serialization })
     setField(serializedValue)
   }

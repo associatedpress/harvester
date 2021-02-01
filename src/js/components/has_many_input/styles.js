@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { darkPrimary, lightNeutral, neutral, darkerHighlight, highlight } from 'js/styles/colors'
+import { darkerHighlight } from 'js/styles/colors'
 
 export const RelativeContainer = styled.div`
   margin: 1em 0;

@@ -64,7 +64,7 @@ describe('form', () => {
     it('should use schema as action payload', () => {
       // GIVEN
       const options = {
-        schema: { headline: 'foo', chatter: 'bar', columns: [] }
+        schema: { headline: 'foo', chatter: 'bar', columns: [] },
       }
 
       // WHEN
