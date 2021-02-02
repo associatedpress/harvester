@@ -24,7 +24,7 @@ function App(props) {
     validateField,
   } = props
 
-  useEffect(() => { fetchSchema({ id: docId }) }, [])
+  useEffect(() => { fetchSchema({ id: docId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
