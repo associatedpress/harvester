@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Well, PrimaryButton, Button } from './styles'
+import { Well, Button } from './styles'
 
 function Controls(props) {
   const {

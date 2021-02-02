@@ -1,4 +1,38 @@
 {
+  "parser": "babel-eslint",
   "root": true,
-  "extends": "@associatedpress/eslint-config-interact"
+  "env": {
+    "browser": true,
+    "jest/globals": true,
+    "es6": true
+  },
+  "plugins": [
+    "react-hooks",
+    "jest"
+  ],
+  "rules": {
+    "space-before-function-paren": ["error", "never"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "off",
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ]
 }

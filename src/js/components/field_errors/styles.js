@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { darkHighlight, lightHighlight } from 'js/styles/colors'
+import { darkHighlight } from 'js/styles/colors'
 
 export const Container = styled.div`
   border-left: 3px solid ${props => props.hasError ? darkHighlight : '#fff'};

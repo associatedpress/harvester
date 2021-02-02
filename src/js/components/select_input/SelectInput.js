@@ -38,8 +38,13 @@ function SelectInput(props) {
     if (optionlist) return
     if (requires && requireValue == null) return
     if (loadedOptions) return
-    fetchOptions({ fieldId, range: schema.config.options.range, requires, requireValue })
-  }, [fieldId, optionlist, requires, requireValue, loadedOptions])
+    fetchOptions({
+      fieldId,
+      range: schema.config.options.range,
+      requires,
+      requireValue,
+    })
+  }, [fieldId, optionlist, requires, requireValue, loadedOptions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (optionlist) return <ChoiceInput {...props} />
 

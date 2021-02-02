@@ -43,7 +43,7 @@ function HasManyInput(props) {
   }, [])
 
   const createRelative = () => {
-    const newRelative = relativeSchema.map(c => null)
+    const newRelative = relativeSchema.map(() => null)
     updateRelatives([
       ...relatives,
       { id: relatives.length, relative: newRelative, deleted: false },
