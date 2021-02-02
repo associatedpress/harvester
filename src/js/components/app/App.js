@@ -34,6 +34,20 @@ function App(props) {
   const indexFields = index && schema.columns.filter(col => indexKeys.includes(col.config.key))
   const indexMissing = index && indexFields.some(col => values[col.id] == null)
 
+  const submitForm = () => {
+    const msg = 'Submit data? Please make sure entered data is correct.'
+    if (confirm(msg)) {
+      submit()
+    }
+  }
+
+  const loadIndexData = () => {
+    const msg = 'Load data for another index? Entered data may be lost'
+    if (!dirty || confirm(msg)) {
+      loadIndex()
+    }
+  }
+
   return (
     <div className={className}>
       <Notifications notifications={notifications} />
@@ -45,7 +59,7 @@ function App(props) {
             fields={indexFields}
             controls={[{
               label: 'Search',
-              onClick: loadIndex,
+              onClick: loadIndexData,
               disabled: indexMissing,
             }]}
             values={values}
@@ -55,7 +69,7 @@ function App(props) {
         {indexLoaded && (
           <Form
             fields={schema.columns}
-            controls={[{ label: 'Submit', onClick: submit, primary: true }]}
+            controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
             values={values}
             errors={errors}
             setField={inputField}
