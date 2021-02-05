@@ -52,17 +52,29 @@ describe('notification', () => {
       expect(action.meta.duration).toEqual(options.duration)
     })
 
-    it('should include the feature in the action meta', () => {
+
+    it('should include default message type', () => {
       // GIVEN
-      const options = {
-        feature: '[feature]',
-      }
+      const options = {}
 
       // WHEN
       const action = notification.setNotification(options)
 
       // THEN
-      expect(action.meta.feature).toEqual(options.feature)
+      expect(action.meta.messageType).toEqual('confirmation')
+    })
+  })
+
+  describe('setErrorNotification', () => {
+    it(`should include an error message type`, () => {
+      // GIVEN
+      const options = {}
+
+      // WHEN
+      const action = notification.setErrorNotification(options)
+
+      // THEN
+      expect(action.meta.messageType).toEqual('error')
     })
   })
 
