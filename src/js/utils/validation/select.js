@@ -24,7 +24,7 @@ export default function validate(schema, value) {
   const errors = []
 
   if (min) errors.push(validateMin(parsedValue, min))
-  if (min) errors.push(validateMax(parsedValue, max))
+  if (max) errors.push(validateMax(parsedValue, max))
 
   return errors.filter(e => e)
 }
