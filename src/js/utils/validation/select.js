@@ -6,17 +6,25 @@ function validateMin(value, min) {
   }
 }
 
+function validateMax(value, max) {
+  if (value.length > max) {
+    return `select no more than ${max} options`
+  }
+}
+
 export default function validate(schema, value) {
   const {
     multiple,
     serialization,
-    min
+    min,
+    max,
   } = schema.config
 
   const parsedValue = parseValue(value, { multiple, serialization })
   const errors = []
 
   if (min) errors.push(validateMin(parsedValue, min))
+  if (min) errors.push(validateMax(parsedValue, max))
 
   return errors.filter(e => e)
 }

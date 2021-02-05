@@ -31,6 +31,7 @@ const allowedOptions = {
     'multiple', // whether or not to allow multiple selections
     'serialization', // csv or json
     'min', // min number of options that must be selected
+    'max', // Max number of options that may be selected
   ]),
   has_many: new Set([
     ...universalOptions,
@@ -67,6 +68,8 @@ function parseConfig(type, key, value, options) {
     case 'rows':
       return +value
     case 'min':
+      return +value
+    case 'max':
       return +value
     default:
       return value
