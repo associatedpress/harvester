@@ -92,7 +92,7 @@ const handleApiSuccess = (store, next, action) => {
     case SUBMIT:
       store.dispatch(clear())
       next([
-        setNotification({ message: 'Form submission successful', feature: FORM }),
+        setNotification({ message: 'Form submission successful', feature: FORM, messageType:'confirmation' }),
         fetchSchema({ id: store.getState().form.id }),
       ])
       break
@@ -105,7 +105,7 @@ const handleApiSuccess = (store, next, action) => {
 
 const handleApiError = (store, next, action) => {
   next([
-    setNotification({ message: action.payload.message, feature: FORM }),
+    setNotification({ message: action.payload.message, feature: FORM,  messageType:'error' }),
     setLoader({ state: false, feature: FORM }),
   ])
 }
@@ -187,7 +187,7 @@ const handleSubmit = (store, next, action) => {
   const state = store.getState()
   if (Object.values(state.form.errors).some(e => e.length)) {
     const message = 'Correct errors before submission'
-    return next(setNotification({ message, feature: FORM }))
+    return next(setNotification({ message, feature: FORM, messageType:'error' }))
   }
   Object.entries(state.form.options.created).forEach(([fieldId, options]) => {
     store.dispatch(submitCreatedOptions({ fieldId, options }))
