@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Notes, NoteConfirm, NoteError } from './styles'
+import { Notes, Note } from './styles'
 
 function Notifications(props) {
   const {
@@ -13,13 +13,9 @@ function Notifications(props) {
 
   return (
     <Notes>
-      {notifications.map(note => {
-        if(note.messageType && note.messageType === 'error'){
-          return <NoteError key={note.id}>{note.message}</NoteError>
-        }else{
-          return <NoteConfirm key={note.id}>{note.message}</NoteConfirm>
-        }
-      })}
+      {notifications.map(note => (
+        <Note key={note.id} type={note.messageType} >{note.message}</Note>
+      ))}
     </Notes>
   )
 }
