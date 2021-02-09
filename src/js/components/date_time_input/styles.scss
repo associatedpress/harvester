@@ -3,8 +3,32 @@
  */
 
  .rdt {
+  position: relative;
+}
+.rdtSwitch:after {
+    content: "";
+    display: inline-block;
     position: relative;
-  }
+    background: url("../../../images/cal.png") no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    margin-bottom: -1px;
+}
+.rdtTimeToggle:after {
+    content: "";
+    display: inline-block;
+    position: relative;
+    background: url("../../../images/clock.png") no-repeat;
+    background-size: 100%;
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    margin-bottom: -1px;
+}
+
+
   .rdtPicker {
     display: none;
     position: absolute;
@@ -207,7 +231,9 @@
     width: 48px;
   }
   
-  .rdtMilli input {
+  .input {
+    font-family: inherit;
+
     width: 100%;
     font-size: 1.2em;
     margin-top: 37px;
