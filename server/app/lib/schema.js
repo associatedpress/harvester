@@ -9,8 +9,9 @@ const universalOptions = [
   'relative', // for relative columns
 ]
 const allowedOptions = {
-  date: new Set([
+  dateTime: new Set([
     ...universalOptions,
+    'time', // whether or not to show time picker
   ]),
   number: new Set([
     ...universalOptions,
@@ -67,6 +68,7 @@ function parseConfig(type, key, value, options) {
       return +value
     default:
       return value
+  
   }
 }
 
