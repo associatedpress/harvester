@@ -1,4 +1,5 @@
 import * as date from '../date'
+import Datetime from 'react-datetime'
 
 describe('date', () => {
   describe('formatDate', () => {
@@ -15,15 +16,15 @@ describe('date', () => {
       })
     })
 
-    it('should format a date as mm/dd/yyyy', () => {
+    it('should format a date as mm/dd/yyyy HH:mm', () => {
       // GIVEN
-      const input = new Date('01/01/2000')
+      const input = Datetime.moment('2021-02-08 09:33')
 
       // WHEN
       const output = date.formatDate(input)
 
       // THEN
-      expect(output).toEqual('01/01/2000')
+      expect(output).toEqual('02/08/2021 09:33')
     })
   })
 })
