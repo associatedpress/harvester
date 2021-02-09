@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import Datetime from 'react-datetime'
 import { formatDate } from 'js/utils/date'
+import './datetime.scss'
 
-function DateInput(props) {
+function DateTimeInput(props) {
   const {
     value,
     setField,
@@ -12,7 +12,7 @@ function DateInput(props) {
   } = props
 
   return (
-    <DatePicker
+    <Datetime
       className='editable'
       selected={value && new Date(value)}
       onChange={d => setField(formatDate(d))}
@@ -21,12 +21,12 @@ function DateInput(props) {
   )
 }
 
-DateInput.propTypes = {
+DateTimeInput.propTypes = {
   value: PropTypes.string,
   setField: PropTypes.func,
   validateField: PropTypes.func,
 }
 
-DateInput.defaultProps = {}
+DateTimeInput.defaultProps = {}
 
-export default DateInput
+export default DateTimeInput

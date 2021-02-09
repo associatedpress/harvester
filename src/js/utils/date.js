@@ -1,7 +1,9 @@
 export const formatDate = date => {
   if (!date) return null
-  const year = date.getFullYear()
-  const month = (date.getMonth() + 1).toString().padStart(2, '0')
-  const day = date.getDate().toString().padStart(2, '0')
-  return `${month}/${day}/${year}`
+  const year = date.format('YYYY')
+  const month = date.format('MM')
+  const day = date.format('DD')
+  const hour = date.format('HH')
+  const minute = date.format('mm')
+  return `${month}/${day}/${year} ${hour}:${minute}`
 }
