@@ -150,9 +150,10 @@ const handleSubmitCreatedOptions = (store, next, action) => {
 const handleValidateField = (store, next, action) => {
   const fieldId = action.payload
   const state = store.getState()
+  const schema = state.form.schema
   const fieldSchema = getFieldSchema(state, fieldId)
   const fieldValue = getFieldValue(state, fieldId)
-  next(setError({ fieldId, errors: validate(fieldSchema, fieldValue) }))
+  next(setError({ fieldId, errors: validate(fieldSchema, fieldValue, schema) }))
 }
 
 const handleValidateForm = (store) => {
@@ -185,7 +186,7 @@ const handleLoadIndex = (store, next, action) => {
 const handleSubmit = (store, next, action) => {
   store.dispatch(validateForm())
   const state = store.getState()
-  if (Object.values(state.form.errors).some(e => e.length)) {
+  if (Object.values(state.form.errors).some(e => e && (!Array.isArray(e) || e.length > 0))) {
     const message = 'Correct errors before submission'
     return next(setErrorNotification({ message, feature: FORM }))
   }

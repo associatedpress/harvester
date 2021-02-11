@@ -7,6 +7,7 @@ function Relative(props) {
   const {
     schema,
     values,
+    errors,
     setField,
     validateField,
     destroy,
@@ -28,6 +29,7 @@ function Relative(props) {
             key={column.id}
             schema={column}
             value={values[i]}
+            errors={errors[i]}
             setField={setRelativeField(i)}
             validateField={validateField}
           />
@@ -41,11 +43,14 @@ function Relative(props) {
 Relative.propTypes = {
   schema: PropTypes.array,
   values: PropTypes.array,
+  errors: PropTypes.object,
   setField: PropTypes.func,
   validateField: PropTypes.func,
   destroy: PropTypes.func,
 }
 
-Relative.defaultProps = {}
+Relative.defaultProps = {
+  errors: {},
+}
 
 export default Relative

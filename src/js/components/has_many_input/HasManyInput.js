@@ -10,6 +10,7 @@ function HasManyInput(props) {
   const {
     schema,
     value,
+    errors,
     setField,
     validateField,
     relativeSchema,
@@ -53,6 +54,7 @@ function HasManyInput(props) {
           key={i}
           schema={relativeSchema}
           values={values}
+          errors={errors[i]}
           setField={setRelative(i)}
           validateField={validateField}
           destroy={destroyRelative(i)}
@@ -68,12 +70,15 @@ function HasManyInput(props) {
 HasManyInput.propTypes = {
   schema: PropTypes.object,
   value: PropTypes.string,
+  errors: PropTypes.object,
   setField: PropTypes.func,
   validateField: PropTypes.func,
   relativeSchema: PropTypes.array,
 }
 
-HasManyInput.defaultProps = {}
+HasManyInput.defaultProps = {
+  errors: {},
+}
 
 function mapStateToProps(state, { schema }) {
   const { relative } = schema.config

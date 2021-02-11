@@ -55,6 +55,8 @@ function parseConfig(type, key, value, options) {
   }
 
   switch (key) {
+    case 'required':
+      return value === 'true'
     case 'default':
       return parseDefault(type, value)
     case 'options':
