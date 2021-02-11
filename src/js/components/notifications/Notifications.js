@@ -14,7 +14,7 @@ function Notifications(props) {
   return (
     <Notes>
       {notifications.map(note => (
-        <Note key={note.id} type={note.messageType} >{note.message}</Note>
+        <Note key={note.id} type={note.messageType}>{note.message}</Note>
       ))}
     </Notes>
   )
