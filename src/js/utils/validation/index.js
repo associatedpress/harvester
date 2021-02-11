@@ -1,4 +1,5 @@
 import required from './required'
+import selectValidation from './select'
 
 // This validation shouldn't have to concern itself with type enforcement
 // because that should be handled by the actual type-specific inputs
@@ -15,9 +16,19 @@ import required from './required'
 // Should errors force the input value to be empty, or should we allow the bad
 // input to show up and have errors simply block submission?
 
+function typedValidation(schema, value) {
+  switch (schema.type) {
+    case 'select':
+      return selectValidation(schema, value)
+    default:
+      return []
+  }
+}
+
 export default function validate(schema, value) {
   const { config } = schema
   const errors = []
   if (config.required) errors.push(required(value))
+  errors.push(...typedValidation(schema, value))
   return errors.filter(e => e)
 }
