@@ -1,4 +1,4 @@
-import { parseValue } from 'js/components/select_input/utils'
+import { parseValue } from 'js/utils/serialize'
 import { validatePrimitive } from './index'
 
 export default function validate(schema, value, formSchema) {
