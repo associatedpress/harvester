@@ -1,61 +1,115 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getRelativeSchema } from 'js/store/selectors/form'
 import Relative from './Relative'
-import { parseValue, serializeValue } from '../select_input/utils'
+import { parseValue, serializeValue } from 'js/utils/serialize'
 import { Controls, NewButton } from './styles'
 
 function HasManyInput(props) {
   const {
     schema,
     value,
+    errors,
     setField,
     validateField,
     relativeSchema,
   } = props
+
+  const [relatives, setRelatives] = useState([])
+  const updateRelatives = newRelatives => {
+    setRelatives(newRelatives)
+    const activeRelatives = newRelatives
+      .filter(rel => !rel.deleted)
+      .map(rel => rel.relative)
+    const serializedValue = serializeValue(
+      activeRelatives,
+      { multiple: true, serialization }
+    )
+    setField(serializedValue)
+    validateField()
+  }
 
   const {
     serialization,
   } = schema.config
 
   const parsedValue = parseValue(value, { multiple: true, serialization })
+  useEffect(() => {
+    setRelatives(parsedValue.map((relative, id) => ({
+      id,
+      relative,
+      deleted: false,
+    })))
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const createRelative = () => {
-    const newValue = [...parsedValue, relativeSchema.map(() => null)]
-    const serializedValue = serializeValue(newValue, { multiple: true, serialization })
-    setField(serializedValue)
+    const newRelative = relativeSchema.map(() => null)
+    updateRelatives([
+      ...relatives,
+      { id: relatives.length, relative: newRelative, deleted: false },
+    ])
   }
 
-  const destroyRelative = idx => {
+  const destroyRelative = id => {
     return () => {
-      const newRelatives = [...parsedValue]
-      newRelatives.splice(idx, 1)
-      const serialized = serializeValue(newRelatives, { multiple: true, serialization })
-      setField(serialized)
-      validateField()
+      const newRelatives = relatives.map(relative => {
+        return {
+          ...relative,
+          deleted: relative.deleted || relative.id === id,
+        }
+      })
+      updateRelatives(newRelatives)
     }
   }
 
-  const setRelative = idx => {
-    return values => {
-      const newRelatives = [...parsedValue]
-      newRelatives.splice(idx, 1, values)
-      const serialized = serializeValue(newRelatives, { multiple: true, serialization })
-      setField(serialized)
+  const undoDestroyRelative = id => {
+    return () => {
+      const newRelatives = relatives.map(relative => {
+        return {
+          ...relative,
+          deleted: relative.id !== id && relative.deleted,
+        }
+      })
+      updateRelatives(newRelatives)
     }
   }
+
+  const setRelative = id => {
+    return values => {
+      const newRelatives = relatives.map(relative => {
+        if (relative.id !== id) return relative
+        return {
+          ...relative,
+          relative: values,
+        }
+      })
+      updateRelatives(newRelatives)
+    }
+  }
+
+  const relativeErrors = relatives.reduce((es, rel) => {
+    const relErrs = rel.deleted ? undefined : errors[es.count]
+    const increment = rel.deleted ? 0 : 1
+    return {
+      count: es.count + increment,
+      errors: [...es.errors, relErrs],
+    }
+  }, { count: 0, errors: [] })
 
   return (
     <div>
-      {parsedValue.map((values, i) => (
+      {relatives.map((relative, i) => (
         <Relative
-          key={i}
+          key={relative.id}
           schema={relativeSchema}
-          values={values}
-          setField={setRelative(i)}
+          values={relative.relative}
+          errors={relativeErrors.errors[i]}
+          setField={setRelative(relative.id)}
           validateField={validateField}
-          destroy={destroyRelative(i)}
+          destroy={destroyRelative(relative.id)}
+          undoDestroy={undoDestroyRelative(relative.id)}
+          deleted={relative.deleted}
         />
       ))}
       <Controls>
@@ -68,12 +122,15 @@ function HasManyInput(props) {
 HasManyInput.propTypes = {
   schema: PropTypes.object,
   value: PropTypes.string,
+  errors: PropTypes.object,
   setField: PropTypes.func,
   validateField: PropTypes.func,
   relativeSchema: PropTypes.array,
 }
 
-HasManyInput.defaultProps = {}
+HasManyInput.defaultProps = {
+  errors: {},
+}
 
 function mapStateToProps(state, { schema }) {
   const { relative } = schema.config

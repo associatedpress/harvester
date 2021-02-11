@@ -23,7 +23,7 @@ import {
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
 import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
-import { setNotification } from '../../actions/notification'
+import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
 import { formatDate } from 'js/utils/date'
@@ -110,7 +110,7 @@ const handleApiSuccess = (store, next, action) => {
 
 const handleApiError = (store, next, action) => {
   next([
-    setNotification({ message: action.payload.message, feature: FORM }),
+    setErrorNotification({ message: action.payload.message, feature: FORM }),
     setLoader({ state: false, feature: FORM }),
   ])
 }
@@ -155,9 +155,10 @@ const handleSubmitCreatedOptions = (store, next, action) => {
 const handleValidateField = (store, next, action) => {
   const fieldId = action.payload
   const state = store.getState()
+  const schema = state.form.schema
   const fieldSchema = getFieldSchema(state, fieldId)
   const fieldValue = getFieldValue(state, fieldId)
-  next(setError({ fieldId, errors: validate(fieldSchema, fieldValue) }))
+  next(setError({ fieldId, errors: validate(fieldSchema, fieldValue, schema) }))
 }
 
 const handleValidateForm = (store) => {
@@ -190,9 +191,9 @@ const handleLoadIndex = (store, next, action) => {
 const handleSubmit = (store, next, action) => {
   store.dispatch(validateForm())
   const state = store.getState()
-  if (Object.values(state.form.errors).some(e => e.length)) {
+  if (Object.values(state.form.errors).some(e => e && (!Array.isArray(e) || e.length > 0))) {
     const message = 'Correct errors before submission'
-    return next(setNotification({ message, feature: FORM }))
+    return next(setErrorNotification({ message, feature: FORM }))
   }
   Object.entries(state.form.options.created).forEach(([fieldId, options]) => {
     store.dispatch(submitCreatedOptions({ fieldId, options }))

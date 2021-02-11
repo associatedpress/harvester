@@ -57,6 +57,7 @@ describe('form', () => {
       expect(next.mock.calls.length).toEqual(3)
       expect(next.mock.calls[0][0]).toEqual(action)
       expect(next.mock.calls[1][0].type).toMatch(notificationActions.SET_NOTIFICATION)
+      expect(next.mock.calls[1][0].meta.messageType).toEqual('error')
       expect(next.mock.calls[1][0].payload).toEqual(action.payload.message)
       expect(next.mock.calls[2][0].type).toMatch(uiActions.SET_LOADER)
       expect(next.mock.calls[2][0].payload).toBe(false)
