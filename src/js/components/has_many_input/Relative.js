@@ -53,6 +53,7 @@ Relative.propTypes = {
   setField: PropTypes.func,
   validateField: PropTypes.func,
   destroy: PropTypes.func,
+  undoDestroy: PropTypes.func,
   deleted: PropTypes.bool,
 }
 

@@ -18,7 +18,7 @@ import hasManyValidation from './has_many'
 // Should errors force the input value to be empty, or should we allow the bad
 // input to show up and have errors simply block submission?
 
-function typedValidation(schema, value, formSchema) {
+function typedValidation(schema, value) {
   switch (schema.type) {
     case 'select':
       return selectValidation(schema, value)

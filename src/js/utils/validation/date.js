@@ -1,4 +1,4 @@
-import { parseDate, formatDate } from 'js/utils/date'
+import { parseDate } from 'js/utils/date'
 
 function validateMin(value, min) {
   const minValue = parseDate(min)
