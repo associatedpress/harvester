@@ -6,6 +6,7 @@ import './styles.scss'
 
 function DateTimeInput(props) {
   const {
+    schema,
     value,
     setField,
     validateField,
@@ -18,6 +19,8 @@ function DateTimeInput(props) {
 
   return (
     <Datetime
+      timeFormat={schema.config.time}
+      dateFormat={schema.config.date}
       className='editable'
       selected={value && new Date(value)}
       onChange={change}
@@ -26,6 +29,7 @@ function DateTimeInput(props) {
 }
 
 DateTimeInput.propTypes = {
+  schema: PropTypes.object,
   value: PropTypes.string,
   setField: PropTypes.func,
   validateField: PropTypes.func,
