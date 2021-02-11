@@ -1,41 +1,61 @@
 const CSV = require('csv-string')
 const google = require('./google')
 
-const universalOptions = [
-  'default', // default value for column
-  'help', // help text for the column
-  'key', // unique ID for the column
-  'required', // whether or not the column is required
-  'relative', // for relative columns
-]
+function identity(x) {
+  return x
+}
+
+function bool(b) {
+  return b === 'true'
+}
+
+function number(n) {
+  return +n
+}
+
+function parseDefault(type, value) {
+  if (type === 'number') return number(value)
+  return value
+}
+
+const universalOptions = {
+  default: parseDefault, // default value for column
+  help: identity, // help text for the column
+  key: identity, // unique ID for the column
+  required: bool, // whether or not the column is required
+  relative: identity, // for relative columns
+}
 const allowedOptions = {
-  dateTime: new Set([
+  date: {
     ...universalOptions,
-    'time', // whether or not to show time picker
-  ]),
-  number: new Set([
+    min: identity, // min viable date
+    max: identity, // max viable date
+  },
+  number: {
     ...universalOptions,
-  ]),
-  string: new Set([
+  },
+  string: {
     ...universalOptions,
-  ]),
-  text: new Set([
-    'rows', // number of rows for the textarea
+  },
+  text: {
+    rows: number, // number of rows for the textarea
     ...universalOptions,
-  ]),
-  select: new Set([
+  },
+  select: {
     ...universalOptions,
-    'creatable', // whether or not new options can be added
-    'options', // sheet to pull select options from
-    'optionlist', // comma-separated list of options
-    'requires', // column to parameterize async data request
-    'multiple', // whether or not to allow multiple selections
-    'serialization', // csv or json
-  ]),
-  has_many: new Set([
+    creatable: bool, // whether or not new options can be added
+    options: range => ({ range }), // sheet to pull select options from
+    optionlist: opts => CSV.parse(opts)[0], // comma-separated list of options
+    requires: identity, // column to parameterize async data request
+    multiple: bool, // whether or not to allow multiple selections
+    serialization: identity, // csv or json
+    min: number, // min number of options that must be selected
+    max: number, // Max number of options that may be selected
+  },
+  has_many: {
     ...universalOptions,
-    'serialization', // csv or json
-  ]),
+    serialization: identity, // csv or json
+  },
 }
 
 function parseConfig(type, key, value, options) {
@@ -46,30 +66,8 @@ function parseConfig(type, key, value, options) {
     throw new Error('schema error: `options` and `optionlist` cannot both be given')
   }
 
-  const parseDefault = (type, value) => {
-    if (type === 'number') return +value
-    return value
-  }
-
-  switch (key) {
-    case 'default':
-      return parseDefault(type, value)
-    case 'options':
-      return {
-        range: value,
-      }
-    case 'optionlist':
-      return CSV.parse(value)[0]
-    case 'creatable':
-      return value === 'true'
-    case 'multiple':
-      return value === 'true'
-    case 'rows':
-      return +value
-    default:
-      return value
-  
-  }
+  const parser = allowedOptions[type][key]
+  return parser(value)
 }
 
 function parseColumnSchema(schema, id) {
@@ -85,7 +83,7 @@ function parseColumnSchema(schema, id) {
   for (let c of options) {
     const [key, val] = c.split(':')
 
-    if (!allowed.has(key)) {
+    if (!allowed[key]) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
     }
 

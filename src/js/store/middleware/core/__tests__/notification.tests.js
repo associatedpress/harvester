@@ -34,6 +34,7 @@ describe('notification', () => {
       expect(next.mock.calls.length).toBe(1)
       expect(next.mock.calls[0][0].type).toEqual(action.type)
       expect(next.mock.calls[0][0].payload.message).toEqual(action.payload)
+      expect(next.mock.calls[0][0].payload.messageType).toEqual('confirmation')
       expect(setTimeout).toHaveBeenCalledTimes(1)
       expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 5000)
 

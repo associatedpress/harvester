@@ -9,6 +9,7 @@ export const notificationMiddleware = () => (next) => (action) => {
     const notification = {
       id,
       message: payload,
+      messageType: meta.messageType,
     }
 
     // fire a new action with the enriched payload

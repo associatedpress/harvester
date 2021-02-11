@@ -12,3 +12,6 @@ export const primary = '#568EA6'
 export const darkPrimary = '#305F72'
 
 export const copy = '#2C2C2C'
+
+export const confirmColor = '#d6f5d6'
+export const errorColor = '#ffc2b3'

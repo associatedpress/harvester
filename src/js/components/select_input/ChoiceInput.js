@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { BoxLabel, Checkbox, Radio } from './styles'
-import { parseValue, serializeValue } from './utils'
+import { parseValue, serializeValue } from 'js/utils/serialize'
 
 function ChoiceInput(props) {
   const {

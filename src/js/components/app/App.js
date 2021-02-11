@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchSchema, submit, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
+import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
 import { Navbar, Header, Notifications, Form } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
 import { Container } from './styles'
@@ -22,6 +22,7 @@ function App(props) {
     setField,
     inputField,
     validateField,
+    clear,
   } = props
 
   useEffect(() => { fetchSchema({ id: docId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -29,10 +30,36 @@ function App(props) {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
 
-  const { index } = schema
+  const { index, columns = [] } = schema
   const indexKeys = index && index.split('+')
-  const indexFields = index && schema.columns.filter(col => indexKeys.includes(col.config.key))
+  const indexFields = index && columns.filter(col => indexKeys.includes(col.config.key))
   const indexMissing = index && indexFields.some(col => values[col.id] == null)
+  const nonIndexFields = columns.filter(col => !index || !indexKeys.includes(col.config.key))
+
+  const submitForm = () => {
+    const msg = 'Submit data? Please make sure entered data is correct.'
+    if (confirm(msg)) {
+      submit()
+    }
+  }
+
+  const loadIndexData = () => {
+    const msg = 'Load data for another index? Entered data may be lost'
+    if (!dirty || confirm(msg)) {
+      loadIndex()
+    }
+  }
+
+  const setIndexField = (opts) => {
+    const msg = 'Updating index value will clear the form. Entered data may be lost'
+    if (indexLoaded && dirty) {
+      if (!confirm(msg)) return
+    }
+    if (indexLoaded) {
+      clear()
+    }
+    setField(opts)
+  }
 
   return (
     <div className={className}>
@@ -45,17 +72,17 @@ function App(props) {
             fields={indexFields}
             controls={[{
               label: 'Search',
-              onClick: loadIndex,
+              onClick: loadIndexData,
               disabled: indexMissing,
             }]}
             values={values}
-            setField={setField}
+            setField={setIndexField}
           />
         )}
         {indexLoaded && (
           <Form
-            fields={schema.columns}
-            controls={[{ label: 'Submit', onClick: submit, primary: true }]}
+            fields={nonIndexFields}
+            controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
             values={values}
             errors={errors}
             setField={inputField}
@@ -82,6 +109,7 @@ App.propTypes = {
   notifications: PropTypes.array,
   dirty: PropTypes.bool,
   indexLoaded: PropTypes.bool,
+  clear: PropTypes.func,
 }
 
 App.defaultProps = {
@@ -99,4 +127,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchSchema, submit, loadIndex, setField, inputField, validateField })(App)
+export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField })(App)

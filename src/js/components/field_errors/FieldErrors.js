@@ -8,18 +8,22 @@ function FieldErrors(props) {
     children,
   } = props
 
-  const hasError = errors && (errors.length > 0)
+  const hasError = errors && Array.isArray(errors) && errors.length > 0
+  const hasMessage = hasError && Array.isArray(errors)
 
   return (
     <Container hasError={hasError}>
       {children}
-      <Message>{hasError && `Error: ${errors.join(', ')}`}</Message>
+      <Message>{hasMessage && `Error: ${errors.join(', ')}`}</Message>
     </Container>
   )
 }
 
 FieldErrors.propTypes = {
-  errors: PropTypes.array,
+  errors: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]),
   children: PropTypes.any,
 }
 

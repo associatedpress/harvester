@@ -41,6 +41,7 @@ function Field(props) {
       <Input
         schema={schema}
         value={value}
+        errors={errors}
         setField={setField}
         validateField={validateField}
       />
@@ -51,7 +52,10 @@ function Field(props) {
 Field.propTypes = {
   schema: PropTypes.object,
   value: PropTypes.any,
-  errors: PropTypes.array,
+  errors: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]),
   setField: PropTypes.func,
   validateField: PropTypes.func,
 }

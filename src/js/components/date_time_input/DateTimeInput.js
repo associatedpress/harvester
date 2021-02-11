@@ -11,12 +11,16 @@ function DateTimeInput(props) {
     validateField,
   } = props
 
+  const change = d => {
+    setField(formatDate(d))
+    validateField()
+  }
+
   return (
     <Datetime
       className='editable'
       selected={value && new Date(value)}
-      onChange={d => setField(formatDate(d))}
-      onBlur={validateField}
+      onChange={change}
     />
   )
 }

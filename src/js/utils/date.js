@@ -6,4 +6,11 @@ export const formatDate = date => {
   const hour = date.format('HH')
   const minute = date.format('mm')
   return `${month}/${day}/${year} ${hour}:${minute}`
+
+}
+
+export const parseDate = date => {
+  if (!date) return date
+  if (date === 'today') return new Date()
+  return new Date(date)
 }
