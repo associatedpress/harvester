@@ -63,12 +63,17 @@ const handleSetSchema = (store, next, action) => {
 
 const handleLoadIndexResponse = (store, next, action) => {
   const state = store.getState()
+  const { index } = state.form.schema
+  const indexKeys = new Set(index.split('+'))
   const values = (action.payload.current && action.payload.current.data) || {}
   state.form.schema.columns.forEach(col => {
     const schema = getFieldSchema(state, col.id)
     const indexValue = values[col.id]
     const value =  (typeof indexValue === 'undefined') ? null : parseDefault(indexValue, schema.type)
-    store.dispatch(setField({ fieldId: col.id, value }))
+    const isIndexField = indexKeys.has(col.config.key)
+    if (!isIndexField) {
+      store.dispatch(setField({ fieldId: col.id, value }))
+    }
   })
   next(setIndexLoaded({ state: true, feature: FORM }))
 }
