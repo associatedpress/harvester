@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { copy } from 'js/styles/fonts'
-import { darkPrimary, lightHighlight } from 'js/styles/colors'
+import { darkPrimary, lightHighlight, errorColor, confirmColor } from 'js/styles/colors'
 
 export const Notes = styled.div`
   position: fixed;
@@ -11,7 +11,7 @@ export const Notes = styled.div`
 `
 
 export const Note = styled.div`
-  background-color: ${lightHighlight};
+  background-color: ${props => props.type === 'error' ? errorColor : confirmColor};
   color: ${darkPrimary};
   margin-bottom: 0.2em;
   padding: 0.2em 1em;
