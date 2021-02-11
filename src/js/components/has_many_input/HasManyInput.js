@@ -41,7 +41,7 @@ function HasManyInput(props) {
       relative,
       deleted: false,
     })))
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const createRelative = () => {
     const newRelative = relativeSchema.map(() => null)
@@ -88,7 +88,7 @@ function HasManyInput(props) {
     }
   }
 
-  const relativeErrors = relatives.reduce((es, rel, i) => {
+  const relativeErrors = relatives.reduce((es, rel) => {
     const relErrs = rel.deleted ? undefined : errors[es.count]
     const increment = rel.deleted ? 0 : 1
     return {

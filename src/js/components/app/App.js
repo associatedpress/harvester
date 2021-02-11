@@ -109,6 +109,7 @@ App.propTypes = {
   notifications: PropTypes.array,
   dirty: PropTypes.bool,
   indexLoaded: PropTypes.bool,
+  clear: PropTypes.func,
 }
 
 App.defaultProps = {

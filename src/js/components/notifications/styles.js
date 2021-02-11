@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { copy } from 'js/styles/fonts'
-import { darkPrimary, lightHighlight, errorColor, confirmColor } from 'js/styles/colors'
+import { darkPrimary, errorColor, confirmColor } from 'js/styles/colors'
 
 export const Notes = styled.div`
   position: fixed;
