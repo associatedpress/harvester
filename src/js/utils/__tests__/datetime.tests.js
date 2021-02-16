@@ -1,4 +1,4 @@
-import * as date from '../date'
+import * as date from '../datetime'
 import Datetime from 'react-datetime'
 
 describe('date', () => {
