@@ -9,7 +9,7 @@ describe('date', () => {
 
       inputs.forEach(input => {
         // WHEN
-        const output = date.formatDate(input)
+        const output = date.formatDateTime(input)
 
         // THEN
         expect(output).toBeNull()
@@ -21,7 +21,7 @@ describe('date', () => {
       const input = Datetime.moment('2021-02-08 09:33')
 
       // WHEN
-      const output = date.formatDate(input)
+      const output = date.formatDateTime(input)
 
       // THEN
       expect(output).toEqual('02/08/2021 09:33')

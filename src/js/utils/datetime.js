@@ -1,3 +1,16 @@
+export const formatDateTime = (datetime, opts = {}) => {
+  if (!datetime) return null
+
+  const year = datetime.format('YYYY')
+  const month = datetime.format('MM')
+  const day = datetime.format('DD')
+  const hour = datetime.format('HH')
+  const minute = datetime.format('mm')
+
+  return `${month}/${day}/${year} ${hour}:${minute}`
+
+}
+
 export const serializeDateTime = (datetime, opts = {}) => {
   if (!datetime) return null
   const {
