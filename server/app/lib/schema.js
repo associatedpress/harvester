@@ -26,7 +26,7 @@ const universalOptions = {
   relative: identity, // for relative columns
 }
 const allowedOptions = {
-  dateTime: {
+  datetime: {
     ...universalOptions,
     min: identity, // min viable date
     max: identity, // max viable date

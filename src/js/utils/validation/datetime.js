@@ -1,14 +1,14 @@
-import { parseDate } from 'js/utils/date'
+import { parseDateTime } from 'js/utils/datetime'
 
 function validateMin(value, min) {
-  const minValue = parseDate(min)
+  const minValue = parseDateTime(min)
   if (value < minValue) {
     return `date must be at least ${min}`
   }
 }
 
 function validateMax(value, max) {
-  const maxValue = parseDate(max)
+  const maxValue = parseDateTime(max)
   if (value > maxValue) {
     return `date must be at most ${max}`
   }
@@ -20,7 +20,7 @@ export default function validate(schema, value) {
     max,
   } = schema.config
 
-  const parsedValue = parseDate(value)
+  const parsedValue = parseDateTime(value)
   const errors = []
 
   if (min) errors.push(validateMin(parsedValue, min))

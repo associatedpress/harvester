@@ -24,7 +24,7 @@ function Field(props) {
   const typeInputs = {
     string: StringInput,
     number: NumberInput,
-    dateTime: DateTimeInput,
+    datetime: DateTimeInput,
     text: TextInput,
     select: SelectInput,
     has_many: HasManyInput,

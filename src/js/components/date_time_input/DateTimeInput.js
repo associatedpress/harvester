@@ -1,7 +1,8 @@
 import React from 'react'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import Datetime from 'react-datetime'
-import { formatDate } from 'js/utils/date'
+import { serializeDateTime, parseDateTime  } from 'js/utils/datetime'
 import './styles.scss'
 
 function DateTimeInput(props) {
@@ -12,17 +13,20 @@ function DateTimeInput(props) {
     validateField,
   } = props
 
+  const date = schema.config.date
+  const time = schema.config.time
+
   const change = d => {
-    setField(formatDate(d))
+    setField(serializeDateTime(d, { date, time }))
     validateField()
   }
 
   return (
     <Datetime
-      timeFormat={schema.config.time}
-      dateFormat={schema.config.date}
+      timeFormat={time}
+      dateFormat={date}
       className='editable'
-      selected={value && new Date(value)}
+      value={value && parseDateTime(value, {date, time})}
       onChange={change}
     />
   )
