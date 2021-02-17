@@ -1,4 +1,4 @@
-export const formatDateTime = (datetime, opts = {}) => {
+export const formatDateTime = (datetime) => {
   if (!datetime) return null
   if (!datetime) return null
   const year = datetime.getFullYear()
