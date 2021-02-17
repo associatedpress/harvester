@@ -67,7 +67,7 @@ describe('datetime', () => {
     it('should return a date object', () => {
       // GIVEN
       const input = '1955-11-05'
-      const parsedDate = new Date('1955-11-05 18:38')
+      const parsedDate = new Date('1955-11-05')
 
       // WHEN
       const output = datetime.parseDateTime(input, {date:true, time:true})
