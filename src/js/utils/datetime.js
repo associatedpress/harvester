@@ -1,13 +1,10 @@
 export const formatDateTime = (datetime, opts = {}) => {
   if (!datetime) return null
-
-  const year = datetime.format('YYYY')
-  const month = datetime.format('MM')
-  const day = datetime.format('DD')
-  const hour = datetime.format('HH')
-  const minute = datetime.format('mm')
-
-  return `${month}/${day}/${year} ${hour}:${minute}`
+  if (!datetime) return null
+  const year = datetime.getFullYear()
+  const month = (datetime.getMonth() + 1).toString().padStart(2, '0')
+  const day = datetime.getDate().toString().padStart(2, '0')
+  return `${month}/${day}/${year}`
 
 }
 
@@ -40,7 +37,7 @@ export const parseDateTime = (datetime, opts = {}) => {
   if (!datetime) return datetime
   if (datetime === 'today') return new Date()
   if (date) return new Date(datetime)
-  if (time) return new Date(`November 5, 1955 ${datetime}`)
+  if (time) return new Date(`1955-11-05 ${datetime}`)
 
   return new Date(datetime)
 }
