@@ -4,16 +4,22 @@ const jwt = require('jsonwebtoken')
 const google = require('../lib/google')
 const parseSchema = require('../lib/schema')
 
-const { JWT_SECRET } = process.env
+const { JWT_SECRET, HOST, NODE_ENV } = process.env
 
 function verifyToken(token) {
   return jwt.verify(token, JWT_SECRET)
 }
 
 function generateToken(auth, res) {
+  // TODO: rather than setting the whole cookie from plugins we should have
+  // them register a partial update so we can consistently handle expiration
+  // and type recording
   const token = jwt.sign(auth, JWT_SECRET, { expiresIn: '1h' })
   res.cookie('token', token, {
     maxAge: 1 * 60 * 60 * 1000, // 1h
+    httpOnly: true,
+    secure: NODE_ENV === 'production',
+    domain: HOST,
   })
 }
 
@@ -26,7 +32,10 @@ config.auth.plugins.forEach(plugin => {
 })
 
 function pruneAuth(auth) {
-  return auth // TODO
+  // TODO: we need to actually prune the tree, for which we need standard
+  // expiration handling
+  return auth
+
   const now = Date.now()
   return Object.entries(auth).reduce((newAuth, [key, value]) => {
     if (value.expires > now) {
@@ -37,6 +46,7 @@ function pruneAuth(auth) {
 }
 
 function auth(req, res, next) {
+  // TODO: check cookie domain
   const token = req.cookies.token || ''
   req.auth = {}
   if (!token) return next()

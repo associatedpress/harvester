@@ -5419,6 +5419,11 @@ he@^1.1.1, he@^1.2.0:
   resolved "https://artifactory.ap.org:443/api/npm/npm/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha1-hK5l+n6vsWX922FWauFLrwVmTw8=
 
+helmet@^4.4.1:
+  version "4.4.1"
+  resolved "https://artifactory.ap.org:443/api/npm/npm/helmet/-/helmet-4.4.1.tgz#a17e1444d81d7a83ddc6e6f9bc6e2055b994efe7"
+  integrity sha1-oX4URNgdeoPdxub5vG4gVbmU7+c=
+
 hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://artifactory.ap.org:443/api/npm/npm/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"

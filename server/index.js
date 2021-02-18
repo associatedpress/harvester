@@ -5,6 +5,7 @@ const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const helmet = require('helmet')
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
@@ -12,6 +13,8 @@ const PORT = process.env.PORT || 3000
 
 const start = (port = PORT, host = HOST) => {
   const app = express()
+
+  app.use(helmet())
 
   app.set('view engine', 'ejs')
   app.set('views', path.join(__dirname, 'views'))
