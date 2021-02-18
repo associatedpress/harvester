@@ -9,9 +9,6 @@ function StringInput(props) {
     validateField,
   } = props
 
-
-  //create function for string length validation
-
   return (
     <Input
       value={value || ''}
