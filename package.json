@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "csv-string": "^4.0.1",
     "dotenv": "^8.2.0",
@@ -74,6 +75,7 @@
     "express-http-proxy": "^1.6.0",
     "googleapis": "^52.1.0",
     "http-proxy-middleware": "^1.0.4",
+    "jsonwebtoken": "^8.5.1",
     "mini-css-extract-plugin": "^0.9.0",
     "react": "^16.13.1",
     "react-datepicker": "^3.0.0",
