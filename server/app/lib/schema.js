@@ -115,6 +115,7 @@ function parseSchema(type, form, configs) {
     form: {
       type,
       id: form,
+      path: `/${type}/${form}`,
     },
   }
   for (let config of configs) {
