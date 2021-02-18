@@ -24,6 +24,7 @@ yarn-error.log*
 
 .env
 .auth.json
+.auth-ap.json
 .auth-stanford.json
 .docker
 *.swp
