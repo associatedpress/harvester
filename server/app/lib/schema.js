@@ -110,8 +110,13 @@ function parseRelativeColumnSchema(schema) {
   return { ...config, relative }
 }
 
-function parseSchema(configs) {
-  const schema = {}
+function parseSchema(type, form, configs) {
+  const schema = {
+    form: {
+      type,
+      id: form,
+    },
+  }
   for (let config of configs) {
     const [configType, ...cfg] = config.filter(c => c)
     if (configType === 'column') {
@@ -125,6 +130,8 @@ function parseSchema(configs) {
       const relativeCols = schema.relatives[column.relative]
       const id = relativeCols.length
       relativeCols.push({  ...column, id })
+    } else if (configType === 'auth') {
+      schema.auth = { type: cfg[0] }
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }
