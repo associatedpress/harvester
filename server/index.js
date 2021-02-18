@@ -4,6 +4,7 @@ const path = require('path')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
@@ -15,6 +16,7 @@ const start = (port = PORT, host = HOST) => {
   app.set('view engine', 'ejs')
   app.set('views', path.join(__dirname, 'views'))
 
+  app.use(cookieParser())
   app.use(bodyParser.json())
 
   app.use((req, res, next) => {
