@@ -5,9 +5,22 @@ const google = require('./lib/google')
 const logger = require('./logger')
 const parseSchema = require('./lib/schema')
 const current = require('./lib/current')
+const auth = require('./auth')
 
 const docIdParam = ':docId([a-zA-Z0-9-_]+)'
 const HARVESTER_CONFIG_DOC_ID = process.env.HARVESTER_CONFIG_DOC_ID
+
+router.use(auth.auth)
+router.use('/auth', auth.router)
+
+async function renderForm(docId, req, res) {
+  const range = 'schema'
+  const data = await google.getRange(docId, { range, headers: false }) || []
+  const schema = await parseSchema('d', docId, data)
+  const next = () => res.render('docId', { docId })
+  const error = () => auth.authenticate(schema, req, res)
+  auth.verify(schema, req, res, next, error)
+}
 
 router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
   if (HARVESTER_CONFIG_DOC_ID) {
@@ -18,7 +31,7 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
       const form = forms.find(f => f.slug === slug)
       if (form) {
         const docId = form.doc_id
-        res.render('docId', { docId })
+        await renderForm(docId, req, res)
       } else {
         res.status(404).json({ message: `No form found with slug '${slug}'` })
       }
@@ -42,18 +55,18 @@ router.get(`/d/${docIdParam}`, async (req, res) => {
       if (form) {
         res.redirect(301, `/forms/${form.slug}`)
       } else {
-        res.render('docId', { docId })
+        await renderForm(docId, req, res)
       }
     } catch (error) {
       logger.error('Error:', error)
       res.status(500).json({ message: error.message })
     }
   } else {
-    res.render('docId', { docId })
+    await renderForm(docId, req, res)
   }
 })
 
-router.get(`/api/${docIdParam}/schema`, async (req, res) => {
+router.get(`/api/${docIdParam}/schema`, auth.api, async (req, res) => {
   try {
     const { docId } = req.params
     const range = 'schema'
@@ -66,7 +79,7 @@ router.get(`/api/${docIdParam}/schema`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
+router.get(`/api/${docIdParam}/sheet/:sheet`, auth.api, async (req, res) => {
   try {
     const { docId } = req.params
     const range = req.params.sheet.toLowerCase()
@@ -89,7 +102,7 @@ router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
   }
 })
 
-router.post(`/api/${docIdParam}/entry`, async (req, res) => {
+router.post(`/api/${docIdParam}/entry`, auth.api, async (req, res) => {
   try {
     const { docId } = req.params
     const { range = 'entry!A1' } = req.query
@@ -102,7 +115,7 @@ router.post(`/api/${docIdParam}/entry`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/current`, async (req, res) => {
+router.get(`/api/${docIdParam}/current`, auth.api, async (req, res) => {
   try {
     const { docId } = req.params
     const {
@@ -121,7 +134,7 @@ router.get(`/api/${docIdParam}/current`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
+router.get(`/api/${docIdParam}/export.csv`, auth.api, async (req, res) => {
   try {
     const { docId } = req.params
     const {
