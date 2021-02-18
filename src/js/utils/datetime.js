@@ -1,13 +1,3 @@
-export const formatDateTime = (datetime) => {
-  if (!datetime) return null
-  if (!datetime) return null
-  const year = datetime.getFullYear()
-  const month = (datetime.getMonth() + 1).toString().padStart(2, '0')
-  const day = datetime.getDate().toString().padStart(2, '0')
-  return `${month}/${day}/${year}`
-
-}
-
 export const serializeDateTime = (datetime, opts = {}) => {
   if (!datetime) return null
   const {
@@ -15,11 +5,11 @@ export const serializeDateTime = (datetime, opts = {}) => {
     time = true,
   } = opts
 
-  const year = datetime.format('YYYY')
-  const month = datetime.format('MM')
-  const day = datetime.format('DD')
-  const hour = datetime.format('HH')
-  const minute = datetime.format('mm')
+  const year = datetime.getFullYear()
+  const month = (datetime.getMonth() + 1).toString().padStart(2, '0')
+  const day = datetime.getDate().toString().padStart(2, '0')
+  const hour = datetime.getHours().toString().padStart(2, '0')
+  const minute = datetime.getMinutes().toString().padStart(2, '0')
 
   const formattedDate = date && `${month}/${day}/${year}` 
   const formattedTime = time && `${hour}:${minute}`

@@ -1,5 +1,4 @@
 import * as datetime from '../datetime'
-import Datetime from 'react-datetime'
 
 describe('datetime', () => {
   describe('serializeDateTime', () => {
@@ -18,7 +17,7 @@ describe('datetime', () => {
 
     it('should format a date as mm/dd/yyyy HH:mm', () => {
       // GIVEN
-      const input = Datetime.moment('1955-11-05 18:38')
+      const input = new Date('1955-11-05 18:38')
 
       // WHEN
       const output = datetime.serializeDateTime(input)
@@ -29,7 +28,7 @@ describe('datetime', () => {
 
     it('should format a time only as  HH:mm', () => {
       // GIVEN
-      const input = Datetime.moment('1955-11-05 18:38')
+      const input = new Date('1955-11-05 18:38')
 
       // WHEN
       const output = datetime.serializeDateTime(input, {date:false, time:true})
@@ -40,7 +39,7 @@ describe('datetime', () => {
 
     it('should format a date only as mm/dd/yyyy', () => {
       // GIVEN
-      const input = Datetime.moment('1955-11-05 18:38')
+      const input = new Date('1955-11-05 18:38')
 
       // WHEN
       const output = datetime.serializeDateTime(input, {date:true, time:false})
@@ -112,32 +111,4 @@ describe('datetime', () => {
       expect(output).toEqual(parsedDate)
     })
   })
-
-
-  describe('formatDateTime', () => {
-    it('should return null with no date', () => {
-      // GIVEN
-      const inputs = [null, undefined, '', false]
-
-      inputs.forEach(input => {
-        // WHEN
-        const output = datetime.formatDateTime(input)
-
-        // THEN
-        expect(output).toBeNull()
-      })
-    })
-
-    it('should format a date as mm/dd/yyyy', () => {
-      // GIVEN
-      const input = new Date('01/01/2000')
-
-      // WHEN
-      const output = datetime.formatDateTime(input)
-
-      // THEN
-      expect(output).toEqual('01/01/2000')
-    })
-  })
-  
 })
