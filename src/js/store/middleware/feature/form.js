@@ -98,8 +98,8 @@ const handleApiSuccess = (store, next, action) => {
       store.dispatch(clear())
       next([
         setNotification({ message: 'Form submission successful', feature: FORM }),
-        fetchSchema({ id: store.getState().form.id }),
       ])
+      window.location.reload(true)
       break
 
     case LOAD_INDEX:
