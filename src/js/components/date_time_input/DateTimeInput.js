@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Datetime from 'react-datetime'
 import { serializeDateTime, parseDateTime  } from 'js/utils/datetime'
-import './styles.scss'
+import { Container } from './styles'
 
 function DateTimeInput(props) {
   const {
@@ -21,13 +21,15 @@ function DateTimeInput(props) {
   }
 
   return (
-    <Datetime
-      timeFormat={time}
-      dateFormat={date}
-      className='editable'
-      value={value && parseDateTime(value, {date, time})}
-      onChange={change}
-    />
+    <Container>
+      <Datetime
+        timeFormat={time}
+        dateFormat={date}
+        className='editable'
+        value={value && parseDateTime(value, {date, time})}
+        onChange={change}
+      />
+    </Container>
   )
 }
 
