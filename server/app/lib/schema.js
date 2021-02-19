@@ -110,8 +110,14 @@ function parseRelativeColumnSchema(schema) {
   return { ...config, relative }
 }
 
-function parseSchema(configs) {
-  const schema = {}
+function parseSchema(type, form, configs) {
+  const schema = {
+    form: {
+      type,
+      id: form,
+      path: `/${type}/${form}`,
+    },
+  }
   for (let config of configs) {
     const [configType, ...cfg] = config.filter(c => c)
     if (configType === 'column') {
