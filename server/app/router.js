@@ -71,10 +71,10 @@ router.get(`/d/${formIdParam}/schema`, async (req, res) => {
   }
 })
 
-router.get(`/d/${formIdParam}/sheet/:sheet`, async (req, res) => {
+router.get(`/d/${formIdParam}/table/:table`, async (req, res) => {
   try {
     const { formId } = req.params
-    const range = req.params.sheet.toLowerCase()
+    const range = req.params.table
     const {
       headers = 'true',
       ...filters

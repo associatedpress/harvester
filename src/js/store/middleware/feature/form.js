@@ -30,7 +30,7 @@ import { formatDate } from 'js/utils/date'
 
 const schemaURL = form => `/${form.type}/${form.id}/schema`
 const optionsURL = (form, range, opts = {}) => {
-  const baseURL = `/${form.type}/${form.id}/sheet/${range}`
+  const baseURL = `/${form.type}/${form.id}/table/${range}`
   const { requires, requireValue } = opts
   if (!requires) return baseURL
   const qs = new URLSearchParams({ [requires]: requireValue })
