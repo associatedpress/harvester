@@ -6,11 +6,12 @@ import App from './components'
 import 'scss/app.scss'
 
 const node = document.getElementById('app')
-const docId = node.getAttribute('data-docid')
+const formType = node.getAttribute('data-formtype')
+const formId = node.getAttribute('data-formid')
 
 render(
   <Provider store={store}>
-    <App docId={docId} />
+    <App formType={formType} docId={formId} />
   </Provider>,
   document.getElementById('app')
 )

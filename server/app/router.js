@@ -6,7 +6,7 @@ const logger = require('./logger')
 const parseSchema = require('./lib/schema')
 const current = require('./lib/current')
 
-const docIdParam = ':docId([a-zA-Z0-9-_]+)'
+const formIdParam = ':formId([a-zA-Z0-9-_]+)'
 const HARVESTER_CONFIG_DOC_ID = process.env.HARVESTER_CONFIG_DOC_ID
 
 router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
@@ -17,8 +17,9 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
       const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
       const form = forms.find(f => f.slug === slug)
       if (form) {
-        const docId = form.doc_id
-        res.render('docId', { docId })
+        const formId = form.form_id
+        const formType = form.form_type || 'd'
+        res.render('formId', { formId, formType })
       } else {
         res.status(404).json({ message: `No form found with slug '${slug}'` })
       }
@@ -32,33 +33,34 @@ router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
   }
 })
 
-router.get(`/d/${docIdParam}`, async (req, res) => {
-  const { docId } = req.params
+router.get(`/d/${formIdParam}`, async (req, res) => {
+  const { formId } = req.params
+  const formType = 'd'
   if (HARVESTER_CONFIG_DOC_ID) {
     try {
       const range = 'forms'
       const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
-      const form = forms.find(f => f.doc_id === docId)
+      const form = forms.find(f => f.form_id === formId)
       if (form) {
         res.redirect(301, `/forms/${form.slug}`)
       } else {
-        res.render('docId', { docId })
+        res.render('formId', { formType, formId })
       }
     } catch (error) {
       logger.error('Error:', error)
       res.status(500).json({ message: error.message })
     }
   } else {
-    res.render('docId', { docId })
+    res.render('formId', { formType, formId })
   }
 })
 
-router.get(`/api/${docIdParam}/schema`, async (req, res) => {
+router.get(`/api/${formIdParam}/schema`, async (req, res) => {
   try {
-    const { docId } = req.params
+    const { formId } = req.params
     const range = 'schema'
-    const data = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema('d', docId, data)
+    const data = await google.getRange(formId, { range, headers: false }) || []
+    const schema = await parseSchema('d', formId, data)
     res.json(schema)
   } catch (error) {
     logger.error('Error:', error)
@@ -66,16 +68,16 @@ router.get(`/api/${docIdParam}/schema`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
+router.get(`/api/${formIdParam}/sheet/:sheet`, async (req, res) => {
   try {
-    const { docId } = req.params
+    const { formId } = req.params
     const range = req.params.sheet.toLowerCase()
     const {
       headers = 'true',
       ...filters
     } = req.query
     const data = await google.getRange(
-      docId,
+      formId,
       {
         headers: headers === 'true',
         range,
@@ -89,12 +91,12 @@ router.get(`/api/${docIdParam}/sheet/:sheet`, async (req, res) => {
   }
 })
 
-router.post(`/api/${docIdParam}/entry`, async (req, res) => {
+router.post(`/api/${formIdParam}/entry`, async (req, res) => {
   try {
-    const { docId } = req.params
+    const { formId } = req.params
     const { range = 'entry!A1' } = req.query
     const rows = req.body
-    const googleRsp = await google.appendRows(docId, rows, { range })
+    const googleRsp = await google.appendRows(formId, rows, { range })
     res.json({ rows: rows.length })
   } catch (error) {
     logger.error('Error:', error)
@@ -102,17 +104,17 @@ router.post(`/api/${docIdParam}/entry`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/current`, async (req, res) => {
+router.get(`/api/${formIdParam}/current`, async (req, res) => {
   try {
-    const { docId } = req.params
+    const { formId } = req.params
     const {
       history = 'false',
       index,
     } = req.query
     const range = 'schema'
-    const rawSchema = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema('d', docId, rawSchema)
-    const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
+    const rawSchema = await google.getRange(formId, { range, headers: false }) || []
+    const schema = await parseSchema('d', formId, rawSchema)
+    const entries = await google.getRange(formId, { range: 'entry', headers: false }) || []
     const curr = current.current(schema, entries, { history: history.match(/^true$/i) })
     res.json(index ? (curr[index] || {}) : curr)
   } catch (error) {
@@ -121,18 +123,18 @@ router.get(`/api/${docIdParam}/current`, async (req, res) => {
   }
 })
 
-router.get(`/api/${docIdParam}/export.csv`, async (req, res) => {
+router.get(`/api/${formIdParam}/export.csv`, async (req, res) => {
   try {
-    const { docId } = req.params
+    const { formId } = req.params
     const {
       history = 'false',
       headers = 'true',
       index,
     } = req.query
     const range = 'schema'
-    const rawSchema = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema('d', docId, rawSchema)
-    const entries = await google.getRange(docId, { range: 'entry', headers: false }) || []
+    const rawSchema = await google.getRange(formId, { range, headers: false }) || []
+    const schema = await parseSchema('d', formId, rawSchema)
+    const entries = await google.getRange(formId, { range: 'entry', headers: false }) || []
     const curr = current.currentRows(schema, entries)
     const dataRows = (headers === 'true') ? curr : curr.slice(1)
     res.send(Buffer.from(CSV.stringify(dataRows)))
