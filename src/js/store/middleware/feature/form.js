@@ -28,9 +28,9 @@ import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
 import { formatDate } from 'js/utils/date'
 
-const schemaURL = form => `/api/${form.id}/schema`
+const schemaURL = form => `/${form.type}/${form.id}/schema`
 const optionsURL = (form, range, opts = {}) => {
-  const baseURL = `/api/${form.id}/sheet/${range}`
+  const baseURL = `/${form.type}/${form.id}/sheet/${range}`
   const { requires, requireValue } = opts
   if (!requires) return baseURL
   const qs = new URLSearchParams({ [requires]: requireValue })
@@ -38,10 +38,10 @@ const optionsURL = (form, range, opts = {}) => {
 }
 const loadIndexURL = (form, index) => {
   const qs = new URLSearchParams({ index })
-  return `/api/${form.id}/current?${qs}`
+  return `/${form.type}/${form.id}/current?${qs}`
 }
 const submitURL = (form, range) => {
-  const baseURL = `/api/${form.id}/entry`
+  const baseURL = `/${form.type}/${form.id}/entry`
   if (!range) return baseURL
   const qs = new URLSearchParams({ range })
   return `${baseURL}?${qs}`

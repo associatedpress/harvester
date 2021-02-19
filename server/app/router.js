@@ -58,7 +58,7 @@ router.get(`/d/${formIdParam}`, async (req, res) => {
   }
 })
 
-router.get(`/api/${formIdParam}/schema`, async (req, res) => {
+router.get(`/d/${formIdParam}/schema`, async (req, res) => {
   try {
     const { formId } = req.params
     const range = 'schema'
@@ -71,7 +71,7 @@ router.get(`/api/${formIdParam}/schema`, async (req, res) => {
   }
 })
 
-router.get(`/api/${formIdParam}/sheet/:sheet`, async (req, res) => {
+router.get(`/d/${formIdParam}/sheet/:sheet`, async (req, res) => {
   try {
     const { formId } = req.params
     const range = req.params.sheet.toLowerCase()
@@ -94,7 +94,7 @@ router.get(`/api/${formIdParam}/sheet/:sheet`, async (req, res) => {
   }
 })
 
-router.post(`/api/${formIdParam}/entry`, async (req, res) => {
+router.post(`/d/${formIdParam}/entry`, async (req, res) => {
   try {
     const { formId } = req.params
     const { range = 'entry!A1' } = req.query
@@ -107,7 +107,7 @@ router.post(`/api/${formIdParam}/entry`, async (req, res) => {
   }
 })
 
-router.get(`/api/${formIdParam}/current`, async (req, res) => {
+router.get(`/d/${formIdParam}/current`, async (req, res) => {
   try {
     const { formId } = req.params
     const {
@@ -126,7 +126,7 @@ router.get(`/api/${formIdParam}/current`, async (req, res) => {
   }
 })
 
-router.get(`/api/${formIdParam}/export.csv`, async (req, res) => {
+router.get(`/d/${formIdParam}/export.csv`, async (req, res) => {
   try {
     const { formId } = req.params
     const {
