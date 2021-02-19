@@ -7,6 +7,11 @@ const bodyParser = require('body-parser')
 const logger = require('./app/logger')
 const router = require('./app/router')
 
+const config = require('./config')
+const dataPlugins = config.store.plugins.map(plugin => {
+  return require(plugin)
+})
+
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
 const PORT = process.env.PORT || 3000
@@ -19,7 +24,11 @@ const start = (port = PORT, host = HOST) => {
 
   app.use(bodyParser.json())
   app.use(logger)
-  app.use(router)
+
+  const plugins = {
+    data: dataPlugins,
+  }
+  app.use(router({ plugins }))
 
   // static front-end files served by webpack in development
   if (IS_PRODUCTION) {
