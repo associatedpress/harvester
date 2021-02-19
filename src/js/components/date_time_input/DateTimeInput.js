@@ -16,6 +16,7 @@ function DateTimeInput(props) {
   const time = schema.config.time
 
   const change = d => {
+    if (!d.toDate) return
     setField(serializeDateTime(d.toDate(), { date, time }))
     validateField()
   }
