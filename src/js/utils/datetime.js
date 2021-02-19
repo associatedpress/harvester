@@ -26,7 +26,6 @@ export const parseDateTime = (datetime, opts = {}) => {
 
   if (!datetime) return datetime
   if (datetime === 'today') return new Date()
-  if (date) return new Date(datetime)
   if (time) return new Date(`1955-11-05 ${datetime}`)
 
   return new Date(datetime)
