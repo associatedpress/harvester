@@ -81,7 +81,7 @@ function parseColumnSchema(schema, id) {
   const config = {}
 
   for (let c of options) {
-    const [key, val] = c.split(':')
+    const [key, val] = c.split(/:(.+)/)
 
     if (!allowed[key]) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
