@@ -50,7 +50,7 @@ const submitURL = (id, range) => {
 const parseDefault = (value, schema) => {
   if (value == null) return null
   if (schema.type === 'number') return +value
-  if (schema.type === 'datetime' && value === 'today') return serializeDateTime(new Date())
+  if (schema.type === 'datetime' && value === 'today') return serializeDateTime(new Date(), schema.config)
   return value
 }
 
