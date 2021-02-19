@@ -13,7 +13,7 @@ function number(n) {
   return +n
 }
 
-function parseDefault(type, value) {
+function parseDefault(value, type) {
   if (type === 'number') return number(value)
   return value
 }
@@ -69,7 +69,7 @@ function parseConfig(type, key, value, options) {
   }
 
   const parser = allowedOptions[type][key]
-  return parser(value)
+  return parser(value, type)
 }
 
 function parseColumnSchema(schema, id) {
@@ -83,7 +83,7 @@ function parseColumnSchema(schema, id) {
   const config = {}
 
   for (let c of options) {
-    const [key, val] = c.split(':')
+    const [key, val] = c.split(/:(.+)/)
 
     if (!allowed[key]) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
