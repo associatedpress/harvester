@@ -28,20 +28,20 @@ import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
 import { formatDate } from 'js/utils/date'
 
-const schemaURL = id => `/api/${id}/schema`
-const optionsURL = (id, range, opts = {}) => {
-  const baseURL = `/api/${id}/sheet/${range}`
+const schemaURL = form => `/api/${form.id}/schema`
+const optionsURL = (form, range, opts = {}) => {
+  const baseURL = `/api/${form.id}/sheet/${range}`
   const { requires, requireValue } = opts
   if (!requires) return baseURL
   const qs = new URLSearchParams({ [requires]: requireValue })
   return `${baseURL}?${qs}`
 }
-const loadIndexURL = (id, index) => {
+const loadIndexURL = (form, index) => {
   const qs = new URLSearchParams({ index })
-  return `/api/${id}/current?${qs}`
+  return `/api/${form.id}/current?${qs}`
 }
-const submitURL = (id, range) => {
-  const baseURL = `/api/${id}/entry`
+const submitURL = (form, range) => {
+  const baseURL = `/api/${form.id}/entry`
   if (!range) return baseURL
   const qs = new URLSearchParams({ range })
   return `${baseURL}?${qs}`
@@ -127,7 +127,7 @@ const handleSetField = (store, next, action) => {
 
 const handleFetchOptions = (store, next, action) => {
   const state = store.getState()
-  const url = optionsURL(state.form.id, action.payload, action.meta)
+  const url = optionsURL(state.form.form, action.payload, action.meta)
   next([
     apiRequest({
       body: null,
@@ -146,7 +146,7 @@ const handleSubmitCreatedOptions = (store, next, action) => {
     body: JSON.stringify([action.payload.map(opt => opt.value)]),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    url: submitURL(state.form.id, schema.config.options.range),
+    url: submitURL(state.form.form, schema.config.options.range),
     referrer: action,
     feature: FORM,
   }))
@@ -180,7 +180,7 @@ const handleLoadIndex = (store, next, action) => {
     apiRequest({
       body: null,
       method: 'GET',
-      url: loadIndexURL(state.form.id, indexValue),
+      url: loadIndexURL(state.form.form, indexValue),
       referrer: action,
       feature: FORM,
     }),
@@ -205,7 +205,7 @@ const handleSubmit = (store, next, action) => {
     body: JSON.stringify([[now, 0, ...row]]),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    url: submitURL(state.form.id),
+    url: submitURL(state.form),
     referrer: action,
     feature: FORM,
   }))

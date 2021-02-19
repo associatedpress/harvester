@@ -11,7 +11,7 @@ const formId = node.getAttribute('data-formid')
 
 render(
   <Provider store={store}>
-    <App formType={formType} docId={formId} />
+    <App formType={formType} formId={formId} />
   </Provider>,
   document.getElementById('app')
 )

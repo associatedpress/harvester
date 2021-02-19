@@ -18,9 +18,9 @@ export const SUBMIT = `${FORM} SUBMIT`
 export const CLEAR = `${FORM} CLEAR`
 
 // action creators
-export const fetchSchema = ({ id }) => ({
+export const fetchSchema = ({ type, id }) => ({
   type: FETCH_SCHEMA,
-  payload: id,
+  payload: { type, id },
   meta: { feature: FORM },
 })
 

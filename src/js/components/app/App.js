@@ -9,7 +9,8 @@ import { Container } from './styles'
 function App(props) {
   const {
     className,
-    docId,
+    formType,
+    formId,
     fetchSchema,
     schema,
     submit,
@@ -25,7 +26,7 @@ function App(props) {
     clear,
   } = props
 
-  useEffect(() => { fetchSchema({ id: docId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchSchema({ type: formType, id: formId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
@@ -96,7 +97,8 @@ function App(props) {
 
 App.propTypes = {
   className: PropTypes.string,
-  docId: PropTypes.string,
+  formType: PropTypes.string,
+  formId: PropTypes.string,
   schema: PropTypes.object,
   values: PropTypes.object,
   errors: PropTypes.object,
