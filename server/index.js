@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const path = require('path')
 const express = require('express')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const logger = require('./app/logger')
 const router = require('./app/router')
@@ -24,6 +25,11 @@ const start = (port = PORT, host = HOST) => {
   if (IS_PRODUCTION) {
     app.use(express.static('public'))
   }
+
+  app.use('/assets', createProxyMiddleware({
+    target: 'https://interactives.ap.org',
+    changeOrigin: true,
+  }))
 
   app.listen(port, host, () => {
     console.log(`Express server listening at http://${host}:${port}`)

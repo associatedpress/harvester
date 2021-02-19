@@ -73,6 +73,7 @@
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.0",
     "googleapis": "^52.1.0",
+    "http-proxy-middleware": "^1.0.6",
     "mini-css-extract-plugin": "^0.9.0",
     "react": "^16.13.1",
     "react-datepicker": "^3.0.0",

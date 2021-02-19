@@ -1,2 +1,2 @@
-export const header = '"Roboto", sans-serif'
-export const copy = '"Roboto", sans-serif'
+export const copy = '"Good Cond Regular"'
+export const bold = '"Good Cond Bold"'

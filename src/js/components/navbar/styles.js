@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { header } from 'js/styles/fonts'
+import { bold } from 'js/styles/fonts'
 import { lightHighlight, darkPrimary } from 'js/styles/colors'
 
 export const Nav = styled.nav`
@@ -10,7 +10,6 @@ export const Nav = styled.nav`
 `
 
 export const Brand = styled.div`
-  font-family: ${header};
-  font-weight: bold;
+  font-family: ${bold};
   color: ${lightHighlight};
 `

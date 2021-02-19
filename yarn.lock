@@ -1499,6 +1499,13 @@
   resolved "https://artifactory.ap.org:443/api/npm/npm/@types/html-minifier-terser/-/html-minifier-terser-5.1.0.tgz#551a4589b6ee2cc9c1dff08056128aec29b94880"
   integrity sha1-VRpFibbuLMnB3/CAVhKK7Cm5SIA=
 
+"@types/http-proxy@^1.17.4":
+  version "1.17.5"
+  resolved "https://artifactory.ap.org:443/api/npm/npm/@types/http-proxy/-/http-proxy-1.17.5.tgz#c203c5e6e9dc6820d27a40eb1e511c70a220423d"
+  integrity sha1-wgPF5uncaCDSekDrHlEccKIgQj0=
+  dependencies:
+    "@types/node" "*"
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.3"
   resolved "https://artifactory.ap.org:443/api/npm/npm/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.3.tgz#4ba8ddb720221f432e443bd5f9117fd22cfd4762"
@@ -5571,7 +5578,18 @@ http-proxy-middleware@0.19.1:
     lodash "^4.17.11"
     micromatch "^3.1.10"
 
-http-proxy@^1.17.0, http-proxy@^1.18.0:
+http-proxy-middleware@^1.0.6:
+  version "1.0.6"
+  resolved "https://artifactory.ap.org:443/api/npm/npm/http-proxy-middleware/-/http-proxy-middleware-1.0.6.tgz#0618557722f450375d3796d701a8ac5407b3b94e"
+  integrity sha1-BhhVdyL0UDddN5bXAaisVAezuU4=
+  dependencies:
+    "@types/http-proxy" "^1.17.4"
+    http-proxy "^1.18.1"
+    is-glob "^4.0.1"
+    lodash "^4.17.20"
+    micromatch "^4.0.2"
+
+http-proxy@^1.17.0, http-proxy@^1.18.0, http-proxy@^1.18.1:
   version "1.18.1"
   resolved "https://artifactory.ap.org:443/api/npm/npm/http-proxy/-/http-proxy-1.18.1.tgz#401541f0534884bbf95260334e72f88ee3976549"
   integrity sha1-QBVB8FNIhLv5UmAzTnL4juOXZUk=
@@ -7011,7 +7029,7 @@ lodash@^4.0.0, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.1
   resolved "https://artifactory.ap.org:443/api/npm/npm/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha1-tEf2ZwoEVbv+7dETku/zMOoJdUg=
 
-lodash@^4.17.19:
+lodash@^4.17.19, lodash@^4.17.20:
   version "4.17.20"
   resolved "https://artifactory.ap.org:443/api/npm/npm/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha1-tEqbYpe8tpjxxRo1RaKzs2jVnFI=
