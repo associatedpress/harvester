@@ -26,7 +26,7 @@ import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
 import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
-import { formatDate } from 'js/utils/date'
+import { serializeDateTime } from 'js/utils/datetime'
 
 const schemaURL = form => `/${form.type}/${form.id}/schema`
 const optionsURL = (form, range, opts = {}) => {
@@ -50,7 +50,7 @@ const submitURL = (form, range) => {
 const parseDefault = (value, schema) => {
   if (value == null) return null
   if (schema.type === 'number') return +value
-  if (schema.type === 'date' && value === 'today') return formatDate(new Date())
+  if (schema.type === 'datetime' && value === 'today') return serializeDateTime(new Date(), schema.config)
   return value
 }
 

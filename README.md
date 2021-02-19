@@ -337,7 +337,8 @@ GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
 
 changing the value `.auth.json` if you use a different filename. This project
 is set up so that you can set environment variables in a `.env` file in the
-root of the project.
+root of the project, so you can create a file called `.env` and set the
+environment variable there.
 
 If you would like to use a Harvester config sheet as well, you can also set the
 following environment variable (though this is optional):
@@ -353,10 +354,25 @@ running:
 yarn start
 ```
 
-This will start the project in development mode. Note that changes to the front
-end (code in the `/src` directory) will cause the browser to automatically
-refresh with the new code, but changes to the back end (code in the `/server`
-directory) will require a manual restart of the server.
+This will start the project in development mode, using [webpack][] to
+dynamically build and serve the front-end code and [babel-watch][] to monitor
+and restart the server process. When you run `yarn start` Harvester should open
+in your web browser; in development you will be interacting directly with the
+webpack development server that's building and serving the front-end, and it
+will proxy all other requests to the server process. The webpack server will
+automatically update the code in your browser as you make changes to the
+front-end code, and babel-watch will restart the server process as you make
+changes to the back-end code.
+
+You can run the two parts of the project independently if you want. Running
+```
+yarn devfrontend
+```
+will start the webpack devlopment server, and running
+```
+yarn devbackend
+```
+will run the server process.
 
 This project includes some tests, which you can run with the following:
 
@@ -390,3 +406,5 @@ Happy harvesting! :heart:
 [config-sheet]: https://docs.google.com/spreadsheets/d/1em6MB9S-rRL81Sh128xrVft9SpTCqRtL2K2zoPVx9PQ/edit#gid=0
 [node]: https://nodejs.org/en/
 [create-service-account]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
+[webpack]: https://webpack.js.org/
+[babel-watch]: https://www.npmjs.com/package/babel-watch
