@@ -40,7 +40,10 @@ router.get(`/d/${formIdParam}`, async (req, res) => {
     try {
       const range = 'forms'
       const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
-      const form = forms.find(f => f.form_id === formId)
+      const form = forms.find(f => {
+        const fType = f.form_type || 'd'
+        return f.form_id === formId && fType === formType
+      })
       if (form) {
         res.redirect(301, `/forms/${form.slug}`)
       } else {
