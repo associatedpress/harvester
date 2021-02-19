@@ -35,6 +35,8 @@ const allowedOptions = {
   },
   number: {
     ...universalOptions,
+    min: number,
+    max: number,
   },
   string: {
     ...universalOptions,
