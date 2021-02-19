@@ -1,12 +1,12 @@
 function validateMin(value, min) {
   if (value < min) {
-    return `entry must be greater than ${min}`
+    return `entry must be at least ${min}`
   }
 }
 
 function validateMax(value, max) {
   if (value > max) {
-    return `entry must be ${max} or less`
+    return `entry must be at most ${max}`
   }
 }
 
@@ -18,8 +18,8 @@ export default function validate(schema, value) {
 
   const errors = []
 
-  if (min) errors.push(validateMin(value, min))
-  if (max) errors.push(validateMax(value, max))
+  if (min || min === 0 ) errors.push(validateMin(value, min))
+  if (max || max === 0 ) errors.push(validateMax(value, max))
 
   return errors.filter(e => e)
 }
