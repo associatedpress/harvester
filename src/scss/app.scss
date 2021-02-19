@@ -108,39 +108,3 @@
   src: url("/assets/fonts/freight/freight_text_bold_italic.woff2") format("woff2"), url("/assets/fonts/freight/freight_text_bold_italic.woff") format("woff");
   font-style: italic;
 }
-
-.react-datepicker-wrapper {
-  width: 100%;
-
-  .react-datepicker__input-container {
-    width: 100%;
-
-    input {
-      width: 100%;
-      height: 2.1em;
-      font-size: 0.9em;
-      padding: 0;
-      padding-left: 0.4em;
-      box-sizing: border-box;
-      border: none;
-      border-bottom: 1px solid #ebebeb;
-      font-family: inherit;
-
-      &.editable {
-        &:hover {
-          border-color: #aaa;
-        }
-      }
-
-      &.read-only {
-        &:hover {
-          border-color: #ebebeb;
-        }
-
-        &:focus {
-          outline: none;
-        }
-      }
-    }
-  }
-}
