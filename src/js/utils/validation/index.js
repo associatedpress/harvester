@@ -3,6 +3,7 @@ import selectValidation from './select'
 import datetimeValidation from './datetime'
 import numberValidation from './number'
 import hasManyValidation from './has_many'
+import stringValidation from './string'
 
 // This validation shouldn't have to concern itself with type enforcement
 // because that should be handled by the actual type-specific inputs
@@ -27,6 +28,8 @@ function typedValidation(schema, value) {
       return datetimeValidation(schema, value)
     case 'number':
       return numberValidation(schema, value)
+    case 'string':
+      return stringValidation(schema, value)
     default:
       return []
   }
