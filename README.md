@@ -126,9 +126,12 @@ listed at the end).
 
 * `string` - a short text input. This column type supports the following specific option:
   - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
-    and requires entries that match exactly. Example:
+    and requires entries that match exactly. Consider giving an example in the name of
+    the field and specifying the necessary format of the entry, because if entries do 
+    not match, the format error message prints the regex, which might not be clear 
+    feedback for non-technical reports. Example:
 
-    | column | Name | string | regex:[A-Z]{2}[0-9]{2-5} | 
+    | column | Name | string | regex:[A-Z]{2}[0-9]{2,5} | 
     |:-------|:-----|:-------|:-------------------------|
 
 * `text` - a longer text input that displays as a `textarea` input. This column
