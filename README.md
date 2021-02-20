@@ -124,11 +124,12 @@ listed at the end).
   | column | Age | number |
   |:-------|:----|:-------|
 
-* `string` - a short text input. This column type does not support any specific
-  options.
+* `string` - a short text input. This column type supports the following specific option:
+  - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
+    and requires entries that match exactly. Example:
 
-  | column | Name | string |
-  |:-------|:-----|:-------|
+    | column | Name | string | regex:[A-Z]{2}[0-9]{2-5} | 
+    |:-------|:-----|:-------|:-------------------------|
 
 * `text` - a longer text input that displays as a `textarea` input. This column
   type supports the following specific option:
