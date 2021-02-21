@@ -1,23 +1,25 @@
 const express = require('express')
+const logger = require('../logger')
 
 const slugParam = ':slug([a-zA-Z0-9-_]+)'
 const formIdParam = ':formId([a-zA-Z0-9-_]+)'
 
-const configure = ({ auth, config, plugins }) => {
-  const router = express.Router()
+const configure = ({ config, plugins }) => {
 
   const storePluginsByType = plugins.reduce((ps, plugin) => {
-    return { ...ps, [plugin.formType]: plugin }
+    return { ...ps, [plugin.plugin.formType]: plugin.plugin }
   }, {})
   const storePluginRoots = Object.keys(storePluginsByType)
   const formTypeParam = `:formType(${storePluginRoots.join('|')})`
 
   const renderForm = async (formType, formId, req, res) => {
-    const storePlugin = storePluginsByType[formType]
-    const schema = await storePlugin.schema(formId)
-    const next = () => res.render('formId', { formType, formId })
-    const error = () => auth.authenticate(schema, req, res)
-    auth.verify(schema, req, res, next, error)
+    res.render('formId', { formType, formId })
+  }
+
+  const setHarvesterResource = (req, res, next) => {
+    const { formType, formId } = req.params
+    req.harvesterResource = { formType, formId }
+    next()
   }
 
   const getCustomForm = async ({ slug, formId }) => {
@@ -28,116 +30,130 @@ const configure = ({ auth, config, plugins }) => {
     return forms.find(f => (!slug || f.slug === slug) && (!formId || f.form_id === formId))
   }
 
-  router.get(`/forms/${slugParam}`, async (req, res) => {
-    try {
-      const { slug } = req.params
-      const customForm = await getCustomForm({ slug })
-      if (customForm) {
-        const formId = form.form_id
-        const formType = form.form_type || config.type
-        res.render('formId', { formId, formType })
-        await renderForm(formType, formId, req, res)
-      } else {
-        // TODO: real 4xx page
-        res.status(404).json({ message: `No form found with slug '${slug}'` })
+  const mount = (verify) => {
+    const router = express.Router()
+    const auth = verify(storePluginsByType)
+
+    router.get(`/forms/${slugParam}`, async (req, res) => {
+      try {
+        const { slug } = req.params
+        const customForm = await getCustomForm({ slug })
+        if (customForm) {
+          const formId = form.form_id
+          const formType = form.form_type || config.type
+          req.params.formType = formType
+          req.params.formId = formId
+          auth(req, res, async () => {
+            await renderForm(formType, formId, req, res)
+          })
+        } else {
+          // TODO: real 4xx page
+          res.status(404).json({ message: `No form found with slug '${slug}'` })
+        }
+      } catch (error) {
+        logger.error('Error from store:', error)
+        // TODO: real 5xx page
+        res.status(500).json({ message: error.message })
       }
-    } catch (error) {
-      logger.error('Error from store:', error)
-      // TODO: real 5xx page
-      res.status(500).json({ message: error.message })
-    }
-  })
+    })
 
-  router.get(`/${formTypeParam}/${formIdParam}`, async (req, res) => {
-    try {
-      const { formType, formId } = req.params
-      const customForm = await getCustomForm({ formId })
-      if (customForm) {
-        res.redirect(301, `/forms/${form.slug}`)
-      } else {
-        await renderForm(formType, formId, req, res)
+    router.get(`/${formTypeParam}/${formIdParam}`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const customForm = await getCustomForm({ formId })
+        if (customForm) {
+          res.redirect(301, `/forms/${form.slug}`)
+        } else {
+          await renderForm(formType, formId, req, res)
+        }
+      } catch (error) {
+        logger.error('Error:', error)
+        // TODO: real 5xx page
+        res.status(500).json({ message: error.message })
       }
-    } catch (error) {
-      logger.error('Error:', error)
-      // TODO: real 5xx page
-      res.status(500).json({ message: error.message })
-    }
-  })
+    })
 
-  router.get(`/${formTypeParam}/${formIdParam}/schema`, auth.api, async (req, res) => {
-    try {
-      const { formType, formId } = req.params
-      const storePlugin = storePluginsByType[formType]
-      const schema = await storePlugin.schema(formId)
-      res.json(schema)
-    } catch (error) {
-      logger.error('Error:', error)
-      res.status(500).json({ message: error.message })
-    }
-  })
+    router.get(`/${formTypeParam}/${formIdParam}/schema`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const storePlugin = storePluginsByType[formType]
+        const schema = await storePlugin.schema(formId)
+        res.json(schema)
+      } catch (error) {
+        logger.error('Error:', error)
+        res.status(500).json({ message: error.message })
+      }
+    })
 
-  router.get(`/${formTypeParam}/${formIdParam}/table/:table`, auth.api, async (req, res) => {
-    try {
-      const { formType, formId, table } = req.params
-      const storePlugin = storePluginsByType[formType]
-      const data = await storePlugin.table(formId, table)
-      res.json(data)
-    } catch (error) {
-      logger.error('Error:', error)
-      res.status(500).json({ message: error.message })
-    }
-  })
+    router.get(`/${formTypeParam}/${formIdParam}/table/:table`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId, table } = req.params
+        const storePlugin = storePluginsByType[formType]
+        const data = await storePlugin.table(formId, table)
+        res.json(data)
+      } catch (error) {
+        logger.error('Error:', error)
+        res.status(500).json({ message: error.message })
+      }
+    })
 
-  router.post(`/${formTypeParam}/${formIdParam}/entry`, auth.api, async (req, res) => {
-    try {
-      const { formType, formId } = req.params
-      const { range } = req.query
-      const rows = req.body
-      const storePlugin = storePluginsByType[formType]
-      await storePlugin.entry(formId, rows, { table: range })
-      res.json({ rows: rows.length })
-    } catch (error) {
-      logger.error('Error:', error)
-      res.status(500).json({ message: error.message })
-    }
-  })
+    router.post(`/${formTypeParam}/${formIdParam}/entry`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const { range } = req.query
+        const rows = req.body
+        const storePlugin = storePluginsByType[formType]
+        await storePlugin.entry(formId, rows, { table: range })
+        res.json({ rows: rows.length })
+      } catch (error) {
+        logger.error('Error:', error)
+        res.status(500).json({ message: error.message })
+      }
+    })
 
-  router.get(`/${formTypeParam}/${formIdParam}/current`, auth.api, async (req, res) => {
-    try {
-      const { formType, formId } = req.params
-      const {
-        history = 'false',
-        index,
-      } = req.query
-      const storePlugin = storePluginsByType[formType]
-      const currentValues = await storePlugin.current(
-        formId,
-        {
+    router.get(`/${formTypeParam}/${formIdParam}/current`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const {
+          history = 'false',
           index,
-          history: /^true$/i.test(history),
-        },
-      )
-      res.json(currentValues)
-    } catch (error) {
-      logger.error('Error:', error)
-      res.status(500).json({ message: error.message })
-    }
-  })
+        } = req.query
+        const storePlugin = storePluginsByType[formType]
+        const currentValues = await storePlugin.current(
+          formId,
+          {
+            index,
+            history: /^true$/i.test(history),
+          },
+        )
+        res.json(currentValues)
+      } catch (error) {
+        logger.error('Error:', error)
+        res.status(500).json({ message: error.message })
+      }
+    })
 
-  router.get(`/${formTypeParam}/${formIdParam}/export.csv`, auth.api, async (req, res) => {
-    try {
-      const { formType, formId } = req.params
-      const headers = /^true$/i.test(req.query.headers)
-      const storePlugin = storePluginsByType[formType]
-      const rows = await storePlugin.exportCsv(formId, { headers })
-      res.send(Buffer.from(CSV.stringify(rows)))
-    } catch (error) {
-      logger.error('Error:', error)
-      res.status(500).json({ message: error.message })
-    }
-  })
+    router.get(`/${formTypeParam}/${formIdParam}/export.csv`, setHarvesterResource, auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const headers = /^true$/i.test(req.query.headers)
+        const storePlugin = storePluginsByType[formType]
+        const rows = await storePlugin.exportCsv(formId, { headers })
+        res.send(Buffer.from(CSV.stringify(rows)))
+      } catch (error) {
+        logger.error('Error:', error)
+        res.status(500).json({ message: error.message })
+      }
+    })
 
-  return router
+    return router
+  }
+
+  return {
+    router: mount,
+  }
 }
 
-module.exports = configure
+module.exports = {
+  configure,
+}

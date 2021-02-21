@@ -7,15 +7,16 @@ const harvesterStores = require('./stores')
 const configure = (config) => {
   const router = express.Router()
 
+  const stores = harvesterStores.configure(config.store)
   const auth = harvesterAuth.configure(config.auth)
+
   router.use(auth.parseAuthCookie)
   router.use('/auth', auth.router)
 
-  const stores = harvesterStores.configure({
-    auth,
-    ...config.store,
-  })
-  router.use(stores)
+  router.use(stores.router(auth.verifyResourceAccessibility))
+
+  router.use(auth.redirectErrorResponse)
+  router.use(auth.apiErrorResponse)
 
   return router
 }

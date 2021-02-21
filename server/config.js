@@ -11,7 +11,13 @@ module.exports = {
   auth: {
     secret: process.env.JWT_SECRET,
     plugins: [
-      'harvester-auth-oauth-google',
+      {
+        name: './auth/oauth-google',
+        options: {
+          clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        },
+      },
     ],
   },
 }

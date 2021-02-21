@@ -7,6 +7,11 @@ const configure = (opts = {}) => {
     formType = 'd',
   } = opts
 
+  const userCanAccess = async (formId, auth = {}) => {
+    const { email } = auth
+    return await google.emailCanRead(formId, email)
+  }
+
   const schema = async (formId) => {
     const range = 'schema'
     const data = await google.getRange(formId, { range, headers: false }) || []
@@ -59,6 +64,7 @@ const configure = (opts = {}) => {
 
   return {
     formType,
+    userCanAccess,
     schema,
     table,
     entry,

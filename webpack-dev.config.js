@@ -12,7 +12,7 @@ const backendUrlPatterns = [
 
 const config = (env, argv, port) => ({
   mode: 'development',
-  devtool: 'cheap-eval-source-map',
+  devtool: 'cheap-module-source-map',
   resolve: {
     modules: [
       'node_modules',
