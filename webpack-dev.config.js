@@ -1,5 +1,14 @@
-const webpack = require('webpack');
-const path = require('path');
+const webpack = require('webpack')
+const path = require('path')
+const portfinder = require('portfinder')
+const args = require('yargs').default('proxy', '3000').argv
+
+const backendUrlPatterns = [
+  '/d/',
+  '/api/',
+  '/assets/',
+  '/auth/',
+]
 
 const config = (env, argv, port) => ({
   mode: 'development',
@@ -15,6 +24,20 @@ const config = (env, argv, port) => ({
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',
+  },
+  devServer: {
+    compress: true,
+    port,
+    open: true,
+    hot: true,
+    contentBase: path.join(__dirname, 'public'),
+    overlay: {
+      errors: true,
+      warnings: false,
+    },
+    proxy: backendUrlPatterns.reduce((proxy, url) => {
+      return { ...proxy, [url]: `http://localhost:${args.proxy}` }
+    }, {}),
   },
   module: {
     rules: [
@@ -85,6 +108,6 @@ const config = (env, argv, port) => ({
     ],
   },
   plugins: [],
-});
+})
 
 module.exports = config

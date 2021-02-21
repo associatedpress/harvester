@@ -4,7 +4,7 @@ import {
   FieldErrors,
   FieldHelp,
   NumberInput,
-  DateInput,
+  DateTimeInput,
   SelectInput,
   StringInput,
   TextInput,
@@ -24,7 +24,7 @@ function Field(props) {
   const typeInputs = {
     string: StringInput,
     number: NumberInput,
-    date: DateInput,
+    datetime: DateTimeInput,
     text: TextInput,
     select: SelectInput,
     has_many: HasManyInput,

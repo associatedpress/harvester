@@ -5,7 +5,7 @@ import Field from './field'
 import FieldErrors from './field_errors'
 import StringInput from './string_input'
 import NumberInput from './number_input'
-import DateInput from './date_input'
+import DateTimeInput from './date_time_input'
 import TextInput from './text_input'
 import SelectInput from './select_input'
 import Notifications from './notifications'
@@ -22,7 +22,7 @@ export {
   FieldErrors,
   StringInput,
   NumberInput,
-  DateInput,
+  DateTimeInput,
   TextInput,
   SelectInput,
   Notifications,

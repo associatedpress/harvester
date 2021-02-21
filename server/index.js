@@ -6,6 +6,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
+const logger = require('./app/logger')
+const router = require('./app/router')
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
@@ -21,31 +23,11 @@ const start = (port = PORT, host = HOST) => {
 
   app.use(cookieParser())
   app.use(bodyParser.json())
+  app.use(logger)
+  app.use(router)
 
-  app.use((req, res, next) => {
-    require('./app/logger')(req, res, next)
-  })
-
-  app.use((req, res, next) => {
-    require('./app/router')(req, res, next)
-  })
-
-  // static
-  if (!IS_PRODUCTION) {
-    const webpack = require('webpack')
-    const webpackDevMiddleware = require('webpack-dev-middleware')
-    const webpackHotMiddleware = require('webpack-hot-middleware')
-    const webpackConfigFn = require('../webpack-dev.config.js')
-    const config = webpackConfigFn(undefined, undefined, port)
-
-    config.entry = ['webpack-hot-middleware/client?reload=true&timeout=1000', config.entry]
-    config.plugins.push(new webpack.HotModuleReplacementPlugin())
-    const compiler = webpack(config)
-    app.use(webpackDevMiddleware(compiler, {
-        publicPath: config.output.publicPath,
-    }))
-    app.use(webpackHotMiddleware(compiler))
-  } else {
+  // static front-end files served by webpack in development
+  if (IS_PRODUCTION) {
     app.use(express.static('public'))
   }
 

@@ -1,6 +1,6 @@
 import required from './required'
 import selectValidation from './select'
-import dateValidation from './date'
+import datetimeValidation from './datetime'
 import hasManyValidation from './has_many'
 
 // This validation shouldn't have to concern itself with type enforcement
@@ -22,8 +22,8 @@ function typedValidation(schema, value) {
   switch (schema.type) {
     case 'select':
       return selectValidation(schema, value)
-    case 'date':
-      return dateValidation(schema, value)
+    case 'datetime':
+      return datetimeValidation(schema, value)
     default:
       return []
   }
