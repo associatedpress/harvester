@@ -1,7 +1,7 @@
 module.exports = {
   store: {
     plugins: [
-      './store-googlesheets',
+      './stores/google-sheets'
     ],
   },
 }

@@ -1,5 +1,4 @@
 const CSV = require('csv-string')
-const google = require('./google')
 
 function identity(x) {
   return x
@@ -60,18 +59,6 @@ const allowedOptions = {
   },
 }
 
-function parseConfig(type, key, value, options) {
-  const hasOptions = options.some(o => /^options:/.test(o))
-  const hasOptionList = options.some(o => /^optionlist:/.test(o))
-
-  if (hasOptions && hasOptionList) {
-    throw new Error('schema error: `options` and `optionlist` cannot both be given')
-  }
-
-  const parser = allowedOptions[type][key]
-  return parser(value, type)
-}
-
 function parseColumnSchema(schema, id) {
   const [label, type, ...options] = schema
   const allowed = allowedOptions[type]
@@ -89,27 +76,15 @@ function parseColumnSchema(schema, id) {
       throw new Error(`schema error: column type ${type} cannot take option ${key}`)
     }
 
-    config[key] = parseConfig(type, key, val, options)
+    const parser = allowedOptions[type][key]
+    config[key] = parser(val, type)
   }
 
-  return { id, label, type, config }
-}
+  const column = { id, label, type, config }
 
-function parseRelativeColumnSchema(schema) {
-  const type = schema[1]
-
-  if (type === 'has_many') {
-    throw new Error(`schema error: relative column must have primitive type`)
-  }
-
-  const config = parseColumnSchema(schema)
-  const relative = config.config.relative
-
-  if (!relative) {
-    throw new Error('schema error: relative column must specify relative')
-  }
-
-  return { ...config, relative }
+  const relative = config.relative
+  if (relative) return { ...column, relative }
+  return column
 }
 
 function parseSchema(type, form, configs) {
@@ -128,11 +103,11 @@ function parseSchema(type, form, configs) {
       schema.columns.push(column)
     } else if (configType === 'relative_column') {
       schema.relatives = schema.relatives || {}
-      const column = parseRelativeColumnSchema(cfg)
+      const column = parseColumnSchema(cfg)
       schema.relatives[column.relative] = schema.relatives[column.relative] || []
       const relativeCols = schema.relatives[column.relative]
       const id = relativeCols.length
-      relativeCols.push({  ...column, id })
+      relativeCols.push({ ...column, id })
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }

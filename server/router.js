@@ -1,38 +1,17 @@
 const express = require('express')
 const CSV = require('csv-string')
-const google = require('./lib/google')
 const logger = require('./logger')
-const current = require('./lib/current')
 
+const slugParam = ':slug([a-zA-Z0-9-_]+)'
 const formIdParam = ':formId([a-zA-Z0-9-_]+)'
-const HARVESTER_CONFIG_DOC_ID = process.env.HARVESTER_CONFIG_DOC_ID
+
+const {
+  HARVESTER_CONFIG_RESOURCE_TYPE = 'd',
+  HARVESTER_CONFIG_RESOURCE_ID,
+} = process.env
 
 const configure = ({ plugins }) => {
   const router = express.Router()
-
-  router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
-    if (HARVESTER_CONFIG_DOC_ID) {
-      try {
-        const { slug } = req.params
-        const range = 'forms'
-        const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
-        const form = forms.find(f => f.slug === slug)
-        if (form) {
-          const formId = form.form_id
-          const formType = form.form_type || 'd'
-          res.render('formId', { formId, formType })
-        } else {
-          res.status(404).json({ message: `No form found with slug '${slug}'` })
-        }
-      } catch (error) {
-        logger.error('Error from Google:', error)
-        res.status(500).json({ message: error.message })
-      }
-    } else {
-      const message = 'Custom form names not supported without Harvester config'
-      res.status(401).json({ message })
-    }
-  })
 
   const storePluginsByType = plugins.data.reduce((ps, plugin) => {
     return { ...ps, [plugin.formType]: plugin }
@@ -40,27 +19,46 @@ const configure = ({ plugins }) => {
   const storePluginRoots = Object.keys(storePluginsByType)
   const formTypeParam = `:formType(${storePluginRoots.join('|')})`
 
-  router.get(`/${formTypeParam}/${formIdParam}`, async (req, res) => {
-    const { formType, formId } = req.params
-    if (HARVESTER_CONFIG_DOC_ID) {
-      try {
-        const range = 'forms'
-        const forms = await google.getRange(HARVESTER_CONFIG_DOC_ID, { range })
-        const form = forms.find(f => {
-          const fType = f.form_type || 'd'
-          return f.form_id === formId && fType === formType
-        })
-        if (form) {
-          res.redirect(301, `/forms/${form.slug}`)
-        } else {
-          res.render('formId', { formType, formId })
-        }
-      } catch (error) {
-        logger.error('Error:', error)
-        res.status(500).json({ message: error.message })
+  const getCustomForm = async ({ slug, formId }) => {
+    if (!HARVESTER_CONFIG_RESOURCE_ID) return
+    if (!slug && !formId) return
+    const storePlugin = storePluginsByType[HARVESTER_CONFIG_RESOURCE_TYPE]
+    const forms = await storePlugin.table(HARVESTER_CONFIG_RESOURCE_ID, 'forms')
+    return forms.find(f => (!slug || f.slug === slug) && (!formId || f.form_id === formId))
+  }
+
+  router.get(`/forms/${slugParam}`, async (req, res) => {
+    try {
+      const { slug } = req.params
+      const customForm = await getCustomForm({ slug })
+      if (customForm) {
+        const formId = form.form_id
+        const formType = form.form_type || HARVESTER_CONFIG_RESOURCE_TYPE
+        res.render('formId', { formId, formType })
+      } else {
+        // TODO: real 4xx page
+        res.status(404).json({ message: `No form found with slug '${slug}'` })
       }
-    } else {
-      res.render('formId', { formType, formId })
+    } catch (error) {
+      logger.error('Error from store:', error)
+      // TODO: real 5xx page
+      res.status(500).json({ message: error.message })
+    }
+  })
+
+  router.get(`/${formTypeParam}/${formIdParam}`, async (req, res) => {
+    try {
+      const { formType, formId } = req.params
+      const customForm = await getCustomForm({ formId })
+      if (customForm) {
+        res.redirect(301, `/forms/${form.slug}`)
+      } else {
+        res.render('formId', { formType, formId })
+      }
+    } catch (error) {
+      logger.error('Error:', error)
+      // TODO: real 5xx page
+      res.status(500).json({ message: error.message })
     }
   })
 
