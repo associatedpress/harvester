@@ -108,6 +108,8 @@ function parseSchema(type, form, configs) {
       const relativeCols = schema.relatives[column.relative]
       const id = relativeCols.length
       relativeCols.push({ ...column, id })
+    } else if (configType === 'auth') {
+      schema.auth = { type: cfg[0] }
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }

@@ -4,8 +4,10 @@ const path = require('path')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
-const logger = require('./logger')
-const router = require('./router')
+const cookieParser = require('cookie-parser')
+const helmet = require('helmet')
+const logger = require('./app/logger')
+const router = require('./app/router')
 
 const config = require('./config')
 const dataPlugins = config.store.plugins.map(store => {
@@ -20,9 +22,12 @@ const PORT = process.env.PORT || 3000
 const start = (port = PORT, host = HOST) => {
   const app = express()
 
+  app.use(helmet())
+
   app.set('view engine', 'ejs')
   app.set('views', path.join(__dirname, 'views'))
 
+  app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(logger)
 

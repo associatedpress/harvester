@@ -4,4 +4,9 @@ module.exports = {
       './stores/google-sheets'
     ],
   },
+  auth: {
+    plugins: [
+      'harvester-auth-oauth-google',
+    ],
+  },
 }

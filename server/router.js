@@ -1,6 +1,7 @@
 const express = require('express')
 const CSV = require('csv-string')
 const logger = require('./logger')
+const auth = require('./auth')
 
 const slugParam = ':slug([a-zA-Z0-9-_]+)'
 const formIdParam = ':formId([a-zA-Z0-9-_]+)'
@@ -13,11 +14,22 @@ const {
 const configure = ({ plugins }) => {
   const router = express.Router()
 
+  router.use(auth.auth)
+  router.use('/auth', auth.router)
+
   const storePluginsByType = plugins.data.reduce((ps, plugin) => {
     return { ...ps, [plugin.formType]: plugin }
   }, {})
   const storePluginRoots = Object.keys(storePluginsByType)
   const formTypeParam = `:formType(${storePluginRoots.join('|')})`
+
+  const renderForm = async (formType, formId, req, res) => {
+    const storePlugin = storePluginsByType[formType]
+    const schema = await storePlugin.schema(formId)
+    const next = () => res.render('formId', { formType, formId })
+    const error = () => auth.authenticate(schema, req, res)
+    auth.verify(schema, req, res, next, error)
+  }
 
   const getCustomForm = async ({ slug, formId }) => {
     if (!HARVESTER_CONFIG_RESOURCE_ID) return
@@ -35,6 +47,7 @@ const configure = ({ plugins }) => {
         const formId = form.form_id
         const formType = form.form_type || HARVESTER_CONFIG_RESOURCE_TYPE
         res.render('formId', { formId, formType })
+        await renderForm(formType, formId, req, res)
       } else {
         // TODO: real 4xx page
         res.status(404).json({ message: `No form found with slug '${slug}'` })
@@ -53,7 +66,7 @@ const configure = ({ plugins }) => {
       if (customForm) {
         res.redirect(301, `/forms/${form.slug}`)
       } else {
-        res.render('formId', { formType, formId })
+        await renderForm(formType, formId, req, res)
       }
     } catch (error) {
       logger.error('Error:', error)
@@ -62,7 +75,7 @@ const configure = ({ plugins }) => {
     }
   })
 
-  router.get(`/${formTypeParam}/${formIdParam}/schema`, async (req, res) => {
+  router.get(`/${formTypeParam}/${formIdParam}/schema`, auth.api, async (req, res) => {
     try {
       const { formType, formId } = req.params
       const storePlugin = storePluginsByType[formType]
@@ -74,7 +87,7 @@ const configure = ({ plugins }) => {
     }
   })
 
-  router.get(`/${formTypeParam}/${formIdParam}/table/:table`, async (req, res) => {
+  router.get(`/${formTypeParam}/${formIdParam}/table/:table`, auth.api, async (req, res) => {
     try {
       const { formType, formId, table } = req.params
       const storePlugin = storePluginsByType[formType]
@@ -86,7 +99,7 @@ const configure = ({ plugins }) => {
     }
   })
 
-  router.post(`/${formTypeParam}/${formIdParam}/entry`, async (req, res) => {
+  router.post(`/${formTypeParam}/${formIdParam}/entry`, auth.api, async (req, res) => {
     try {
       const { formType, formId } = req.params
       const { range } = req.query
@@ -100,7 +113,7 @@ const configure = ({ plugins }) => {
     }
   })
 
-  router.get(`/${formTypeParam}/${formIdParam}/current`, async (req, res) => {
+  router.get(`/${formTypeParam}/${formIdParam}/current`, auth.api, async (req, res) => {
     try {
       const { formType, formId } = req.params
       const {
@@ -122,7 +135,7 @@ const configure = ({ plugins }) => {
     }
   })
 
-  router.get(`/${formTypeParam}/${formIdParam}/export.csv`, async (req, res) => {
+  router.get(`/${formTypeParam}/${formIdParam}/export.csv`, auth.api, async (req, res) => {
     try {
       const { formType, formId } = req.params
       const headers = /^true$/i.test(req.query.headers)
