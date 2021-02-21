@@ -4,8 +4,14 @@ const path = require('path')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
-const logger = require('./app/logger')
-const router = require('./app/router')
+const logger = require('./logger')
+const router = require('./router')
+
+const config = require('./config')
+const dataPlugins = config.store.plugins.map(store => {
+  if (store.store) return require(store.store).configure(store.options || {})
+  return require(store).configure({})
+})
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
@@ -19,7 +25,11 @@ const start = (port = PORT, host = HOST) => {
 
   app.use(bodyParser.json())
   app.use(logger)
-  app.use(router)
+
+  const plugins = {
+    data: dataPlugins,
+  }
+  app.use(router({ plugins }))
 
   // static front-end files served by webpack in development
   if (IS_PRODUCTION) {
