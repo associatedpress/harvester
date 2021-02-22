@@ -112,17 +112,47 @@ as `<key>:<value>`). The supported column types are listed below along with the
 options that they support (note that all columns support the general options
 listed at the end).
 
-* `date` - a date input that renders as a date picker. This column type does
-  not support any specific options.
+* `datetime` - a date and time input that renders as a datetime picker. This column type supports the following options:
+  | column | Start date | datetime | 
+  |:-------|:-----------|:---------|
 
-  | column | Start date | date |
-  |:-------|:-----------|:-----|
+  - `min:<date time string>` - the minimum date or time a user may enter. Enter value as a date time string `DD/MM/YYYY HH:MM` 
 
-* `number` - a number input. This column type does not support any specific
-  options.
+    | column | Start date | datetime | min:12/5/1955 06:38 PM| 
+    |:-------|:-----------|:---------|:--------------|
+
+  - `max:<date time string>` - the minimum date or time a user may enter. 
+
+    | column | Start date | datetime | max:10/21/2015 19:28| 
+    |:-------|:-----------|:---------|:--------------|
+
+  - `date:<true|false>` - show or hide date in the rendered picker. A value of `false` will hide the date picker and only display a time picker. The default value is `true`.
+
+    | column | Start date | datetime | date:false | 
+    |:-------|:-----------|:---------|:-----------|
+
+  - `time:<true|false>` - show or hide time in the rendered picker. A value of `false` will hide the time picker and only display a date picker. The default value is `true`.
+
+    | column | Start date | datetime | time:false | 
+    |:-------|:-----------|:---------|:-----------|
+
+
+
+* `number` - a number input. This column type supports the following options:
 
   | column | Age | number |
   |:-------|:----|:-------|
+  
+  - `min:<num>` - the minimum number a user may enter. 
+
+    | column | Start date | datetime | min:-5 |
+    |:-------|:-----------|:---------|:-------|
+
+  - `max:<num>` - the maximum number a user may enter. 
+
+    | column | Start date | datetime | max:10 |
+    |:-------|:-----------|:---------|:-------|
+    
 
 * `string` - a short text input. This column type supports the following specific option:
   - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
@@ -215,6 +245,20 @@ listed at the end).
 
     | column | States | select | options:states | multiple:true |
     |:-------|:-------|:-------|:---------------|:--------------|
+
+  - `min:<num>` -  when `multiple` is set to true, this option
+    specifies the minimum number of options a user must select.
+    Example:
+
+    | column | States | select | options:states | multiple:true | min:1 |
+    |:-------|:-------|:-------|:---------------|:--------------|:------|
+
+    - `max:<num>` -  when `multiple` is set to true, this option
+    specifies the maximum number of options a user may select.
+    Example:
+
+    | column | States | select | options:states | multiple:true | max:10 |
+    |:-------|:-------|:-------|:---------------|:--------------|:------|
 
   - `serialization:<json|csv>` - when `multiple` is set to true this option
     specifies how the multiple values should be serialized so as to occupy
