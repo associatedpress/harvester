@@ -34,7 +34,7 @@ Harvester expects the sheet that drives it to have a few important properties:
 
 2. Second, the sheet has to have at least two tabs: one named `entry` and one
    named `schema`. The `entry` tab is where Harvester will append records when
-   uses submit a form; the `schema` tab defines the structure of the form as
+   users submit a form; the `schema` tab defines the structure of the form as
    described below. The sheet can certainly have other tabs in addition to
    these two.
 
