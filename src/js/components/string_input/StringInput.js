@@ -4,7 +4,6 @@ import { Input } from './styles'
 
 function StringInput(props) {
   const {
-    schema,
     value,
     setField,
     validateField,
@@ -27,7 +26,6 @@ StringInput.propTypes = {
 
 StringInput.defaultProps = {
   value: '',
-  schema: PropTypes.object,
 }
 
 export default StringInput
