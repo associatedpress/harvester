@@ -13,11 +13,13 @@ import {
 function SignInPage(props) {
   const {
     buttons,
+    formType,
+    formId,
   } = props
 
   return (
     <div>
-      <Navbar />
+      <Navbar formType={formType} formId={formId} />
       <Main>
         <ButtonsContainer>
           {buttons.map((button, i) => {

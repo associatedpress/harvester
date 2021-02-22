@@ -4,9 +4,5 @@ import { ErrorPage } from './components'
 import 'scss/app.scss'
 
 const node = document.getElementById('app')
-const { status, message } = node.dataset
-
-render(
-  <ErrorPage status={+status} message={message} />,
-  node
-)
+const { props } = node.dataset
+render(<ErrorPage {...JSON.parse(props)} />, node)

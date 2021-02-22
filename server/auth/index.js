@@ -28,6 +28,7 @@ const configure = ({ secret, plugins }) => {
       const { formType, formId } = req.params
       const storePlugin = storePluginsByType[formType]
       const auth = req.auth
+      console.log(auth)
       const userCanAccess = await storePlugin.userCanAccess(formId, auth)
       if (userCanAccess) return next()
       next(new Error(`unauthorized access to resource ${formType}/${formId}`))
@@ -39,7 +40,16 @@ const configure = ({ secret, plugins }) => {
     if (req.harvesterResource) {
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
-      if (req.auth) return res.status(400).render('error', { status: 400, message: error.message })
+      if (req.auth) {
+        const opts = {
+          status: 400,
+          message: error.message,
+          user: { email: req.auth.email },
+          formType,
+          formId,
+        }
+        return res.status(400).render('error', opts)
+      }
       return res.redirect(`/auth/sign-in?${q}`)
     }
     return next(error)
@@ -62,7 +72,10 @@ const configure = ({ secret, plugins }) => {
       httpOnly: true,
       // secure: NODE_ENV === 'production',
     })
-    res.redirect(`/${form.type}/${form.id}`)
+    if (form.type && form.id) {
+      return res.redirect(`/${form.type}/${form.id}`)
+    }
+    return res.redirect('/')
   }
 
   const router = express.Router()
@@ -83,6 +96,19 @@ const configure = ({ secret, plugins }) => {
       }
     })
     res.render('signIn', { formType, formId, buttons })
+  })
+
+  router.get('/sign-out', (req, res) => {
+    const { formType, formId } = req.query
+    const token = signToken({}, { expiresIn: 0 })
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: NODE_ENV === 'production',
+    })
+    if (formType && formId) {
+      return res.redirect(`/${formType}/${formId}`)
+    }
+    return res.redirect('/')
   })
 
   plugins.forEach(plugin => {

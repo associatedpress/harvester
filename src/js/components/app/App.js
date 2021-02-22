@@ -8,6 +8,7 @@ import { Main } from 'js/styles/containers'
 
 function App(props) {
   const {
+    user,
     className,
     formType,
     formId,
@@ -65,7 +66,7 @@ function App(props) {
   return (
     <div className={className}>
       <Notifications notifications={notifications} />
-      <Navbar />
+      <Navbar user={user} formType={formType} formId={formId} />
       <Main>
         <Header />
         {index && (
@@ -96,6 +97,7 @@ function App(props) {
 }
 
 App.propTypes = {
+  user: PropTypes.object,
   className: PropTypes.string,
   formType: PropTypes.string,
   formId: PropTypes.string,

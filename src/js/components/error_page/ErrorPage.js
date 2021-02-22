@@ -13,13 +13,16 @@ import {
 
 function ErrorPage(props) {
   const {
+    user,
     status,
     message,
+    formType,
+    formId,
   } = props
 
   return (
     <div>
-      <Navbar />
+      <Navbar user={user} formType={formType} formId={formId} />
       <Main>
         <ErrorContainer>
           <ErrorHeader>
@@ -35,6 +38,7 @@ function ErrorPage(props) {
 }
 
 ErrorPage.propTypes = {
+  user: PropTypes.object,
   status: PropTypes.number,
   message: PropTypes.string,
 }

@@ -13,7 +13,8 @@ const configure = ({ config, plugins }) => {
   const formTypeParam = `:formType(${storePluginRoots.join('|')})`
 
   const renderForm = async (formType, formId, req, res) => {
-    res.render('formId', { formType, formId })
+    const user = req.auth && { email: req.auth.email }
+    res.render('formId', { formType, formId, user })
   }
 
   const setHarvesterResource = (req, res, next) => {
