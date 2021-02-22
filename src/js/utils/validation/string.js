@@ -1,5 +1,5 @@
 function validateRegex(value, regex) {
-  let re = new RegExp(`^${regex}\$`);
+  const re = new RegExp(`^${regex}\$`);
   if (!re.test(value)) {
       return `entry does not match specified pattern ${regex}`
   }
