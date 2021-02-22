@@ -136,8 +136,6 @@ listed at the end).
     | column | Start date | datetime | time:false | 
     |:-------|:-----------|:---------|:-----------|
 
-
-
 * `number` - a number input. This column type supports the following options:
 
   | column | Age | number |
@@ -152,7 +150,6 @@ listed at the end).
 
     | column | Start date | datetime | max:10 |
     |:-------|:-----------|:---------|:-------|
-    
 
 * `string` - a short text input. This column type supports the following specific option:
   - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
