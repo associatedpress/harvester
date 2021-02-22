@@ -34,7 +34,7 @@ Harvester expects the sheet that drives it to have a few important properties:
 
 2. Second, the sheet has to have at least two tabs: one named `entry` and one
    named `schema`. The `entry` tab is where Harvester will append records when
-   uses submit a form; the `schema` tab defines the structure of the form as
+   users submit a form; the `schema` tab defines the structure of the form as
    described below. The sheet can certainly have other tabs in addition to
    these two.
 
@@ -47,7 +47,7 @@ describing one attribute of the form. The first column declares the attribute
 the form is describing and subsequent columns in the row describe the details
 of the attribute.
 
-Three attribute types are currently supported:
+Attribute types that are currently supported:
 
 * `headline` - this defines the title of the form. The only other column in
   a `headline`-type row is the text of the column. Example:
@@ -65,7 +65,7 @@ Three attribute types are currently supported:
 * `index` (required) - this defines a (possibly compound) index that uniquely
   identifies an entity in the dataset. An index consists of one or more column
   keys joined by `+`. When an index is specified the user can access
-  a "Current" view where they can speficy all component pieces of an index and
+  a "Current" view where they can specify all component pieces of an index and
   get back the collapsed "current" value of all columns for the given entity.
   Note that the values referenced in the index are column keys created with the
   `key:<string>` option (see below). Example:
@@ -124,11 +124,17 @@ listed at the end).
   | column | Age | number |
   |:-------|:----|:-------|
 
-* `string` - a short text input. This column type does not support any specific
-  options.
+* `string` - a short text input. This column type supports the following specific option:
+  - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
+    and requires entries that match exactly. Consider giving an example in the name of
+    the field and specifying the necessary format of the entry, because if entries do 
+    not match, the format error message prints the regex, which might not be clear 
+    feedback for non-technical reports. A great place to give guidance to reporters 
+    is the `help:` option to set help text for a column, which shows up as hover text 
+    over an info icon next to the column label. Example:
 
-  | column | Name | string |
-  |:-------|:-----|:-------|
+    | column | Name | string | regex:[A-Z]{2}[0-9]{2,5} | help:State abbreviation and numeric bill ID.|
+    |:-------|:-----|:-------|:-------------------------|:--------------------------------------------|
 
 * `text` - a longer text input that displays as a `textarea` input. This column
   type supports the following specific option:
@@ -211,7 +217,7 @@ listed at the end).
     |:-------|:-------|:-------|:---------------|:--------------|
 
   - `serialization:<json|csv>` - when `multiple` is set to true this option
-    specifies how the muliple values should be serialized so as to occupy
+    specifies how the multiple values should be serialized so as to occupy
     a single cell in the resulting sheet. Selecting `csv` will cause the
     multiple values to be serialized into a comma-separated list with fields
     quoted with (`"`) as necessary; selecting `json` (the default) will cause
@@ -223,7 +229,7 @@ listed at the end).
 
 * `has_many` - an input that allows a user to provide sub-fields for one or
   more "relative" or "secondary" models of a certain type. A `has_many` column
-  must include the `relative:<relative_key>` opition, which specifies which
+  must include the `relative:<relative_key>` option, which specifies which
   collection of `relative_column` definitions make up the schema of the
   secondary model. All `relative_column` definitions with a matching
   `relative:<relative_key>` configuration in order will define the secondary
@@ -337,7 +343,8 @@ GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
 
 changing the value `.auth.json` if you use a different filename. This project
 is set up so that you can set environment variables in a `.env` file in the
-root of the project.
+root of the project, so you can create a file called `.env` and set the
+environment variable there.
 
 If you would like to use a Harvester config sheet as well, you can also set the
 following environment variable (though this is optional):
@@ -353,10 +360,25 @@ running:
 yarn start
 ```
 
-This will start the project in development mode. Note that changes to the front
-end (code in the `/src` directory) will cause the browser to automatically
-refresh with the new code, but changes to the back end (code in the `/server`
-directory) will require a manual restart of the server.
+This will start the project in development mode, using [webpack][] to
+dynamically build and serve the front-end code and [babel-watch][] to monitor
+and restart the server process. When you run `yarn start` Harvester should open
+in your web browser; in development you will be interacting directly with the
+webpack development server that's building and serving the front-end, and it
+will proxy all other requests to the server process. The webpack server will
+automatically update the code in your browser as you make changes to the
+front-end code, and babel-watch will restart the server process as you make
+changes to the back-end code.
+
+You can run the two parts of the project independently if you want. Running
+```
+yarn devfrontend
+```
+will start the webpack development server, and running
+```
+yarn devbackend
+```
+will run the server process.
 
 This project includes some tests, which you can run with the following:
 
@@ -390,3 +412,5 @@ Happy harvesting! :heart:
 [config-sheet]: https://docs.google.com/spreadsheets/d/1em6MB9S-rRL81Sh128xrVft9SpTCqRtL2K2zoPVx9PQ/edit#gid=0
 [node]: https://nodejs.org/en/
 [create-service-account]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
+[webpack]: https://webpack.js.org/
+[babel-watch]: https://www.npmjs.com/package/babel-watch
