@@ -13,6 +13,7 @@ import Controls from './controls'
 import FieldHelp from './field_help'
 import HasManyInput from './has_many_input'
 import Navbar from './navbar'
+import Finished from './finished'
 import ErrorPage from './error_page'
 import SignInPage from './sign_in_page'
 
@@ -32,6 +33,7 @@ export {
   FieldHelp,
   HasManyInput,
   Navbar,
+  Finished,
   ErrorPage,
   SignInPage
 }

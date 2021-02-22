@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
 import { setUser } from 'js/store/actions/user'
-import { Navbar, Header, Notifications, Form } from 'js/components'
+import { Navbar, Header, Notifications, Form, Finished } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
 import { Main } from 'js/styles/containers'
 
@@ -17,6 +17,7 @@ function App(props) {
     schema,
     submit,
     loadIndex,
+    finished,
     values,
     errors,
     notifications,
@@ -72,27 +73,33 @@ function App(props) {
       <Navbar user={user} formType={formType} formId={formId} />
       <Main>
         <Header />
-        {index && (
-          <Form
-            fields={indexFields}
-            controls={[{
-              label: 'Search',
-              onClick: loadIndexData,
-              disabled: indexMissing,
-            }]}
-            values={values}
-            setField={setIndexField}
-          />
-        )}
-        {indexLoaded && (
-          <Form
-            fields={nonIndexFields}
-            controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
-            values={values}
-            errors={errors}
-            setField={inputField}
-            validateField={validateField}
-          />
+        {finished ? (
+          <Finished />
+        ) : (
+          <>
+            {index && (
+              <Form
+                fields={indexFields}
+                controls={[{
+                  label: 'Search',
+                  onClick: loadIndexData,
+                  disabled: indexMissing,
+                }]}
+                values={values}
+                setField={setIndexField}
+              />
+            )}
+            {indexLoaded && (
+              <Form
+                fields={nonIndexFields}
+                controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
+                values={values}
+                errors={errors}
+                setField={inputField}
+                validateField={validateField}
+              />
+            )}
+          </>
         )}
       </Main>
     </div>
@@ -132,6 +139,7 @@ function mapStateToProps(state) {
     notifications: getNotifications(state),
     dirty: state.ui.formDirty,
     indexLoaded: state.ui.indexLoaded,
+    finished: state.ui.finished,
   }
 }
 

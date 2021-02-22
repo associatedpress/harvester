@@ -22,7 +22,7 @@ import {
   submitCreatedOptions
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
-import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
+import { setLoader, setFormDirty, setIndexLoaded, setFinished } from '../../actions/ui'
 import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import { getUserEmail } from '../../selectors/user'
@@ -101,8 +101,8 @@ const handleApiSuccess = (store, next, action) => {
       store.dispatch(clear())
       next([
         setNotification({ message: 'Form submission successful', feature: FORM }),
+        setFinished({ state: true, feature: FORM }),
       ])
-      window.location.reload(true)
       break
 
     case LOAD_INDEX:
