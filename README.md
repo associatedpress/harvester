@@ -47,7 +47,7 @@ describing one attribute of the form. The first column declares the attribute
 the form is describing and subsequent columns in the row describe the details
 of the attribute.
 
-Three attribute types are currently supported:
+Attribute types that are currently supported:
 
 * `headline` - this defines the title of the form. The only other column in
   a `headline`-type row is the text of the column. Example:
@@ -65,7 +65,7 @@ Three attribute types are currently supported:
 * `index` (required) - this defines a (possibly compound) index that uniquely
   identifies an entity in the dataset. An index consists of one or more column
   keys joined by `+`. When an index is specified the user can access
-  a "Current" view where they can speficy all component pieces of an index and
+  a "Current" view where they can specify all component pieces of an index and
   get back the collapsed "current" value of all columns for the given entity.
   Note that the values referenced in the index are column keys created with the
   `key:<string>` option (see below). Example:
@@ -217,7 +217,7 @@ listed at the end).
     |:-------|:-------|:-------|:---------------|:--------------|
 
   - `serialization:<json|csv>` - when `multiple` is set to true this option
-    specifies how the muliple values should be serialized so as to occupy
+    specifies how the multiple values should be serialized so as to occupy
     a single cell in the resulting sheet. Selecting `csv` will cause the
     multiple values to be serialized into a comma-separated list with fields
     quoted with (`"`) as necessary; selecting `json` (the default) will cause
@@ -229,7 +229,7 @@ listed at the end).
 
 * `has_many` - an input that allows a user to provide sub-fields for one or
   more "relative" or "secondary" models of a certain type. A `has_many` column
-  must include the `relative:<relative_key>` opition, which specifies which
+  must include the `relative:<relative_key>` option, which specifies which
   collection of `relative_column` definitions make up the schema of the
   secondary model. All `relative_column` definitions with a matching
   `relative:<relative_key>` configuration in order will define the secondary
@@ -374,7 +374,7 @@ You can run the two parts of the project independently if you want. Running
 ```
 yarn devfrontend
 ```
-will start the webpack devlopment server, and running
+will start the webpack development server, and running
 ```
 yarn devbackend
 ```
