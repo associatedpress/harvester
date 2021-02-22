@@ -35,6 +35,7 @@ const allowedOptions = {
     ...universalOptions,
   },
   string: {
+    maxLength: number, //max extent of how many chars can be entered in the string
     ...universalOptions,
   },
   text: {

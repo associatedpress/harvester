@@ -4,10 +4,13 @@ import { Input } from './styles'
 
 function StringInput(props) {
   const {
+    schema,
     value,
     setField,
     validateField,
   } = props
+
+ schema.config.maxLength = schema.config.maxLength || 80
 
   return (
     <Input
@@ -26,6 +29,7 @@ StringInput.propTypes = {
 
 StringInput.defaultProps = {
   value: '',
+  schema: PropTypes.object,
 }
 
 export default StringInput
