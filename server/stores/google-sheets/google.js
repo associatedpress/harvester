@@ -31,10 +31,8 @@ async function emailCanRead(fileId, email) {
     fileId,
     fields: fields.join(','),
   }
-  console.log(email)
   const filePermissions = await drive.permissions.list(request)
   return filePermissions.data.permissions.some(perm => {
-    console.log(perm)
     if (perm.id === 'anyoneWithLink') return true
     return perm.emailAddress === email
   })

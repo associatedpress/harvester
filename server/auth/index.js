@@ -36,7 +36,6 @@ const configure = ({ secret, plugins }) => {
 
   const redirectErrorResponse = (error, req, res, next) => {
     console.error(error)
-    console.log({ harvester: req.harvesterResource })
     if (req.harvesterResource) {
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
@@ -77,7 +76,6 @@ const configure = ({ secret, plugins }) => {
         ...(plugin.plugin.button || {}),
         ...(plugin.options.button || {}),
       }
-      console.log(plugin)
       return {
         path,
         name: plugin.plugin.path,
