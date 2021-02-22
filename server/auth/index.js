@@ -40,8 +40,7 @@ const configure = ({ secret, plugins }) => {
     if (req.harvesterResource) {
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
-      // TODO: if (!req.auth) return res.render('400', { message: error.message }) or something
-      if (req.auth) return res.status(400).json({ message: error.message })
+      if (req.auth) return res.status(400).render('error', { status: 400, message: error.message })
       return res.redirect(`/auth/sign-in?${q}`)
     }
     return next(error)
@@ -78,8 +77,10 @@ const configure = ({ secret, plugins }) => {
         ...(plugin.plugin.button || {}),
         ...(plugin.options.button || {}),
       }
+      console.log(plugin)
       return {
         path,
+        name: plugin.plugin.path,
         button,
       }
     })

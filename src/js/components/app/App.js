@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
 import { Navbar, Header, Notifications, Form } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
-import { Container } from './styles'
+import { Main } from 'js/styles/containers'
 
 function App(props) {
   const {
@@ -66,7 +66,7 @@ function App(props) {
     <div className={className}>
       <Notifications notifications={notifications} />
       <Navbar />
-      <Container>
+      <Main>
         <Header />
         {index && (
           <Form
@@ -90,7 +90,7 @@ function App(props) {
             validateField={validateField}
           />
         )}
-      </Container>
+      </Main>
     </div>
   )
 }

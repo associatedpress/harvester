@@ -47,13 +47,11 @@ const configure = ({ config, plugins }) => {
             await renderForm(formType, formId, req, res)
           })
         } else {
-          // TODO: real 4xx page
-          res.status(404).json({ message: `No form found with slug '${slug}'` })
+          res.status(404).render({ status: 404, message: `No form found with slug '${slug}'` })
         }
       } catch (error) {
         logger.error('Error from store:', error)
-        // TODO: real 5xx page
-        res.status(500).json({ message: error.message })
+        res.status(500).render({ status: 500, message: error.message })
       }
     })
 
@@ -68,8 +66,7 @@ const configure = ({ config, plugins }) => {
         }
       } catch (error) {
         logger.error('Error:', error)
-        // TODO: real 5xx page
-        res.status(500).json({ message: error.message })
+        res.status(500).render({ status: 500, message: error.message })
       }
     })
 
