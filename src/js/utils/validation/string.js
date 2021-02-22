@@ -1,4 +1,4 @@
-function validateLength(value, maxLength) {
+function validateLength(value, maxLength=80) {
   if (value) {
     const stringLength = value.length
     if ((stringLength) > maxLength) {

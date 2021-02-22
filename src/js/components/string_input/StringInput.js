@@ -10,8 +10,6 @@ function StringInput(props) {
     validateField,
   } = props
 
- schema.config.maxLength = schema.config.maxLength || 80
-
   return (
     <Input
       value={value || ''}
