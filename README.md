@@ -124,11 +124,17 @@ listed at the end).
   | column | Age | number |
   |:-------|:----|:-------|
 
-* `string` - a short text input. This column type does not support any specific
-  options.
+* `string` - a short text input. This column type supports the following specific option:
+  - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
+    and requires entries that match exactly. Consider giving an example in the name of
+    the field and specifying the necessary format of the entry, because if entries do 
+    not match, the format error message prints the regex, which might not be clear 
+    feedback for non-technical reports. A great place to give guidance to reporters 
+    is the `help:` option to set help text for a column, which shows up as hover text 
+    over an info icon next to the column label. Example:
 
-  | column | Name | string |
-  |:-------|:-----|:-------|
+    | column | Name | string | regex:[A-Z]{2}[0-9]{2,5} | help:State abbreviation and numeric bill ID.|
+    |:-------|:-----|:-------|:-------------------------|:--------------------------------------------|
 
 * `text` - a longer text input that displays as a `textarea` input. This column
   type supports the following specific option:

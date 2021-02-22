@@ -39,6 +39,7 @@ const allowedOptions = {
     max: number,
   },
   string: {
+    regex: identity,
     ...universalOptions,
   },
   text: {
