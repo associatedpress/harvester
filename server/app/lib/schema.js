@@ -39,6 +39,7 @@ const allowedOptions = {
     max: number,
   },
   string: {
+    maxLength: number, //max extent of how many chars can be entered in the string
     regex: identity,
     ...universalOptions,
   },
