@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
+import { setUser } from 'js/store/actions/user'
 import { Navbar, Header, Notifications, Form } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
 import { Main } from 'js/styles/containers'
@@ -25,8 +26,10 @@ function App(props) {
     inputField,
     validateField,
     clear,
+    setUser,
   } = props
 
+  useEffect(() => { setUser({ email: user && user.email }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { fetchSchema({ type: formType, id: formId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     window.onbeforeunload = () => dirty ? true : undefined
@@ -114,6 +117,7 @@ App.propTypes = {
   dirty: PropTypes.bool,
   indexLoaded: PropTypes.bool,
   clear: PropTypes.func,
+  serUser: PropTypes.func,
 }
 
 App.defaultProps = {
@@ -131,4 +135,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField })(App)
+export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField, setUser })(App)
