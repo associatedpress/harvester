@@ -6,14 +6,36 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
-const logger = require('./app/logger')
-const router = require('./app/router')
+const logger = require('./logger')
+const router = require('./router')
 
 const config = require('./config')
-const dataPlugins = config.store.plugins.map(store => {
-  if (store.store) return require(store.store).configure(store.options || {})
-  return require(store).configure({})
-})
+
+function loadConfig(cfg) {
+  const loadPlugin = plugin => {
+    const name = plugin.name || plugin
+    const options = plugin.options || {}
+    return {
+      name,
+      options,
+      plugin: require(name).configure(options),
+    }
+  }
+  const dataPlugins = cfg.store.plugins.map(loadPlugin)
+  const authPlugins = cfg.auth.plugins.map(loadPlugin)
+
+  return {
+    ...cfg,
+    store: {
+      ...cfg.store,
+      plugins: dataPlugins,
+    },
+    auth: {
+      ...cfg.auth,
+      plugins: authPlugins,
+    },
+  }
+}
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
@@ -30,11 +52,7 @@ const start = (port = PORT, host = HOST) => {
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(logger)
-
-  const plugins = {
-    data: dataPlugins,
-  }
-  app.use(router({ plugins }))
+  app.use(router(loadConfig(config)))
 
   // static front-end files served by webpack in development
   if (IS_PRODUCTION) {

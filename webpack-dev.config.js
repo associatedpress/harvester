@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const path = require('path')
 const portfinder = require('portfinder')
+const glob = require('glob')
 const args = require('yargs').default('proxy', '3000').argv
 
 const backendUrlPatterns = [
@@ -12,7 +13,7 @@ const backendUrlPatterns = [
 
 const config = (env, argv, port) => ({
   mode: 'development',
-  devtool: 'cheap-eval-source-map',
+  devtool: 'cheap-module-source-map',
   resolve: {
     modules: [
       'node_modules',
@@ -20,7 +21,10 @@ const config = (env, argv, port) => ({
     ],
 		extensions: ['.js', '.jsx'],
   },
-  entry: path.resolve(__dirname, './src/js/main-app.js'),
+  entry: glob.sync(`${path.resolve(__dirname, './src/js')}/*-app.js`).reduce((entry, file) => {
+    const name = path.basename(file).slice(0, -1 * '-app.js'.length)
+    return { ...entry, [name]: file }
+  }, {}),
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',

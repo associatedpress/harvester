@@ -14,7 +14,8 @@
   </head>
   <body class="ap-interactive">
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <article id="app" data-props="<%= JSON.stringify({ formType, formId, user }) %>"></article>
-    <script src="/main.js"></script>
+    <article id="app" data-props="<%= JSON.stringify({ status, message, user, formType, formId }) %>">
+    </article>
+    <script src="/error.js"></script>
   </body>
 </html>

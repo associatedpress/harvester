@@ -6,12 +6,11 @@ import App from './components'
 import 'scss/app.scss'
 
 const node = document.getElementById('app')
-const formType = node.getAttribute('data-formtype')
-const formId = node.getAttribute('data-formid')
+const { props } = node.dataset
 
 render(
   <Provider store={store}>
-    <App formType={formType} formId={formId} />
+    <App {...JSON.parse(props)} />
   </Provider>,
   document.getElementById('app')
 )

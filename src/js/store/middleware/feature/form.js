@@ -25,6 +25,7 @@ import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
 import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
 import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
+import { getUserEmail } from '../../selectors/user'
 import validate from 'js/utils/validation'
 import { serializeDateTime } from 'js/utils/datetime'
 
@@ -203,11 +204,12 @@ const handleSubmit = (store, next, action) => {
   const row = state.form.schema.columns
     .map(col => getFieldValue(state, col.id))
   const now = new Date()
+  const userEmail = getUserEmail(state) || 0
   next(apiRequest({
-    body: JSON.stringify([[now, 0, ...row]]),
+    body: JSON.stringify([[now, userEmail, ...row]]),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    url: submitURL(state.form),
+    url: submitURL(state.form.form),
     referrer: action,
     feature: FORM,
   }))

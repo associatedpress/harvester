@@ -3,60 +3,61 @@ const jwt = require('jsonwebtoken')
 const google = require('../stores/google-sheets/google')
 const parseSchema = require('../stores/schema')
 
-const { HOST, NODE_ENV } = process.env
-
 const configure = ({ secret, plugins }) => {
-  function verifyToken(token) {
+  const verifyToken = (token) => {
     return jwt.verify(token, secret)
   }
 
-  function parseAuthCookie(req, res, next) {
-    // TODO: check cookie domain
+  const signToken = (payload, opts = {}) => {
+    return jwt.sign(payload, secret, opts)
+  }
+
+  const parseAuthCookie = (req, res, next) => {
     const token = req.cookies.token || ''
-    req.auth = {}
     if (!token) return next()
     try {
-      const auth = verifyToken(token)
-      req.auth = pruneAuth(auth)
+      req.auth = verifyToken(token)
     } catch(error) {
       console.error(error)
     }
     next()
   }
 
-  function generateToken(auth, res) {
-    // TODO: rather than setting the whole cookie from plugins we should have
-    // them register a partial update so we can consistently handle expiration
-    // and type recording
-    const token = jwt.sign(auth, JWT_SECRET, { expiresIn: '1h' })
-    res.cookie('token', token, {
-      maxAge: 1 * 60 * 60 * 1000, // 1h
-      httpOnly: true,
-      secure: NODE_ENV === 'production',
-      domain: HOST,
-    })
+  const verifyResourceAccessibility = (storePluginsByType) => {
+    return async (req, res, next) => {
+      const { formType, formId } = req.params
+      const storePlugin = storePluginsByType[formType]
+      const auth = req.auth
+      console.log(auth)
+      const userCanAccess = await storePlugin.userCanAccess(formId, auth)
+      if (userCanAccess) return next()
+      next(new Error(`unauthorized access to resource ${formType}/${formId}`))
+    }
   }
 
-  const router = express.Router()
-  plugins.forEach(plugin => {
-    const authPlugin = require(plugin)
-    const pluginRouter = express.Router()
-    authPlugin.configure(pluginRouter, generateToken)
-    router.use(`/${plugin}`, pluginRouter)
-  })
-
-  function pruneAuth(auth) {
-    // TODO: we need to actually prune the tree, for which we need standard
-    // expiration handling
-    return auth
-
-    const now = Date.now()
-    return Object.entries(auth).reduce((newAuth, [key, value]) => {
-      if (value.expires > now) {
-        newAuth[key] = value
+  const redirectErrorResponse = (error, req, res, next) => {
+    console.error(error)
+    if (req.harvesterResource) {
+      const { formType, formId } = req.harvesterResource
+      const q = new URLSearchParams({ formType, formId })
+      if (req.auth) {
+        const opts = {
+          status: 400,
+          message: error.message,
+          user: { email: req.auth.email },
+          formType,
+          formId,
+        }
+        return res.status(400).render('error', opts)
       }
-      return newAuth
-    }, {})
+      return res.redirect(`/auth/sign-in?${q}`)
+    }
+    return next(error)
+  }
+
+  const apiErrorResponse = (error, req, res, next) => {
+    console.error(error)
+    res.status(400).json({ message: error.message })
   }
 
   function authenticate(schema, req, res) {
@@ -65,29 +66,70 @@ const configure = ({ secret, plugins }) => {
     authPlugin.authenticate(schema, req, res)
   }
 
-  function verify(schema, req, res, next, error) {
-    const { auth } = schema
-    if (!auth) return next()
-    const authPlugin = require(auth.type)
-    authPlugin.verify(schema, req, res, next, error)
+  function resolveAuth(req, res, { form, data, options }) {
+    const token = signToken(data, options)
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: NODE_ENV === 'production',
+    })
+    if (form.type && form.id) {
+      return res.redirect(`/${form.type}/${form.id}`)
+    }
+    return res.redirect('/')
   }
 
-  async function api(req, res, next) {
-    const { docId } = req.params
-    const range = 'schema'
-    const data = await google.getRange(docId, { range, headers: false }) || []
-    const schema = await parseSchema('d', docId, data)
-    verify(schema, req, res, next, () => {
-      res.status(401).json({ error: 'invalid credentials' })
+  const router = express.Router()
+
+  router.get('/sign-in', (req, res) => {
+    const { formType, formId } = req.query
+    const q = new URLSearchParams({ formType, formId })
+    const buttons = plugins.map(plugin => {
+      const path = `/auth/${plugin.plugin.path}/sign-in?${q}`
+      const button = {
+        ...(plugin.plugin.button || {}),
+        ...(plugin.options.button || {}),
+      }
+      return {
+        path,
+        name: plugin.plugin.path,
+        button,
+      }
     })
-  }
+    res.render('signIn', { formType, formId, buttons })
+  })
+
+  router.get('/sign-out', (req, res) => {
+    const { formType, formId } = req.query
+    const token = signToken({}, { expiresIn: 0 })
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: NODE_ENV === 'production',
+    })
+    if (formType && formId) {
+      return res.redirect(`/${formType}/${formId}`)
+    }
+    return res.redirect('/')
+  })
+
+  plugins.forEach(plugin => {
+    const pluginRouter = express.Router()
+    const deps = {
+      router: pluginRouter,
+      resolve: resolveAuth,
+      token: {
+        verify: verifyToken,
+        sign: signToken,
+      },
+    }
+    router.use(`/${plugin.plugin.path}`, plugin.plugin.mount(deps))
+  })
 
   return {
     parseAuthCookie,
-    api,
+    verifyResourceAccessibility,
+    redirectErrorResponse,
+    apiErrorResponse,
     router,
-    authenticate,
-    verify,
   }
 }
 
