@@ -1,7 +1,9 @@
 import required from './required'
 import selectValidation from './select'
 import datetimeValidation from './datetime'
+import numberValidation from './number'
 import hasManyValidation from './has_many'
+import stringValidation from './string'
 
 // This validation shouldn't have to concern itself with type enforcement
 // because that should be handled by the actual type-specific inputs
@@ -24,6 +26,10 @@ function typedValidation(schema, value) {
       return selectValidation(schema, value)
     case 'datetime':
       return datetimeValidation(schema, value)
+    case 'number':
+      return numberValidation(schema, value)
+    case 'string':
+      return stringValidation(schema, value)
     default:
       return []
   }
@@ -33,7 +39,9 @@ export function validatePrimitive(schema, value, formSchema) {
   const { config } = schema
   const errors = []
   if (config.required) errors.push(required(value))
-  errors.push(...typedValidation(schema, value, formSchema))
+  if (value || value === 0) {
+    errors.push(...typedValidation(schema, value, formSchema))
+  }
   return errors.filter(e => e)
 }
 
