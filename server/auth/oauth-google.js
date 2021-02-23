@@ -12,19 +12,20 @@ const configure = (opts = {}) => {
     clientSecret,
   } = opts
 
-  function oauth2Client() {
+  function oauth2Client(req) {
+    const proto = req.protocol
+    const host = req.get('host')
     return new google.auth.OAuth2(
       clientId,
       clientSecret,
       // TODO
-      `http://localhost:8080/auth/oauth-google/callback`,
+      `${proto}://${host}/auth/oauth-google/callback`,
     )
   }
 
   function getGoogleAuthURL(auth, { state }) {
     const scope = [
       'https://www.googleapis.com/auth/userinfo.email',
-      //'https://www.googleapis.com/auth/spreadsheets.readonly',
     ]
 
     return auth.generateAuthUrl({
@@ -39,7 +40,7 @@ const configure = (opts = {}) => {
     router.get('/sign-in', (req, res) => {
       const { formType, formId } = req.query
       const state = token.sign({ formType, formId }, { expiresIn: '5m' })
-      const authURL = getGoogleAuthURL(oauth2Client(), { state })
+      const authURL = getGoogleAuthURL(oauth2Client(req), { state })
       res.redirect(authURL)
     })
 
@@ -50,7 +51,7 @@ const configure = (opts = {}) => {
           state,
         } = req.query
         const { formType, formId } = token.verify(state)
-        const { tokens } = await oauth2Client().getToken(code)
+        const { tokens } = await oauth2Client(req).getToken(code)
         const { email } = jwt.decode(tokens.id_token)
         const form = { type: formType, id: formId }
         const data = { email }
