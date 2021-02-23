@@ -3,13 +3,20 @@ const jwt = require('jsonwebtoken')
 const google = require('../stores/google-sheets/google')
 const parseSchema = require('../stores/schema')
 
-const configure = ({ secret, plugins }) => {
+const configure = ({ enabled = true, secret, plugins }) => {
   const verifyToken = (token) => {
     return jwt.verify(token, secret)
   }
 
   const signToken = (payload, opts = {}) => {
     return jwt.sign(payload, secret, opts)
+  }
+
+  const setAuthCookie = (res, token) => {
+    res.cookie('token', token, {
+      httpOnly: true,
+      // secure: NODE_ENV === 'production',
+    })
   }
 
   const parseAuthCookie = (req, res, next) => {
@@ -25,10 +32,10 @@ const configure = ({ secret, plugins }) => {
 
   const verifyResourceAccessibility = (storePluginsByType) => {
     return async (req, res, next) => {
+      if (!enabled) return next()
       const { formType, formId } = req.params
       const storePlugin = storePluginsByType[formType]
       const auth = req.auth
-      console.log(auth)
       const userCanAccess = await storePlugin.userCanAccess(formId, auth)
       if (userCanAccess) return next()
       next(new Error(`unauthorized access to resource ${formType}/${formId}`))
@@ -37,7 +44,7 @@ const configure = ({ secret, plugins }) => {
 
   const redirectErrorResponse = (error, req, res, next) => {
     console.error(error)
-    if (req.harvesterResource) {
+    if (enabled && req.harvesterResource) {
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
       if (req.auth) {
@@ -60,18 +67,9 @@ const configure = ({ secret, plugins }) => {
     res.status(400).json({ message: error.message })
   }
 
-  function authenticate(schema, req, res) {
-    const { auth } = schema
-    const authPlugin = require(auth.type)
-    authPlugin.authenticate(schema, req, res)
-  }
-
   function resolveAuth(req, res, { form, data, options }) {
     const token = signToken(data, options)
-    res.cookie('token', token, {
-      httpOnly: true,
-      // secure: NODE_ENV === 'production',
-    })
+    setAuthCookie(res, token)
     if (form.type && form.id) {
       return res.redirect(`/${form.type}/${form.id}`)
     }
@@ -82,9 +80,11 @@ const configure = ({ secret, plugins }) => {
 
   router.get('/sign-in', (req, res) => {
     const { formType, formId } = req.query
-    const q = new URLSearchParams({ formType, formId })
+    const hasForm = formType && formId
+    const q = hasForm && `?${new URLSearchParams({ formType, formId })}`
+    if (!enabled) return res.redirect(hasForm ? `/${formType}/${formId}` : '/')
     const buttons = plugins.map(plugin => {
-      const path = `/auth/${plugin.plugin.path}/sign-in?${q}`
+      const path = `/auth/${plugin.plugin.path}/sign-in${q}`
       const button = {
         ...(plugin.plugin.button || {}),
         ...(plugin.options.button || {}),
@@ -101,10 +101,7 @@ const configure = ({ secret, plugins }) => {
   router.get('/sign-out', (req, res) => {
     const { formType, formId } = req.query
     const token = signToken({}, { expiresIn: 0 })
-    res.cookie('token', token, {
-      httpOnly: true,
-      // secure: NODE_ENV === 'production',
-    })
+    setAuthCookie(res, token)
     if (formType && formId) {
       return res.redirect(`/${formType}/${formId}`)
     }
@@ -112,6 +109,7 @@ const configure = ({ secret, plugins }) => {
   })
 
   plugins.forEach(plugin => {
+    if (!enabled) return
     const pluginRouter = express.Router()
     const deps = {
       router: pluginRouter,
