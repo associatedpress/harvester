@@ -26,7 +26,7 @@ import { setLoader, setFormDirty, setIndexLoaded } from '../../actions/ui'
 import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import validate from 'js/utils/validation'
-import { formatDate } from 'js/utils/date'
+import { serializeDateTime } from 'js/utils/datetime'
 
 const schemaURL = id => `/api/${id}/schema`
 const optionsURL = (id, range, opts = {}) => {
@@ -47,10 +47,10 @@ const submitURL = (id, range) => {
   return `${baseURL}?${qs}`
 }
 
-const parseDefault = (value, type) => {
+const parseDefault = (value, schema) => {
   if (value == null) return null
-  if (type === 'number') return +value
-  if (type === 'date' && value === 'today') return formatDate(new Date())
+  if (schema.type === 'number') return +value
+  if (schema.type === 'datetime' && value === 'today') return serializeDateTime(new Date(), schema.config)
   return value
 }
 
@@ -65,11 +65,13 @@ const handleLoadIndexResponse = (store, next, action) => {
   const state = store.getState()
   const { index } = state.form.schema
   const indexKeys = new Set(index.split('+'))
+  const foundIndex = !!(action.payload.current && action.payload.current.data)
   const values = (action.payload.current && action.payload.current.data) || {}
   state.form.schema.columns.forEach(col => {
     const schema = getFieldSchema(state, col.id)
     const indexValue = values[col.id]
-    const value =  (typeof indexValue === 'undefined') ? null : parseDefault(indexValue, schema.type)
+    const val = foundIndex ? indexValue : schema.config.default
+    const value = parseDefault(val, schema)
     const isIndexField = indexKeys.has(col.config.key)
     if (!isIndexField) {
       store.dispatch(setField({ fieldId: col.id, value }))
