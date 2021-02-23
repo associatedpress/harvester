@@ -5,6 +5,7 @@ const args = require('yargs').default('proxy', '3000').argv
 
 const backendUrlPatterns = [
   '/d/',
+  '/forms/',
   '/api/',
   '/assets/',
   '/auth/',
