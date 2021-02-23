@@ -39,7 +39,9 @@ export function validatePrimitive(schema, value, formSchema) {
   const { config } = schema
   const errors = []
   if (config.required) errors.push(required(value))
-  errors.push(...typedValidation(schema, value, formSchema))
+  if (value || value === 0) {
+    errors.push(...typedValidation(schema, value, formSchema))
+  }
   return errors.filter(e => e)
 }
 
