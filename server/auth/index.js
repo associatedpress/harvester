@@ -3,19 +3,27 @@ const jwt = require('jsonwebtoken')
 const google = require('../stores/google-sheets/google')
 const parseSchema = require('../stores/schema')
 
-const configure = ({ enabled = true, secret, plugins }) => {
+const configure = (config) => {
+  const {
+    secret,
+    enabled = true,
+    session = {},
+    plugins = [],
+  } = config
+
   const verifyToken = (token) => {
     return jwt.verify(token, secret)
   }
 
   const signToken = (payload, opts = {}) => {
-    return jwt.sign(payload, secret, opts)
+    const { expiresIn = '7d' } = session
+    return jwt.sign(payload, secret, { expiresIn, ...opts })
   }
 
-  const setAuthCookie = (res, token) => {
+  const setAuthCookie = (req, res, token) => {
     res.cookie('token', token, {
       httpOnly: true,
-      // secure: NODE_ENV === 'production',
+      secure: req.secure,
     })
   }
 
@@ -69,7 +77,7 @@ const configure = ({ enabled = true, secret, plugins }) => {
 
   function resolveAuth(req, res, { form, data, options }) {
     const token = signToken(data, options)
-    setAuthCookie(res, token)
+    setAuthCookie(req, res, token)
     if (form.type && form.id) {
       return res.redirect(`/${form.type}/${form.id}`)
     }
@@ -101,7 +109,7 @@ const configure = ({ enabled = true, secret, plugins }) => {
   router.get('/sign-out', (req, res) => {
     const { formType, formId } = req.query
     const token = signToken({}, { expiresIn: 0 })
-    setAuthCookie(res, token)
+    setAuthCookie(req, res, token)
     if (formType && formId) {
       return res.redirect(`/${formType}/${formId}`)
     }

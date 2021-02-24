@@ -10,6 +10,7 @@ module.exports = {
   },
   auth: {
     secret: process.env.JWT_SECRET,
+    session: {},
     plugins: [
       {
         name: './auth/oauth-google',
