@@ -6,8 +6,8 @@ const ERROR = 3
 function log(level, ...msg) {
   const levelLabels = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
   const levelFns = [console.debug, console.log, console.warn, console.error]
-  const pref = `${levelLabels[level]} [${new Date().toISOString()}]`
-  const fn = levelFns[level] || console.log
+  const pref = `${levelLabels[level]} [${new Date(Date.now()).toISOString()}]`
+  const fn = levelFns[level]
   fn(pref, ...msg)
 }
 

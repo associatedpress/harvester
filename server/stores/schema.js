@@ -108,12 +108,13 @@ function parseSchema(type, form, configs) {
     } else if (configType === 'relative_column') {
       schema.relatives = schema.relatives || {}
       const column = parseColumnSchema(cfg)
+      if (!column.relative) {
+        throw new Error(`schema error: relative_column ${column.label} does not specify relative`)
+      }
       schema.relatives[column.relative] = schema.relatives[column.relative] || []
       const relativeCols = schema.relatives[column.relative]
       const id = relativeCols.length
       relativeCols.push({ ...column, id })
-    } else if (configType === 'auth') {
-      schema.auth = { type: cfg[0] }
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }
