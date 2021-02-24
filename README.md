@@ -321,6 +321,16 @@ General options that can be provided to any type of column:
   | column | Number of people | number | required:true |
   |:-------|:-----------------|:-------|:--------------|
 
+## API
+
+Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export collected data to csv.
+
+GET /api/<docId>/schema Returns the schema as constructed in the defined Google sheet
+GET /api/<docId>/sheet/:sheet
+POST /api/<docId>/entry
+GET /api/<docId>/current
+GET /api/<docId>/export.csv
+
 ## App-level Configuration
 
 Harvester allows for some optional app-level configuration through a Harvester
