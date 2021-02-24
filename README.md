@@ -325,11 +325,11 @@ General options that can be provided to any type of column:
 
 Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export collected data to csv.
 
-GET /api/<docId>/schema Returns the schema as constructed in the defined Google sheet
-GET /api/<docId>/sheet/:sheet
-POST /api/<docId>/entry
-GET /api/<docId>/current
-GET /api/<docId>/export.csv
+GET /d/<docId>/schema - Returns the schema as defined in the specified Google sheet.
+GET /d/<docId>/table/<table> - Returns the contents of a specified table as an array of objects.
+POST /d/<docId>/entry?range=<table> - Appends an entry to a specified sheet.
+GET /d/<docId>/current - If the schema contains an index, this endpoint will return the current value for any uniquely defined entities.
+GET /d/<docId>/export.csv - Returns a csv of harvested entries.
 
 ## App-level Configuration
 
@@ -388,7 +388,7 @@ account credentials (these should be in the form of a JSON file, canonically
 placed in the root of the project in a file called `.auth.json`) you should set
 the following environment variable:
 
-```
+`
 GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
 ```
 
