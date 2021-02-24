@@ -8,13 +8,23 @@ export const apiMiddleware = ({ dispatch }) => next => action => {
     const { url, method, headers, referrer, feature } = action.meta
 
     fetch(url, { body, method, headers })
-      .then(response => Promise.all([response, response.json()]))
-      .then(([rsp, response]) => {
-        dispatch(apiSuccess({ status: rsp.status, response, referrer, feature }))
-      })
-      .catch(error => {
-        console.error(error)
-        dispatch(apiError({ error: error, referrer, feature }))
+      .then(async (response) => {
+        let data
+        try {
+          data = await response.json()
+        } catch(error) {
+          console.error(error)
+          return dispatch(apiError({ error, referrer, feature }))
+        }
+        if (!response.ok) {
+          return dispatch(apiError({ error: data, referrer, feature }))
+        }
+        return dispatch(apiSuccess({
+          status: response.status,
+          response: data,
+          referrer,
+          feature,
+        }))
       })
   }
 }
