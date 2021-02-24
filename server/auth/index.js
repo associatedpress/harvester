@@ -16,7 +16,7 @@ const configure = (config) => {
   }
 
   const signToken = (payload, opts = {}) => {
-    const { authenticationExpiresIn } = session
+    const { authenticationExpiresIn = '30d' } = session
     const tokenOpts = {
       expiresIn: authenticationExpiresIn,
       ...opts,
