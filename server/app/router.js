@@ -9,6 +9,10 @@ const current = require('./lib/current')
 const docIdParam = ':docId([a-zA-Z0-9-_]+)'
 const HARVESTER_CONFIG_DOC_ID = process.env.HARVESTER_CONFIG_DOC_ID
 
+router.get('/', (req, res) => {
+  res.render('landing')
+})
+
 router.get('/forms/:slug([a-zA-Z0-9-_]+)', async (req, res) => {
   if (HARVESTER_CONFIG_DOC_ID) {
     try {

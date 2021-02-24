@@ -4,6 +4,7 @@ const portfinder = require('portfinder')
 const args = require('yargs').default('proxy', '3000').argv
 
 const backendUrlPatterns = [
+  '/',
   '/d/',
   '/forms/',
   '/api/',
@@ -21,7 +22,10 @@ const config = (env, argv, port) => ({
     ],
 		extensions: ['.js', '.jsx'],
   },
-  entry: path.resolve(__dirname, './src/js/main-app.js'),
+  entry: {
+    main: path.resolve(__dirname, './src/js/main-app.js'),
+    landing: path.resolve(__dirname, './src/js/landing-app.js'),
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',
