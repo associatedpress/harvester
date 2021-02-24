@@ -25,5 +25,5 @@ export function serializeValue(value, opts = {}) {
     json: JSON.stringify,
   }
   const fn = serializers[serialization] || serializers.json
-  return value && fn(value).trim()
+  return (value && value.length) ? fn(value).trim() : null
 }
