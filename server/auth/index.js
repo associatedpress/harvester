@@ -16,8 +16,12 @@ const configure = (config) => {
   }
 
   const signToken = (payload, opts = {}) => {
-    const { expiresIn = '7d' } = session
-    return jwt.sign(payload, secret, { expiresIn, ...opts })
+    const { authenticationExpiresIn } = session
+    const tokenOpts = {
+      expiresIn: authenticationExpiresIn,
+      ...opts,
+    }
+    return jwt.sign(payload, secret, tokenOpts)
   }
 
   const setAuthCookie = (req, res, token) => {
