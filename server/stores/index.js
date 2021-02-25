@@ -17,10 +17,15 @@ const configure = ({ config, plugins }) => {
     res.render('formId', { formType, formId, user })
   }
 
-  const setHarvesterResource = (req, res, next) => {
-    const { formType, formId } = req.params
-    req.harvesterResource = { formType, formId }
-    next()
+  const setHarvesterResource = (opts = {}) => {
+    const {
+      api = true,
+    } = opts
+    return (req, res, next) => {
+      const { formType, formId } = req.params
+      req.harvesterResource = { formType, formId, api }
+      next()
+    }
   }
 
   const getCustomForm = async ({ slug, formId }) => {
@@ -44,6 +49,7 @@ const configure = ({ config, plugins }) => {
           const formType = form.form_type || config.type
           req.params.formType = formType
           req.params.formId = formId
+          req.harvesterResource = { forType, formId, api: false }
           auth(req, res, async () => {
             await renderForm(formType, formId, req, res)
           })
@@ -56,7 +62,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.get(`/${formTypeParam}/${formIdParam}`, setHarvesterResource, auth, async (req, res) => {
+    router.get(`/${formTypeParam}/${formIdParam}`, setHarvesterResource({ api: false }), auth, async (req, res) => {
       try {
         const { formType, formId } = req.params
         const customForm = await getCustomForm({ formId })
@@ -71,7 +77,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.get(`/${formTypeParam}/${formIdParam}/schema`, setHarvesterResource, auth, async (req, res) => {
+    router.get(`/${formTypeParam}/${formIdParam}/schema`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId } = req.params
         const storePlugin = storePluginsByType[formType]
@@ -83,7 +89,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.get(`/${formTypeParam}/${formIdParam}/table/:table`, setHarvesterResource, auth, async (req, res) => {
+    router.get(`/${formTypeParam}/${formIdParam}/table/:table`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId, table } = req.params
         const storePlugin = storePluginsByType[formType]
@@ -95,7 +101,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.post(`/${formTypeParam}/${formIdParam}/entry`, setHarvesterResource, auth, async (req, res) => {
+    router.post(`/${formTypeParam}/${formIdParam}/entry`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId } = req.params
         const { range } = req.query
@@ -109,7 +115,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.get(`/${formTypeParam}/${formIdParam}/current`, setHarvesterResource, auth, async (req, res) => {
+    router.get(`/${formTypeParam}/${formIdParam}/current`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId } = req.params
         const {
@@ -131,7 +137,7 @@ const configure = ({ config, plugins }) => {
       }
     })
 
-    router.get(`/${formTypeParam}/${formIdParam}/export.csv`, setHarvesterResource, auth, async (req, res) => {
+    router.get(`/${formTypeParam}/${formIdParam}/export.csv`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId } = req.params
         const headers = /^true$/i.test(req.query.headers)

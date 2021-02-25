@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 
 const configure = (opts = {}) => {
   const {
+    name = 'oauth-google',
     clientId,
     clientSecret,
   } = opts
@@ -18,7 +19,6 @@ const configure = (opts = {}) => {
     return new google.auth.OAuth2(
       clientId,
       clientSecret,
-      // TODO
       `${proto}://${host}/auth/oauth-google/callback`,
     )
   }
@@ -26,14 +26,50 @@ const configure = (opts = {}) => {
   function getGoogleAuthURL(auth, { state }) {
     const scope = [
       'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
     ]
 
     return auth.generateAuthUrl({
-      access_type: 'online',
+      access_type: 'offline',
       prompt: 'consent',
       scope,
       state,
     })
+  }
+
+  async function fetchEmail(auth) {
+    const people = google.people('v1')
+    const res = await people.people.get({
+      auth,
+      resourceName: 'people/me',
+      personFields: 'emailAddresses',
+    })
+    return res.data
+  }
+
+  async function authLease(auth) {
+    try {
+      await fetchEmail(auth)
+      const tokens = auth.credentials
+      const id = jwt.decode(tokens.id_token)
+      return {
+        email: id.email,
+        issuer: name,
+        expiry_date: tokens.expiry_date,
+        data: tokens,
+      }
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  async function refresh(req) {
+    const tokens = req.auth.data
+    const auth = oauth2Client(req)
+    auth.setCredentials({
+      refresh_token: tokens.refresh_token,
+    })
+    return await authLease(auth)
   }
 
   const mount = ({ router, resolve, token }) => {
@@ -51,10 +87,11 @@ const configure = (opts = {}) => {
           state,
         } = req.query
         const { formType, formId } = token.verify(state)
-        const { tokens } = await oauth2Client(req).getToken(code)
-        const { email } = jwt.decode(tokens.id_token)
+        const auth = oauth2Client(req)
+        const { tokens } = await auth.getToken(code)
+        auth.setCredentials(tokens)
+        const data = await authLease(auth)
         const form = { type: formType, id: formId }
-        const data = { email }
         resolve(req, res, { form, data })
       } catch(error) {
         next(error)
@@ -65,8 +102,9 @@ const configure = (opts = {}) => {
   }
 
   return {
-    path: 'oauth-google',
+    path: name,
     mount,
+    refresh,
   }
 }
 
