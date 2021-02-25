@@ -1,7 +1,7 @@
 Harvester
 =========
 
-A transparent and flexible data-entry tool built on Google Sheets. Harvester
+A transparent and flexible collaborative data-entry tool built on Google Sheets. Harvester
 uses the structure of a Google Sheets workbook to drive a data entry form that
 feeds data into another tab in the same workbook. The Harvester form pulls its
 schema from the workbook on page load, so it should immediately reflect
@@ -17,7 +17,7 @@ http://harvester.ap.org/d/<docId>
 ```
 
 where `<docId>` is the the document ID that shows up in the URL of a Google
-Sheet after `spreadsheets/d/` in the Sheet's URL (e.g., `1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY`). 
+Sheet after `spreadsheets/d/`and before the next `/` in the Sheet's URL (e.g., `1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY`). 
 For example, the following sheet URL and harvester URL would work together:
 
 ```
@@ -27,10 +27,9 @@ http://harvester.ap.org/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE
 
 Harvester expects the sheet that drives it to have a few important properties:
 
-1. First, the sheet has to be shared with the service account that Harvester
-   uses to access Google APIs
-   (harvester-backend@ap-harvester.iam.gserviceaccount.com). That account will
-   need to be able to edit the sheet in question.
+1. First, the sheet has to be shared with a Google service account that Harvester
+   will use to access Google APIs. That account will
+   need permission to be able to edit the sheet in question.
 
 2. Second, the sheet needs to have at least two tabs: one named `entry` and one
    named `schema`. The `entry` tab is where Harvester will append records when
@@ -318,10 +317,6 @@ then the following paths will be equivalent:
 Note that the former will be treated as canonical; Harvester will redirect from
 the latter with a `301` to the former.
 
-Our instance of Harvester is configured to use [this sheet for custom
-URLs][config-sheet]. If you need to be granted access, please contact
-@amilligan, @jmyers, or @tthibodeaux.
-
 ## Development
 
 In order to get this project running locally you will first need to clone this
@@ -335,23 +330,22 @@ yarn install
 Once all of the project's dependencies have installed successfully, you will
 need to configure your development environment, providing Harvester with Google
 service account credentials to use to access the sheets that drive it. You can
-[create your own service account to use for this][create-service-account] or
-ask @amilligan for the production credentials. Once you have the service
-account credentials (these should be in the form of a JSON file, canonically
-placed in the root of the project in a file called `.auth.json`) you should set
+[create your own service account to use for this][create-service-account]. 
+Once you have the service account credentials (these should be in the form of a JSON file, 
+canonically placed in the root of the project in a file called `.auth.json`) you should set
 the following environment variable:
 
 ```
 GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
 ```
 
-changing the value `.auth.json` if you use a different filename. This project
-is set up so you can set environment variables in a `.env` file in the
+This project is set up so you can set environment variables in an `.env` file in the
 root of the project, so you can create a file called `.env` and set the
 environment variable there.
 
-If you would like to use a Harvester config sheet as well, you can also set the
-following environment variable (though this is optional):
+If you would like to use a Harvester config sheet to provide Custom Form URLs, 
+as mentioned above, you can also set the following environment variable 
+(though this is optional):
 
 ```
 HARVESTER_CONFIG_DOC_ID="<ID_OF_YOU_HARVESTER_CONFIG_SHEET>"
