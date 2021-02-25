@@ -323,13 +323,14 @@ General options that can be provided to any type of column:
 
 ## API
 
-Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export collected data to csv.
+Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export harested data to csv.
 
-GET /d/<docId>/schema - Returns the schema as defined in the specified Google sheet.
-GET /d/<docId>/table/<table> - Returns the contents of a specified table as an array of objects.
-POST /d/<docId>/entry?range=<table> - Appends an entry to a specified sheet.
-GET /d/<docId>/current - If the schema contains an index, this endpoint will return the current value for any uniquely defined entities.
-GET /d/<docId>/export.csv - Returns a csv of harvested entries.
+* GET &nbsp; `/d/<docId>/schema` - Returns the schema as defined in the specified Google sheet.
+* GET &nbsp; `/d/<docId>/table/<table>` - Returns the contents of a specified table as an array of objects.
+* POST `/d/<docId>/entry?range=<table>` - Appends an entry to a specified sheet.
+* GET &nbsp; `/d/<docId>/current` - If the schema contains an index, this endpoint will return the current value for any uniquely defined entities.
+* GET &nbsp; `/d/<docId>/export.csv` - Returns a csv of harvested entries.
+
 
 ## App-level Configuration
 
