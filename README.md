@@ -336,7 +336,7 @@ GET /d/<docId>/export.csv - Returns a csv of harvested entries.
 Harvester allows for some optional app-level configuration through a Harvester
 configuration sheet. If you deploy the app with the environment variable
 `HARVESTER_CONFIG_DOC_ID` set to the doc ID of a Google Sheet then Harvester
-will use that sheet as its app configuration.
+will use that sheet as its app configuration. 
 
 ### Custom Form URLs
 
