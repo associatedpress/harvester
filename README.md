@@ -135,6 +135,8 @@ listed at the end).
 
     | column | Name | string | regex:[A-Z]{2}[0-9]{2,5} | help:State abbreviation and numeric bill ID.|
     |:-------|:-----|:-------|:-------------------------|:--------------------------------------------|
+  - `maxLength:<maxLength>` - Maximum number of characters a string input should expect. If none is
+    specified the default is 80 characters. 
 
 * `text` - a longer text input that displays as a `textarea` input. This column
   type supports the following specific option:
