@@ -23,7 +23,7 @@ const configure = (config) => {
   }
 
   const authIsCurrent = (auth) => {
-    return Date.now() < auth.expiry_date
+    return auth && (Date.now() < auth.expiry_date)
   }
 
   const setAuthCookie = (req, res, token) => {
