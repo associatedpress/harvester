@@ -389,7 +389,7 @@ account credentials (these should be in the form of a JSON file, canonically
 placed in the root of the project in a file called `.auth.json`) you should set
 the following environment variable:
 
-`
+```
 GOOGLE_APPLICATION_CREDENTIALS=".auth.json"
 ```
 
@@ -402,7 +402,7 @@ If you would like to use a Harvester config sheet as well, you can also set the
 following environment variable (though this is optional):
 
 ```
-HARVESTER_CONFIG_DOC_ID="<ID_OF_YOU_HARVESTER_CONFIG_SHEET>"
+HARVESTER_CONFIG_DOC_ID="<ID_OF_YOU_HARVESTER_CONFIG_SHEET>
 ```
 
 Once your environment is properly configured, you can run Harvester locally by
