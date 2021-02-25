@@ -143,12 +143,12 @@ listed at the end).
   
   - `min:<num>` - the minimum number a user may enter. 
 
-    | column | Start date | datetime | min:-5 |
+    | column | Items | number | min:-5 |
     |:-------|:-----------|:---------|:-------|
 
   - `max:<num>` - the maximum number a user may enter. 
 
-    | column | Start date | datetime | max:10 |
+    | column | Items | number | max:100 |
     |:-------|:-----------|:---------|:-------|
 
 * `string` - a short text input. This column type supports the following specific option:
