@@ -20,7 +20,6 @@
     "start": "npm-run-all --parallel devbackend devfrontend",
     "server": "node server/index.js",
     "build": "webpack --mode=production --config webpack-prod.config.js",
-    "postbuild": "printf '%s' \"$GOOGLE_SERVICE_ACCOUNT_CREDENTIALS\" > \"$GOOGLE_APPLICATION_CREDENTIALS\"",
     "test": "jest --coverage",
     "lint": "eslint \"src/**/*.js\""
   },

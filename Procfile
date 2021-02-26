@@ -1,1 +1,1 @@
-web: bin/harvester run
+web: printf '%s' "$GOOGLE_SERVICE_ACCOUNT_CREDENTIALS" > "$GOOGLE_APPLICATION_CREDENTIALS" && yarn server
