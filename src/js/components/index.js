@@ -13,6 +13,7 @@ import Controls from './controls'
 import FieldHelp from './field_help'
 import HasManyInput from './has_many_input'
 import Navbar from './navbar'
+import ErrorBoundary from './error_boundary'
 import LandingPage from './landing_page'
 
 export {
@@ -31,6 +32,7 @@ export {
   FieldHelp,
   HasManyInput,
   Navbar,
+  ErrorBoundary,
   LandingPage
 }
 

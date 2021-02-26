@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
-import { Navbar, Header, Notifications, Form } from 'js/components'
+import { Navbar, Header, Notifications, Form, ErrorBoundary } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
 import { Container } from './styles'
 
@@ -67,28 +67,43 @@ function App(props) {
       <Navbar />
       <Container>
         <Header />
-        {index && (
-          <Form
-            fields={indexFields}
-            controls={[{
-              label: 'Search',
-              onClick: loadIndexData,
-              disabled: indexMissing,
-            }]}
-            values={values}
-            setField={setIndexField}
-          />
-        )}
-        {indexLoaded && (
-          <Form
-            fields={nonIndexFields}
-            controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
-            values={values}
-            errors={errors}
-            setField={inputField}
-            validateField={validateField}
-          />
-        )}
+        <ErrorBoundary
+          fallbackRender={({ error }) => (
+            <div>
+              <p>
+                Sorry, something went wrong. Please reload the page and try again.
+              </p>
+              {error && error.message && (
+                <p>
+                  Error: {error.message}
+                </p>
+              )}
+            </div>
+          )}
+        >
+          {index && (
+            <Form
+              fields={indexFields}
+              controls={[{
+                label: 'Search',
+                onClick: loadIndexData,
+                disabled: indexMissing,
+              }]}
+              values={values}
+              setField={setIndexField}
+            />
+          )}
+          {indexLoaded && (
+            <Form
+              fields={nonIndexFields}
+              controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
+              values={values}
+              errors={errors}
+              setField={inputField}
+              validateField={validateField}
+            />
+          )}
+        </ErrorBoundary>
       </Container>
     </div>
   )
