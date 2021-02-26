@@ -8,7 +8,7 @@
   ],
   "website": "https://gitlab.inside.ap.org/newsapps/harvester",
   "repository": "https://gitlab.inside.ap.org/newsapps/harvester",
-  "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_38x44.png",
+  "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_311x360.png",
   "success_url": "/",
   "env": {
     "HARVESTER_CONFIG_DOC_ID": {
