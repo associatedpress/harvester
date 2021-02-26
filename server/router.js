@@ -14,7 +14,8 @@ const configure = (config) => {
   router.use('/auth', auth.router)
 
   router.get('/', (req, res) => {
-    res.render('landing')
+    const user = req.auth && { email: req.auth.email }
+    res.render('landing', { user })
   })
 
   router.use(stores.router(auth.verifyResourceAccessibility))

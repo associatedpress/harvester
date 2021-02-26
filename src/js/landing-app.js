@@ -4,5 +4,5 @@ import { LandingPage } from './components'
 import 'scss/app.scss'
 
 const node = document.getElementById('app')
-
-render(<LandingPage />, node)
+const { props } = node.dataset
+render(<LandingPage {...JSON.parse(props)} />, node)
