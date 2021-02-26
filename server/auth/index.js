@@ -54,9 +54,15 @@ const configure = (config) => {
       // attempt refresh of stale authentication if not API call
       if (auth && !authIsCurrent(auth) && !api) {
         const plugin = authPluginsByType[req.auth.issuer]
-        auth = await plugin.refresh(req)
-        const token = signToken(auth)
-        setAuthCookie(req, res, token)
+        if (!plugin) {
+          auth = undefined
+          const token = signToken({}, { expiresIn: 0 })
+          setAuthCookie(req, res, token)
+        } else {
+          auth = await plugin.refresh(req)
+          const token = signToken(auth)
+          setAuthCookie(req, res, token)
+        }
       }
 
       const authToCheck = authIsCurrent(auth) ? auth : undefined
