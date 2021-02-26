@@ -3,11 +3,13 @@ import { formReducer } from './reducers/form'
 import { formMiddleware } from './middleware/feature/form'
 import { apiMiddleware } from './middleware/core/api'
 import { uiReducer } from './reducers/ui'
+import { userReducer } from './reducers/user'
 import { notificationsReducer } from './reducers/notification'
 import { notificationMiddleware } from './middleware/core/notification'
 import { actionSplitterMiddleware } from './middleware/core/actionSplitter'
 
 const rootReducer = combineReducers({
+  user: userReducer,
   form: formReducer,
   ui: uiReducer,
   notification: notificationsReducer,

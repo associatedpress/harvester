@@ -1,4 +1,5 @@
 const path = require('path');
+const glob = require('glob')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -13,7 +14,10 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx'],
   },
-  entry: path.resolve(__dirname, './src/js/main-app.js'),
+  entry: glob.sync(`${path.resolve(__dirname, './src/js')}/*-app.js`).reduce((entry, file) => {
+    const name = path.basename(file).slice(0, -1 * '-app.js'.length)
+    return { ...entry, [name]: file }
+  }, {}),
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',

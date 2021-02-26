@@ -1,11 +1,16 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Navbar, Header } from 'js/components'
 import { Container } from './styles'
 
-function LandingPage() {
+function LandingPage(props) {
+  const {
+    user,
+  } = props
+
   return (
     <div>
-      <Navbar />
+      <Navbar user={user} />
       <Container>
         Hello! Welcome to Harvester.
       </Container>
@@ -13,7 +18,9 @@ function LandingPage() {
   )
 }
 
-LandingPage.propTypes = {}
+LandingPage.propTypes = {
+  user: PropTypes.object,
+}
 
 LandingPage.defaultProps = {}
 

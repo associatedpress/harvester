@@ -27,6 +27,7 @@ describe('form', () => {
     it('should use id as action payload', () => {
       // GIVEN
       const options = {
+        type: 'd',
         id: '12345',
       }
 
@@ -34,7 +35,7 @@ describe('form', () => {
       const action = form.fetchSchema(options)
 
       // THEN
-      expect(action.payload).toEqual(options.id)
+      expect(action.payload).toEqual(options)
     })
   })
 

@@ -2,18 +2,22 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
-import { Navbar, Header, Notifications, Form, ErrorBoundary } from 'js/components'
+import { setUser } from 'js/store/actions/user'
+import { Navbar, Header, Notifications, Form, Finished, ErrorBoundary } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
-import { Container } from './styles'
+import { Main } from 'js/styles/containers'
 
 function App(props) {
   const {
+    user,
     className,
-    docId,
+    formType,
+    formId,
     fetchSchema,
     schema,
     submit,
     loadIndex,
+    finished,
     values,
     errors,
     notifications,
@@ -23,9 +27,11 @@ function App(props) {
     inputField,
     validateField,
     clear,
+    setUser,
   } = props
 
-  useEffect(() => { fetchSchema({ id: docId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setUser({ email: user && user.email }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchSchema({ type: formType, id: formId }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
@@ -64,8 +70,8 @@ function App(props) {
   return (
     <div className={className}>
       <Notifications notifications={notifications} />
-      <Navbar />
-      <Container>
+      <Navbar user={user} formType={formType} formId={formId} />
+      <Main>
         <Header />
         <ErrorBoundary
           fallbackRender={({ error }) => (
@@ -81,37 +87,45 @@ function App(props) {
             </div>
           )}
         >
-          {index && (
-            <Form
-              fields={indexFields}
-              controls={[{
-                label: 'Search',
-                onClick: loadIndexData,
-                disabled: indexMissing,
-              }]}
-              values={values}
-              setField={setIndexField}
-            />
-          )}
-          {indexLoaded && (
-            <Form
-              fields={nonIndexFields}
-              controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
-              values={values}
-              errors={errors}
-              setField={inputField}
-              validateField={validateField}
-            />
+          {finished ? (
+            <Finished />
+          ) : (
+            <>
+              {index && (
+                <Form
+                  fields={indexFields}
+                  controls={[{
+                    label: 'Search',
+                    onClick: loadIndexData,
+                    disabled: indexMissing,
+                  }]}
+                  values={values}
+                  setField={setIndexField}
+                />
+              )}
+              {indexLoaded && (
+                <Form
+                  fields={nonIndexFields}
+                  controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
+                  values={values}
+                  errors={errors}
+                  setField={inputField}
+                  validateField={validateField}
+                />
+              )}
+            </>
           )}
         </ErrorBoundary>
-      </Container>
+      </Main>
     </div>
   )
 }
 
 App.propTypes = {
+  user: PropTypes.object,
   className: PropTypes.string,
-  docId: PropTypes.string,
+  formType: PropTypes.string,
+  formId: PropTypes.string,
   schema: PropTypes.object,
   values: PropTypes.object,
   errors: PropTypes.object,
@@ -125,6 +139,7 @@ App.propTypes = {
   dirty: PropTypes.bool,
   indexLoaded: PropTypes.bool,
   clear: PropTypes.func,
+  serUser: PropTypes.func,
 }
 
 App.defaultProps = {
@@ -139,7 +154,8 @@ function mapStateToProps(state) {
     notifications: getNotifications(state),
     dirty: state.ui.formDirty,
     indexLoaded: state.ui.indexLoaded,
+    finished: state.ui.finished,
   }
 }
 
-export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField })(App)
+export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField, setUser })(App)

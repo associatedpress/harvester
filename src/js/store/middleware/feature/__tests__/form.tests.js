@@ -114,7 +114,14 @@ describe('form', () => {
 
     it('should trigger API request on FETCH_OPTIONS', () => {
       // GIVEN
-      const state = { form: { id: '12345' } }
+      const state = {
+        form: {
+          form: {
+            type: 'd',
+            id: '12345',
+          },
+        },
+      }
       const getState = () => state
       const next = jest.fn()
       const splitNext = actionSplitterMiddleware()(next)
@@ -133,7 +140,10 @@ describe('form', () => {
       // GIVEN
       const state = {
         form: {
-          id: '12345',
+          form: {
+            type: 'd',
+            id: '12345',
+          },
           schema: {
             columns: [
               { id: 0, label: 'Type', config: { options: { range: 'types' } } },
@@ -283,6 +293,10 @@ describe('form', () => {
       // GIVEN
       const state = {
         form: {
+          form: {
+            type: 'd',
+            id: '12345',
+          },
           schema: {
             index: 'state',
             columns: [
@@ -314,7 +328,12 @@ describe('form', () => {
       it('should validate form, trigger API request, and submit created options on SUBMIT', () => {
         // GIVEN
         const state = {
+          user: {},
           form: {
+            form: {
+              type: 'd',
+              id: '12345',
+            },
             schema: {
               index: 'state',
               columns: [
