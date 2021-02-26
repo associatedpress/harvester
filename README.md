@@ -8,6 +8,10 @@ schema from the workbook on page load, so it should immediately reflect
 changes. The structure of the workbook and the internal schema syntax are
 described in detail below.
 
+## Heroku Deploy
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 ## The Sheet
 
 The main URL pattern that Harvester exposes is:
