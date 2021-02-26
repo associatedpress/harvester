@@ -10,7 +10,7 @@ described in detail below.
 
 ## Heroku Deploy
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/associatedpress/harvester-deploy-test)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/andrewmilligan/harvester-deploy-test)
 
 ## The Sheet
 
