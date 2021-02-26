@@ -1,16 +1,16 @@
-Harvester
+AP Harvester
 =========
 
-A transparent and flexible data-entry tool built on Google Sheets. Harvester
+A transparent and flexible data-entry tool built on Google Sheets. AP Harvester
 uses the structure of a Google Sheets workbook to drive a data entry form that
-feeds data right back into the same workbook. The Harvester form pulls its
+feeds data right back into the same workbook. The AP Harvester form pulls its
 schema from the workbook on page load, so it should immediately reflect
 changes. The structure of the workbook and the internal schema syntax are
 described in detail below.
 
 ## The Sheet
 
-The main URL pattern that Harvester exposes is:
+The main URL pattern that AP Harvester exposes is:
 
 ```
 http://harvester.ap.org/d/<docId>
@@ -25,22 +25,22 @@ https://docs.google.com/spreadsheets/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvA
 http://harvester.ap.org/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE
 ```
 
-Harvester expects the sheet that drives it to have a few important properties:
+AP Harvester expects the sheet that drives it to have a few important properties:
 
-1. First, the sheet has to be shared with the service account that Harvester
+1. First, the sheet has to be shared with the service account that AP Harvester
    uses to access Google APIs
    (harvester-backend@ap-harvester.iam.gserviceaccount.com). That account will
    need to be able to edit the sheet in question.
 
 2. Second, the sheet has to have at least two tabs: one named `entry` and one
-   named `schema`. The `entry` tab is where Harvester will append records when
+   named `schema`. The `entry` tab is where AP Harvester will append records when
    users submit a form; the `schema` tab defines the structure of the form as
    described below. The sheet can certainly have other tabs in addition to
    these two.
 
 ## The Schema
 
-The Harvester schema lives in the `schema` tab of the sheet and defines some
+The AP Harvester schema lives in the `schema` tab of the sheet and defines some
 general information about the form as well as the details of each field the
 user will be asked to enter. The schema is read row-by-row, with each row
 describing a single attribute of the form. The first column declares the attribute
@@ -293,7 +293,7 @@ listed at the end).
 General options that can be provided to any type of column:
 
 * `default:<value>` - provide a default value for the column. You should pick
-  something that makes sense with the type. By default date entries will
+  something that makes sense with the type. By default, date entries will
   default to the current day; you can specify `default:empty` to instead render
   them with no date selected. Example:
 
@@ -309,8 +309,8 @@ General options that can be provided to any type of column:
 * `key:<string>` - a unique identifier for the column that makes it available
   as a dependency for `select` columns through the `requires` option. You can
   provide any key you want, but it should be universally unique to the column.
-  Also bear in mind the specific requirements of the `requires` option,
-  described above.
+  Bear in mind the specific requirements of the `requires` option,
+  described above. Also note that keys are a requirement for setting an index attribute in your schema (see above).
 
   | column | State | select | options:states | key:state |
   |:-------|:------|:-------|:---------------|:----------|
@@ -323,7 +323,7 @@ General options that can be provided to any type of column:
 
 ## API
 
-Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export harested data to csv.
+AP Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export harested data to csv.
 
 * GET &nbsp; `/d/<docId>/schema` - Returns the schema as defined in the specified Google sheet.
 * GET &nbsp; `/d/<docId>/table/<table>` - Returns the contents of a specified table as an array of objects.
