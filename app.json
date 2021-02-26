@@ -1,6 +1,6 @@
 {
   "name": "Harvester",
-  "description": "Collaborative data collection tool developed by the Associated Press",
+  "description": "An open and collaborative data collection tool developed by the Associated Press",
   "keywords": [
     "collaborative",
     "data",
@@ -8,10 +8,11 @@
   ],
   "website": "https://gitlab.inside.ap.org/newsapps/harvester",
   "repository": "https://gitlab.inside.ap.org/newsapps/harvester",
+  "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_38x44.png",
   "success_url": "/",
   "env": {
     "HARVESTER_CONFIG_DOC_ID": {
-      "desciption": "Google Sheet that will configure custom URLs for Harvester",
+      "description": "Google Sheet that will configure custom URLs for Harvester",
       "required": false
     },
     "GOOGLE_APPLICATION_CREDENTIALS": {
