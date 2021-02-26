@@ -1,11 +1,14 @@
 {
-  "name": "protest-arrests-data-entry",
+  "name": "harvester",
   "version": "2.0.4",
   "main": "./src/js/main-app.js",
-  "description": "Code for the Protest Arrests Data Entry interactive",
-  "repository": "git@gitlab.inside.ap.org:newsapps/protest-arrests-data-entry",
+  "description": "Collaborative data collection tool developed by the Associated Press",
+  "repository": "https://gitlab.inside.ap.org/newsapps/harvester",
   "license": "ISC",
   "sideEffects": false,
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "release": "bin/push && echo 'Successfully released docker image!'",
     "prerelease": "yarn version && yarn build",
