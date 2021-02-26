@@ -13,7 +13,7 @@ RUN yarn install
 
 COPY . ./
 
-RUN yarn build:app
+RUN yarn build
 
 EXPOSE $PORT
 
