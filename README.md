@@ -28,8 +28,8 @@ http://harvester.ap.org/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE
 Harvester expects the sheet that drives it to have a few important properties:
 
 1. First, the sheet has to be shared with a Google service account that Harvester
-   will use to access Google APIs. That account will
-   need permission to be able to edit the sheet in question.
+   will use to access Google APIs. If you need to create an account, [you can do so here][create-service-account]That account 
+   will need permission to be able to edit the sheet in question.
 
 2. Second, the sheet needs to have at least two tabs: one named `entry` and one
    named `schema`. The `entry` tab is where Harvester will append records when
@@ -393,7 +393,7 @@ yarn lint
 ## Releasing
 
 Once a new version of the project is ready to be released, you can build a new
-Docker image of the project and publish it to our internal Artifactory by
+Docker image of the project and publish it to an internal Artifactory by
 running:
 
 ```
