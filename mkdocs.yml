@@ -1,0 +1,5 @@
+site_name: Harvester
+nav:
+  - Home: README.md
+  - Migrating: migrating_to_v2.md
+theme: readthedocs

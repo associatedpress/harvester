@@ -17,7 +17,9 @@
     "server": "node server/index.js",
     "build:app": "webpack --mode=production --config webpack-prod.config.js",
     "test": "jest --coverage",
-    "lint": "eslint \"src/**/*.js\""
+    "lint": "eslint \"src/**/*.js\"",
+    "docs:build": "mkdocs build",
+    "docs:serve": "mkdocs serve"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
