@@ -11,6 +11,9 @@
 # production
 /public
 
+# documentation
+/site
+
 # misc
 .DS_Store
 .env.local

@@ -16,6 +16,8 @@ import Navbar from './navbar'
 import Finished from './finished'
 import ErrorPage from './error_page'
 import SignInPage from './sign_in_page'
+import ErrorBoundary from './error_boundary'
+import LandingPage from './landing_page'
 
 export {
   App,
@@ -35,7 +37,9 @@ export {
   Navbar,
   Finished,
   ErrorPage,
-  SignInPage
+  SignInPage,
+  ErrorBoundary,
+  LandingPage
 }
 
 export default App

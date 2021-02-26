@@ -13,6 +13,10 @@ const configure = (config) => {
   router.use(auth.parseAuthCookie)
   router.use('/auth', auth.router)
 
+  router.get('/', (req, res) => {
+    res.render('landing')
+  })
+
   router.use(stores.router(auth.verifyResourceAccessibility))
 
   router.use(auth.redirectErrorResponse)
