@@ -42,10 +42,10 @@ Harvester expects the sheet that drives it to have a few important properties:
 
 The Harvester schema lives in the `schema` tab of the sheet and defines some
 general information about the form as well as the details of each field the
-user will asked to enter. The schema is read row-by-row, with each row
-describing one attribute of the form. The first column declares the attribute
+user will be asked to enter. The schema is read row-by-row, with each row
+describing a single attribute of the form. The first column declares the attribute
 the form is describing and subsequent columns in the row describe the details
-of the attribute.
+of that attribute.
 
 Attribute types that are currently supported:
 
@@ -62,7 +62,7 @@ Attribute types that are currently supported:
   | chatter | Here's what you should do with this form. |
   |:--------|:------------------------------------------|
 
-* `index` (required) - this defines a (possibly compound) index that uniquely
+* `index` - this defines a (possibly compound) index that uniquely
   identifies an entity in the dataset. An index consists of one or more column
   keys joined by `+`. When an index is specified the user can access
   a "Current" view where they can specify all component pieces of an index and
