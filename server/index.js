@@ -52,17 +52,18 @@ const start = (port = PORT, host = HOST) => {
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(logger)
-  app.use(router(loadConfig(config)))
+
+  app.use('/assets', createProxyMiddleware({
+    target: 'https://interactives.ap.org',
+    changeOrigin: true,
+  }))
 
   // static front-end files served by webpack in development
   if (IS_PRODUCTION) {
     app.use(express.static('public'))
   }
 
-  app.use('/assets', createProxyMiddleware({
-    target: 'https://interactives.ap.org',
-    changeOrigin: true,
-  }))
+  app.use(router(loadConfig(config)))
 
   app.listen(port, host, () => {
     console.log(`Express server listening at http://${host}:${port}`)

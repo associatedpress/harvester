@@ -7,21 +7,23 @@ const configure = (config) => {
   const {
     secret,
     enabled = true,
-    session = {},
     plugins = [],
   } = config
+
+  const authPluginsByType = plugins.reduce((ps, plugin) => {
+    return { ...ps, [plugin.plugin.path]: plugin.plugin }
+  }, {})
 
   const verifyToken = (token) => {
     return jwt.verify(token, secret)
   }
 
   const signToken = (payload, opts = {}) => {
-    const { authenticationExpiresIn = '30d' } = session
-    const tokenOpts = {
-      expiresIn: authenticationExpiresIn,
-      ...opts,
-    }
-    return jwt.sign(payload, secret, tokenOpts)
+    return jwt.sign(payload, secret, opts)
+  }
+
+  const authIsCurrent = (auth) => {
+    return auth && (Date.now() < auth.expiry_date)
   }
 
   const setAuthCookie = (req, res, token) => {
@@ -45,18 +47,34 @@ const configure = (config) => {
   const verifyResourceAccessibility = (storePluginsByType) => {
     return async (req, res, next) => {
       if (!enabled) return next()
-      const { formType, formId } = req.params
+      const { formType, formId, api } = req.harvesterResource
       const storePlugin = storePluginsByType[formType]
-      const auth = req.auth
-      const userCanAccess = await storePlugin.userCanAccess(formId, auth)
+      let auth = req.auth
+
+      // attempt refresh of stale authentication if not API call
+      if (auth && !authIsCurrent(auth) && !api) {
+        const plugin = authPluginsByType[req.auth.issuer]
+        if (!plugin) {
+          auth = undefined
+          const token = signToken({}, { expiresIn: 0 })
+          setAuthCookie(req, res, token)
+        } else {
+          auth = await plugin.refresh(req)
+          const token = signToken(auth)
+          setAuthCookie(req, res, token)
+        }
+      }
+
+      const authToCheck = authIsCurrent(auth) ? auth : undefined
+      const userCanAccess = await storePlugin.userCanAccess(formId, authToCheck)
       if (userCanAccess) return next()
       next(new Error(`unauthorized access to resource ${formType}/${formId}`))
     }
   }
 
   const redirectErrorResponse = (error, req, res, next) => {
-    console.error(error)
-    if (enabled && req.harvesterResource) {
+    if (enabled && req.harvesterResource && !req.harvesterResource.api) {
+      console.error(error)
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
       if (req.auth) {
