@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const path = require('path')
 const express = require('express')
 const { createProxyMiddleware } = require('http-proxy-middleware')
@@ -71,8 +69,9 @@ const start = (port = PORT, host = HOST) => {
 }
 
 if (!IS_PRODUCTION) {
+  const args = require('yargs').default('port', PORT).argv
   const portfinder = require('portfinder')
-  portfinder.basePort = PORT
+  portfinder.basePort = args.port
   portfinder.getPortPromise().then(start)
 } else {
   start()
