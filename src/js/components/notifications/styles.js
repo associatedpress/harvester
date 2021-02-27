@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { copy } from 'js/styles/fonts'
-import { darkPrimary, errorColor, confirmColor } from 'js/styles/colors'
+import { primary, errorColor, confirmColor } from 'js/styles/colors'
 
 export const Notes = styled.div`
   position: fixed;
@@ -12,7 +12,7 @@ export const Notes = styled.div`
 
 export const Note = styled.div`
   background-color: ${props => props.type === 'error' ? errorColor : confirmColor};
-  color: ${darkPrimary};
+  color: ${primary.dark};
   margin-bottom: 0.2em;
   padding: 0.2em 1em;
   border-radius: 3px;

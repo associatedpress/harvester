@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { darkPrimary, lightNeutral, neutral, darkerHighlight, highlight } from 'js/styles/colors'
+import { primary, neutral } from 'js/styles/colors'
 
 export const Well = styled.div`
   margin: 1em 0;
@@ -9,14 +9,14 @@ export const Well = styled.div`
 
 const buttonColor = props => {
   if (props.disabled) return neutral
-  if (props.primary) return darkerHighlight
-  return darkPrimary
+  if (props.primary) return primary.light
+  return primary.dark
 }
 
 const buttonBackgroundColor = props => {
-  if (props.disabled) return lightNeutral
-  if (props.primary) return highlight
-  return lightNeutral
+  if (props.disabled) return primary.light
+  if (props.primary) return primary.main
+  return primary.light
 }
 
 export const Button = styled.button`

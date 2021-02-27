@@ -1,6 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Nav, Brand, User, LogOut, LogIn } from './styles'
+import {
+  Nav,
+  Logo,
+  Brand,
+  User,
+  LogOutLink,
+  LogOutIcon,
+  LogInLink,
+  LogInIcon
+} from './styles'
 
 function Navbar(props) {
   const {
@@ -13,15 +22,16 @@ function Navbar(props) {
 
   return (
     <Nav>
+      <Logo />
       <Brand>Harvester</Brand>
       {user ? (
         <User>
           <div>{user.email}</div>
-          <LogOut q={q} />
+          <LogOutLink q={q}><LogOutIcon /></LogOutLink>
         </User>
       ) : (
         <User>
-          <LogIn q={q} />
+          <LogInLink q={q}><LogInIcon /></LogInLink>
         </User>
       )}
     </Nav>

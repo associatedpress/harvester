@@ -18,6 +18,8 @@ import ErrorPage from './error_page'
 import SignInPage from './sign_in_page'
 import ErrorBoundary from './error_boundary'
 import LandingPage from './landing_page'
+import Footer from './footer'
+import Layout from './layout'
 
 export {
   App,
@@ -39,7 +41,9 @@ export {
   ErrorPage,
   SignInPage,
   ErrorBoundary,
-  LandingPage
+  LandingPage,
+  Footer,
+  Layout
 }
 
 export default App

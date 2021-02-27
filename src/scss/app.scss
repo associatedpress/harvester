@@ -1,1 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap')
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+:root {
+  --ap-logo-size: 2.25rem;
+
+  @media (min-width: 22.5rem) {
+    --ap-logo-size: 2.375rem;
+  }
+
+  @media (min-width: 30rem) {
+    --ap-logo-size: 2.5rem;
+  }
+
+  @media (min-width: 37.5rem) {
+    --ap-logo-size: 2.75rem;
+  }
+
+  @media (min-width: 45rem) {
+    --ap-logo-size: 3rem;
+  }
+
+  @media (min-width: 60rem) {
+    --ap-logo-size: 3.25rem;
+  }
+
+  @media (min-width: 64rem) {
+    --ap-logo-size: 3.375rem;
+  }
+
+  @media (min-width: 80rem) {
+    --ap-logo-size: 3.5rem;
+  }
+
+  @media (min-width: 90rem) {
+    --ap-logo-size: 3.75rem;
+  }
+}

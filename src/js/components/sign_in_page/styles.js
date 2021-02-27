@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import icon from './defaultIcon.svg'
 
 export const ButtonsContainer = styled.div`
-  max-width: 300px;
+  max-width: 400px;
   margin: 0 auto;
   overflow: visible;
 `
@@ -29,7 +29,6 @@ export const ButtonIconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
 `
 
 export const ButtonIcon = styled.div`
@@ -44,4 +43,5 @@ export const ButtonIcon = styled.div`
 `
 
 export const ButtonLabel = styled.div`
+  padding: 0 12px;
 `

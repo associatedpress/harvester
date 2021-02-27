@@ -1,6 +1,5 @@
 const path = require('path')
 const express = require('express')
-const { createProxyMiddleware } = require('http-proxy-middleware')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
@@ -50,11 +49,6 @@ const start = (port = PORT, host = HOST) => {
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(logger)
-
-  app.use('/assets', createProxyMiddleware({
-    target: 'https://interactives.ap.org',
-    changeOrigin: true,
-  }))
 
   // static front-end files served by webpack in development
   if (IS_PRODUCTION) {
