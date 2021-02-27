@@ -8,6 +8,7 @@ export const ErrorContainer = styled.div`
 
 export const ErrorHeader = styled.div`
   font-family: ${bold};
+  font-weight: bold;
   font-size: 1.8em;
   display: flex;
   align-items: baseline;
@@ -24,6 +25,7 @@ export const ErrorTitle = styled.div`
 
 export const ErrorBody = styled.div`
   font-family: ${bold};
+  font-weight: bold;
 `
 
 export const ErrorDetail = styled.div`

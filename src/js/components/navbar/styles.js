@@ -16,6 +16,7 @@ export const Nav = styled.nav`
 
 export const Brand = styled.div`
   font-family: ${bold};
+  font-weight: bold;
   color: ${lightHighlight};
 `
 
