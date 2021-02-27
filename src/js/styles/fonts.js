@@ -1,2 +1,2 @@
-export const copy = '"Good Cond Regular"'
-export const bold = '"Good Cond Bold"'
+export const copy = '"Open Sans", sans-serif'
+export const bold = '"Open Sans", sans-serif'
