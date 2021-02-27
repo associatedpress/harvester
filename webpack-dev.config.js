@@ -2,16 +2,12 @@ const webpack = require('webpack')
 const path = require('path')
 const portfinder = require('portfinder')
 const glob = require('glob')
-const args = require('yargs').default('proxy', '3000').argv
+const args = require('yargs')
+  .default('proxy', '3000')
+  .default('port', '8080')
+  .argv
 
-const backendUrlPatterns = [
-  '/',
-  '/d/',
-  '/forms/',
-  '/api/',
-  '/assets/',
-  '/auth/',
-]
+portfinder.basePort = args.port
 
 const config = (env, argv, port) => ({
   mode: 'development',
@@ -32,6 +28,7 @@ const config = (env, argv, port) => ({
     filename: '[name].js',
   },
   devServer: {
+    index: '',
     compress: true,
     port,
     open: true,
@@ -41,9 +38,10 @@ const config = (env, argv, port) => ({
       errors: true,
       warnings: false,
     },
-    proxy: backendUrlPatterns.reduce((proxy, url) => {
-      return { ...proxy, [url]: `http://localhost:${args.proxy}` }
-    }, {}),
+    proxy: {
+      context: () => true,
+      target: `http://localhost:${args.proxy}`,
+    },
   },
   module: {
     rules: [
@@ -116,4 +114,6 @@ const config = (env, argv, port) => ({
   plugins: [],
 })
 
-module.exports = config
+module.exports = (env, argv) =>
+  portfinder.getPortPromise()
+    .then(port => config(env, argv, port))
