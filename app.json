@@ -1,5 +1,5 @@
 {
-  "name": "Harvester",
+  "name": "AP Harvester",
   "description": "An open and collaborative data collection tool developed by the Associated Press",
   "keywords": [
     "collaborative",
@@ -11,7 +11,7 @@
   "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_311x360.png",
   "success_url": "/",
   "env": {
-    "HARVESTER_CONFIG_DOC_ID": {
+    "HARVESTER_CONFIG_RESOURCE_ID": {
       "description": "Google Sheet that will configure custom URLs for Harvester",
       "required": false
     },
