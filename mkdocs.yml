@@ -10,6 +10,9 @@ nav:
   - App Configuration: configuration_resource.md
   - Schema Reference: schema.md
   - Developing AP Harvester: development.md
-theme: readthedocs
+theme:
+  name: readthedocs
+  custom_dir: docs_theme
 extra_css:
   - css/tables.css
+  - css/ap-footer.css
