@@ -94,22 +94,51 @@ as `<key>:<value>`). The supported column types are listed below along with the
 options that they support (note that all columns support the general options
 listed at the end).
 
-### `date`
+### `datetime`
 
-A date input that renders as a date picker. This column type does not support
-any specific options.
+A date and time input that renders as a datetime picker. This column type
+supports the following options:
 
-| column | Start date | date |
-|:-------|:-----------|:-----|
+`min:<date time string>` - The minimum date or time a user may enter. Enter
+value as a date time string `DD/MM/YYYY HH:MM`
+
+| column | Start date | datetime | min:12/5/1955 06:38 PM |
+|:-------|:-----------|:---------|:-----------------------|
+
+`max:<date time string>` - The minimum date or time a user may enter.
+
+| column | Start date | datetime | max:10/21/2015 19:28 |
+|:-------|:-----------|:---------|:---------------------|
+
+`date:<true|false>` - Show or hide date in the rendered picker. A value of
+`false` will hide the date picker and only display a time picker. The default
+value is `true`.
+
+| column | Start date | datetime | date:false |
+|:-------|:-----------|:---------|:-----------|
+
+`time:<true|false>` - Show or hide time in the rendered picker. A value of
+`false` will hide the time picker and only display a date picker. The default
+value is `true`.
+
+| column | Start date | datetime | time:false |
+|:-------|:-----------|:---------|:-----------|
 
 <hr />
 
 ### `number`
 
-A number input. This column type does not support any specific options.
+A number input. This column type supports the following options:
 
-| column | Age | number |
-|:-------|:----|:-------|
+`min:<num>` - The minimum number a user may enter.
+
+| column | Items | number | min:-5 |
+|:-------|:------|:-------|:-------|
+
+`max:<num>` - The maximum number a user may enter.
+
+| column | Items | number | max:100 |
+|:-------|:------|:-------|:--------|
 
 <hr />
 
@@ -218,6 +247,18 @@ a collection of checkboxes rather than a group of radio buttons> The default is
 | column | States | select | options:states | multiple:true |
 |:-------|:-------|:-------|:---------------|:--------------|
 
+`min:<num>` - When `multiple` is set to true, this option specifies the minimum
+number of options a user must select. Example:
+
+| column | States | select | options:states | multiple:true | min:1 |
+|:-------|:-------|:-------|:---------------|:--------------|:------|
+
+`max:<num>` - When `multiple` is set to true, this option specifies the maximum
+number of options a user may select. Example:
+
+| column | States | select | options:states | multiple:true | max:10 |
+|:-------|:-------|:-------|:---------------|:--------------|:------|
+
 `serialization:<json|csv>` - when `multiple` is set to true this option
 specifies how the multiple values should be serialized so as to occupy a single
 cell in the resulting sheet. Selecting `csv` will cause the multiple values to
@@ -261,7 +302,7 @@ this:
 General options that can be provided to any type of column:
 
 `default:<value>` - provide a default value for the column. You should pick
-something that makes sense with the type. By default date entries will default
+something that makes sense with the type. By default, date entries will default
 to the current day; you can specify `default:empty` to instead render them with
 no date selected. Example:
 
@@ -277,8 +318,9 @@ next to the column label.
 `key:<string>` - a unique identifier for the column that makes it available as
 a dependency for `select` columns through the `requires` option. You can
 provide any key you want, but it should be universally unique to the column.
-Also bear in mind the specific requirements of the `requires` option, described
-above.
+Bear in mind the specific requirements of the `requires` option, described
+above; also note that keys are a requirement for setting an `index` attribute
+in your schema (see above).
 
 | column | State | select | options:states | key:state |
 |:-------|:------|:-------|:---------------|:----------|
