@@ -1,5 +1,7 @@
 const express = require('express')
 const logger = require('../logger')
+const stream = require('stream')
+const CSV = require('csv-string')
 
 const slugParam = ':slug([a-zA-Z0-9-_]+)'
 const formIdParam = ':formId([a-zA-Z0-9-_]+)'
@@ -143,7 +145,13 @@ const configure = ({ config, plugins }) => {
         const headers = /^true$/i.test(req.query.headers)
         const storePlugin = storePluginsByType[formType]
         const rows = await storePlugin.exportCsv(formId, { headers })
-        res.send(Buffer.from(CSV.stringify(rows)))
+        const filename = `${formType}_${formId}_${Date.now()}.csv`
+        const buffer = Buffer.from(CSV.stringify(rows))
+        const readStream = new stream.PassThrough()
+        readStream.end(buffer)
+        res.set('Content-disposition', `attachment; filename=${filename}`)
+        res.set('Content-Type', 'text/plain')
+        readStream.pipe(res)
       } catch (error) {
         logger.error('Error:', error)
         res.status(500).json({ message: error.message })

@@ -70,7 +70,7 @@ function App(props) {
     <Layout user={user}>
       <Notifications notifications={notifications} />
       <Article>
-        <Header />
+        <Header formType={formType} formId={formId} />
         <ErrorBoundary
           fallbackRender={({ error }) => (
             <div>
