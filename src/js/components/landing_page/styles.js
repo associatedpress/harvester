@@ -22,6 +22,11 @@ export const Hero = styled.div`
 
   a {
     color: ${primary.main};
+
+    &:hover {
+      color: ${primary.light};
+      border-color: ${primary.light};
+    }
   }
 `
 

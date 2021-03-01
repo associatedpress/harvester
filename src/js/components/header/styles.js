@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { darkNeutral } from 'js/styles/colors'
+import { primary, darkNeutral } from 'js/styles/colors'
 
 export const TitleContainer = styled.div`
   display: flex;
@@ -16,6 +16,10 @@ export const DownloadLink = styled.a.attrs(props => ({
   height: 24px;
   margin-left: 12px;
   color: ${darkNeutral};
+
+  &:hover {
+    color: ${primary.main};
+  }
 `
 
 export const DownloadIcon = () => (

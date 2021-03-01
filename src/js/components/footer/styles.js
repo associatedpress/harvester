@@ -18,5 +18,9 @@ export const FooterContent = styled.div`
 
   a {
     color: ${primary.main};
+
+    &:hover {
+      color: ${primary.light};
+    }
   }
 `
