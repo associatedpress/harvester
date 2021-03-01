@@ -34,8 +34,30 @@ const configure = ({ config, plugins }) => {
     if (!config.id) return
     if (!slug && !formId) return
     const storePlugin = storePluginsByType[config.type]
-    const forms = await storePlugin.table(config.id, 'forms')
-    return forms.find(f => (!slug || f.slug === slug) && (!formId || f.form_id === formId))
+    try {
+      const forms = await storePlugin.table(config.id, 'forms')
+      return forms.find(f => (!slug || f.slug === slug) && (!formId || f.form_id === formId))
+    } catch(error) {
+      return
+    }
+  }
+
+  const formIsAllowed = async ({ formType, formId }) => {
+    if (!config.id) return true
+    if (!formType && !formId) return true
+    const storePlugin = storePluginsByType[config.type]
+    try {
+      const allowed = await storePlugin.table(config.id, 'allowlist')
+      const idx = allowed.findIndex(f => {
+        if (formId !== f.form_id) return false
+        if (f.form_type) return f.form_type === formType
+        return formType === config.type
+      })
+      return idx >= 0
+    } catch(error) {
+      console.error(error)
+      return true
+    }
   }
 
   const mount = (verify) => {
@@ -67,17 +89,19 @@ const configure = ({ config, plugins }) => {
     })
 
     router.get(`/${formTypeParam}/${formIdParam}`, setHarvesterResource({ api: false }), auth, async (req, res) => {
+      const user = req.auth && { email: req.auth.email }
       try {
         const { formType, formId } = req.params
         const customForm = await getCustomForm({ formId })
         if (customForm) {
           res.redirect(301, `/forms/${customForm.slug}`)
+        } else if (!await formIsAllowed({ formType, formId })) {
+          res.status(404).render('error', { user, status: 404, message: `No resource found at ${formType}/${formId}` })
         } else {
           await renderForm(formType, formId, req, res)
         }
       } catch (error) {
         logger.error('Error:', error)
-        const user = req.auth && { email: req.auth.email }
         res.status(500).render('error', { user, status: 500, message: error.message })
       }
     })

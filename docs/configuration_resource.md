@@ -41,4 +41,37 @@ then the following paths will be equivalent:
 The former (`/forms/my-form`) will be treated as canonical, meaning Harvester
 will redirect users from the latter with a `301` to the former.
 
+## Limiting Allowed Resources
+
+By default AP Harvester is not picky about the resources it uses to render
+forms. Anyone can create a Google Sheet, set it up correctly, share it with
+your service account, and be off to the races. Depending on how you deploy it,
+you may want to lock down your Harvester a little more tightly.
+
+You can add an tab called `allowlist` to your configuration sheet; this will
+let you specify resources that you don't want to grace with custom URLs
+but that you do want Harvester to be allowed to use. (Anything that has been
+given a custom URL is assumed to be allowed.) A basic `allowlist` might allow
+use of a resource with the ID `1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT` like so:
+
+| form_id                            |
+|:-----------------------------------|
+| 1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT |
+
+With that configuration, Harvester will allow access to anything with a custom
+URL at the correct `/forms` endpoint _and_ it this particular resource at
+`/d/1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT`. Note that if this resource is _also_
+given a custom URL then including it in the `allowlist` will have no effect;
+users will still be forwarded to `/forms/<slug>` like normal.
+
+A typical use case for the `allowlist` configuration is to create the
+`allowlist` tab and simply leave it blank. This will cause Harvester to _only_
+render forms that have been given a custom URL in the `forms` tab.
+
+The advantange of using an `allowlist` is that it lets you restrict who can
+create new Harvester projects by restricting access to the configuration sheet
+itself. No new Harvester projects can be started without first adding them to
+the configuration sheet, either as a custom URL or as an entry in the
+`allowlist`.
+
 [google-spreadsheet-id]: https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id
