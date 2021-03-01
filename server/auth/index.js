@@ -111,7 +111,7 @@ const configure = (config) => {
   router.get('/sign-in', (req, res) => {
     const { formType, formId } = req.query
     const hasForm = formType && formId
-    const q = hasForm && `?${new URLSearchParams({ formType, formId })}`
+    const q = hasForm ? `?${new URLSearchParams({ formType, formId })}`: ''
     if (!enabled) return res.redirect(hasForm ? `/${formType}/${formId}` : '/')
     const buttons = plugins.map(plugin => {
       const path = `/auth/${plugin.plugin.path}/sign-in${q}`
