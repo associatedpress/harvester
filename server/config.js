@@ -9,8 +9,8 @@ module.exports = {
     ],
   },
   auth: {
+    enabled: !!(process.env.GOOGLE_OAUTH_CLIENT_ID && process.env.GOOGLE_OAUTH_CLIENT_SECRET),
     secret: process.env.JWT_SECRET,
-    session: {},
     plugins: [
       {
         name: './auth/oauth-google',
