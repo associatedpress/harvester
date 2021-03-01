@@ -10,6 +10,12 @@ import {
   ButtonLabel
 } from './styles'
 
+const label = (button) => {
+  if (button.button.label) return button.button.label
+  const name = button.button.name || button.name
+  return `Sign in with ${name}`
+}
+
 function SignInPage(props) {
   const {
     buttons,
@@ -26,9 +32,9 @@ function SignInPage(props) {
             return (
               <ButtonContainer key={i} href={button.path}>
                 <ButtonIconContainer>
-                  <ButtonIcon icon={button.icon} />
+                  <ButtonIcon icon={button.button && button.button.icon} />
                 </ButtonIconContainer>
-                <ButtonLabel>{button.label || `Sign in with ${button.name}`}</ButtonLabel>
+                <ButtonLabel>{label(button)}</ButtonLabel>
               </ButtonContainer>
             )
           })}

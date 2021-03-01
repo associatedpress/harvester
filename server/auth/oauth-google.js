@@ -105,6 +105,9 @@ const configure = (opts = {}) => {
     path: name,
     mount,
     refresh,
+    button: {
+      name: 'Google OAuth',
+    },
   }
 }
 
