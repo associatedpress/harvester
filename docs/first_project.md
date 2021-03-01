@@ -187,6 +187,82 @@ Note that both of the `relative_column` rows have to include the option
 what alows Harvester to figure out that "Attack Name" and "Hit Chance (%)" go
 with the "Attacks" input field.
 
+#### Making our dataset updatable with an index
+
+Most of the data we're collecting so far won't really change. Pikachu is and
+electric-type Pokemon, and Pikachu will always be an electric-type Pokemon. You
+might notice that one data point _might_ change though: whether or not we've
+already caught a certain Pokemon. As data journalists by day and Pokemon
+trainers by night we are (hopefully) going to be catching new Pokemon even as
+we're collecting our data. So if we enter data on Goldeen never having caught
+one and then proceed to catch one the next day we'll need to update our dataset
+to reflect that.
+
+With our current setup we _could_ just add a new entry for Goldeen, but we
+would also have to enter all the other information, like the fact that Goldeen
+is a water type. That's both annoying and error-prone, and luckily Harvester
+lets us do something better: we can set an `index` indicating that the
+_entities_ we're collecting data on are uniquely identified by the "Name"
+field, since no two Pokemon will share the same name.
+
+| headline        | Pokemon             |          |                   |               |         |
+|:----------------|:--------------------|:---------|:------------------|:--------------|:--------|
+| chatter         | Gotta catch 'em all |          |                   |               |         |
+| **[index][]**   | **name**            |          |                   |               |         |
+| column          | Name                | string   | required:true     | **key:name**  |         |
+| column          | Type                | select   | options:types     |               |         |
+| column          | Already caught      | select   | optionlist:Yes,No | default:No    |         |
+| column          | Attacks             | has_many | relative:attacks  |               |         |
+| relative_column | Attack Name         | string   | relative:attacks  | required:true |         |
+| relative_column | Hit Chance (%)      | number   | relative:attacks  | min:0         | max:100 |
+
+Notice that we've made _two_ important changes: we've specified that the our
+dataset is _indexed_ by the field with the key `name` and we've added the key
+`name` to the "Name" column.
+
+Now Harvester will render this project very differently. Instead of getting the
+entire form at the start you will only be prompted for a Pokemon's name; once
+you enter a name, Harvester will look up the most current data on that Pokemon
+and render the rest of the form with the current data pre-populated.
+
+Now updating the caught status of Goldeen is easy!
+
+#### Encouraging index uniformity with a creatable select
+
+You might see that we're still opening ourselves up to some human error here by
+using a `string` input as our `index` value. What if you have a sticky keyboard
+and accidentally type "Goldeeen" as your index value? Well, you'll get a blank
+form because you haven't previously recorded "Goldeeen" and you might fill it
+out never realizing that you _did_ have data already under the correctly
+spelled name!
+
+You can make your life a bit easier in this situation by using a _creatable
+`select` field_ instead of a `string` field. It will work just like the "Type"
+field that we created, pulling a set of options from a separate tab, _but_ it
+will allow users to _create new options that aren't already included_.
+
+| headline        | Pokemon             |                |                   |                   |                    |          |
+|:----------------|:--------------------|:---------------|:------------------|:------------------|:-------------------|:---------|
+| chatter         | Gotta catch 'em all |                |                   |                   |                    |          |
+| index           | name                |                |                   |                   |                    |          |
+| column          | Name                | **[select][]** | required:true     | **options:names** | **creatable:true** | key:name |
+| column          | Type                | select         | options:types     |                   |                    |          |
+| column          | Already caught      | select         | optionlist:Yes,No | default:No        |                    |          |
+| column          | Attacks             | has_many       | relative:attacks  |                   |                    |          |
+| relative_column | Attack Name         | string         | relative:attacks  | required:true     |                    |          |
+| relative_column | Hit Chance (%)      | number         | relative:attacks  | min:0             | max:100            |          |
+
+Now we've changed "Name" to a [`select` field][select] that pulls its options
+from a tab named `names` (we'll have to create that and add the `value` column
+header in `A1`), and we've specified that the select is `creatable`. If you
+look back at your form you'll see that, if your `names` tab doesn't have any
+names under the `value` header, you're given a drop-down with no options. If
+you type a name into the drop-down though, you can _create_ and option that's
+not there. When you submit the form you'll see that the new name you created
+gets added to the end of the `names` sheet in the `value` column. The next time
+you go to submit the form the drop-down will include that name as an already
+available option.
+
 [new-sheet]: https://sheets.new
 [setup-google]: ./setup.md#google-credentials
 [schema]: ./schema.md
@@ -196,6 +272,7 @@ with the "Attacks" input field.
 [pokemon-types]: https://pokemon.fandom.com/wiki/Types
 [headline]: ./schema.md#headline
 [chatter]: ./schema.md#chatter
+[index]: ./schema.md#index
 [column]: ./schema.md#column
 [relative_column]: ./schema.md#relative_column
 [string]: ./schema.md#string
