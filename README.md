@@ -1,9 +1,9 @@
-Harvester
-=========
+AP Harvester
+============
 
-A transparent and flexible collaborative data-entry tool built on Google Sheets. Harvester
+A transparent and flexible collaborative data-entry tool built on Google Sheets. AP Harvester
 uses the structure of a Google Sheets workbook to drive a data entry form that
-feeds data into another tab in the same workbook. The Harvester form pulls its
+feeds data into another tab in the same workbook. The AP Harvester form pulls its
 schema from the workbook on page load, so it should immediately reflect
 changes. The structure of the workbook and the internal schema syntax are
 described in detail below.
@@ -14,14 +14,14 @@ described in detail below.
 
 ## The Sheet
 
-The main URL pattern that Harvester exposes is:
+The main URL pattern that AP Harvester exposes is:
 
 ```
 http://harvester.ap.org/d/<docId>
 ```
 
 where `<docId>` is the the document ID that shows up in the URL of a Google
-Sheet after `spreadsheets/d/`and before the next `/` in the Sheet's URL (e.g., `1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY`). 
+Sheet after `spreadsheets/d/`and before the next `/` in the Sheet's URL (e.g., `1V6Sq_6T4JFBHklmjpW7LpF_K9auZOFfRa2tIEt7-kqY`).
 For example, the following sheet URL and harvester URL would work together:
 
 ```
@@ -29,26 +29,26 @@ https://docs.google.com/spreadsheets/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvA
 http://harvester.ap.org/d/1lPnNfJchm96Yk2qSAIVbyBz9-2K2flEHCMA3zKvABEE
 ```
 
-Harvester expects the sheet that drives it to have a few important properties:
+AP Harvester expects the sheet that drives it to have a few important properties:
 
-1. First, the sheet has to be shared with a Google service account that Harvester
-   will use to access Google APIs. If you need to create an account, [you can do so here][create-service-account]That account 
+1. First, the sheet has to be shared with a Google service account that AP Harvester
+   will use to access Google APIs. If you need to create an account, [you can do so here][create-service-account]That account
    will need permission to be able to edit the sheet in question.
 
 2. Second, the sheet needs to have at least two tabs: one named `entry` and one
-   named `schema`. The `entry` tab is where Harvester will append records when
+   named `schema`. The `entry` tab is where AP Harvester will append records when
    users submit a form; the `schema` tab defines the structure of the form as
-   described in the below documentation. The sheet can have other tabs 
+   described in the below documentation. The sheet can have other tabs
    in addition to these two.
 
 ## The Schema
 
-The Harvester schema lives in the `schema` tab of the sheet and defines some
+The AP Harvester schema lives in the `schema` tab of the sheet and defines some
 general information about the form as well as the details of each field the
-user will asked to enter. The schema is read row-by-row, with each row
-describing one attribute of the form. The first column declares the attribute
+user will be asked to enter. The schema is read row-by-row, with each row
+describing a single attribute of the form. The first column declares the attribute
 the form is describing and subsequent columns in the row describe the details
-of the attribute.
+of that attribute.
 
 Attribute types that are currently supported:
 
@@ -65,7 +65,7 @@ Attribute types that are currently supported:
   | chatter | Here's what you should do with this form. |
   |:--------|:------------------------------------------|
 
-* `index` (required) - this defines a (possibly compound) index that uniquely
+* `index` - this defines a (possibly compound) index that uniquely
   identifies an entity in the dataset. An index consists of one or more column
   keys joined by `+`. When an index is specified the user can access
   a "Current" view where they can specify all component pieces of an index and
@@ -115,33 +115,60 @@ as `<key>:<value>`). The supported column types are listed below along with the
 options that they support (note that all columns support the general options
 listed at the end).
 
-* `date` - a date input that renders as a date picker. This column type does
-  not support any specific options.
+* `datetime` - a date and time input that renders as a datetime picker. This column type supports the following options:
+  | column | Start date | datetime |
+  |:-------|:-----------|:---------|
 
-  | column | Start date | date |
-  |:-------|:-----------|:-----|
+  - `min:<date time string>` - the minimum date or time a user may enter. Enter value as a date time string `DD/MM/YYYY HH:MM`
 
-* `number` - a number input. This column type does not support any specific
-  options.
+    | column | Start date | datetime | min:12/5/1955 06:38 PM |
+    |:-------|:-----------|:---------|:-----------------------|
+
+  - `max:<date time string>` - the minimum date or time a user may enter.
+
+    | column | Start date | datetime | max:10/21/2015 19:28 |
+    |:-------|:-----------|:---------|:---------------------|
+
+  - `date:<true|false>` - show or hide date in the rendered picker. A value of `false` will hide the date picker and only display a time picker. The default value is `true`.
+
+    | column | Start date | datetime | date:false |
+    |:-------|:-----------|:---------|:-----------|
+
+  - `time:<true|false>` - show or hide time in the rendered picker. A value of `false` will hide the time picker and only display a date picker. The default value is `true`.
+
+    | column | Start date | datetime | time:false |
+    |:-------|:-----------|:---------|:-----------|
+
+* `number` - a number input. This column type supports the following options:
 
   | column | Age | number |
   |:-------|:----|:-------|
+
+  - `min:<num>` - the minimum number a user may enter.
+
+    | column | Items | number | min:-5 |
+    |:-------|:------|:-------|:-------|
+
+  - `max:<num>` - the maximum number a user may enter.
+
+    | column | Items | number | max:100 |
+    |:-------|:------|:-------|:- ------|
 
 * `string` - a short text input. This column type supports the following specific options:
 
   - `regex:<regex>` - JavaScript regular expression. The regex does not need quotations,
     and requires entries that match exactly. Consider giving an example in the name of
-    the field and specifying the necessary format of the entry, because if entries do 
-    not match, the format error message prints the regex, which might not be clear 
-    feedback for non-technical reports. A great place to give guidance to reporters 
-    is the `help:` option to set help text for a column, which shows up as hover text 
+    the field and specifying the necessary format of the entry, because if entries do
+    not match, the format error message prints the regex, which might not be clear
+    feedback for non-technical reports. A great place to give guidance to reporters
+    is the `help:` option to set help text for a column, which shows up as hover text
     over an info icon next to the column label. Example:
 
     | column | Name | string | regex:[A-Z]{2}[0-9]{2,5} | help:State abbreviation and numeric bill ID.|
     |:-------|:-----|:-------|:-------------------------|:--------------------------------------------|
 
   - `maxLength:<maxLength>` - Maximum number of characters a string input should expect. If none is
-    specified the default is 80 characters. 
+    specified the default is 80 characters.
 
 * `text` - a longer text input that displays as a `textarea` input. This column
   type supports the following specific option:
@@ -223,6 +250,20 @@ listed at the end).
     | column | States | select | options:states | multiple:true |
     |:-------|:-------|:-------|:---------------|:--------------|
 
+  - `min:<num>` -  when `multiple` is set to true, this option
+    specifies the minimum number of options a user must select.
+    Example:
+
+    | column | States | select | options:states | multiple:true | min:1 |
+    |:-------|:-------|:-------|:---------------|:--------------|:------|
+
+    - `max:<num>` -  when `multiple` is set to true, this option
+    specifies the maximum number of options a user may select.
+    Example:
+
+    | column | States | select | options:states | multiple:true | max:10 |
+    |:-------|:-------|:-------|:---------------|:--------------|:------|
+
   - `serialization:<json|csv>` - when `multiple` is set to true this option
     specifies how the multiple values should be serialized so as to occupy
     a single cell in the resulting sheet. Selecting `csv` will cause the
@@ -259,7 +300,7 @@ listed at the end).
 General options that can be provided to any type of column:
 
 * `default:<value>` - provide a default value for the column. You should pick
-  something that makes sense with the type. By default date entries will
+  something that makes sense with the type. By default, date entries will
   default to the current day; you can specify `default:empty` to instead render
   them with no date selected. Example:
 
@@ -275,8 +316,8 @@ General options that can be provided to any type of column:
 * `key:<string>` - a unique identifier for the column that makes it available
   as a dependency for `select` columns through the `requires` option. You can
   provide any key you want, but it should be universally unique to the column.
-  Also bear in mind the specific requirements of the `requires` option,
-  described above.
+  Bear in mind the specific requirements of the `requires` option,
+  described above. Also note that keys are a requirement for setting an index attribute in your schema (see above).
 
   | column | State | select | options:states | key:state |
   |:-------|:------|:-------|:---------------|:----------|
@@ -286,6 +327,17 @@ General options that can be provided to any type of column:
 
   | column | Number of people | number | required:true |
   |:-------|:-----------------|:-------|:--------------|
+
+## API
+
+AP Harvester contains an assortment of API endpoints to provide various information about your Harvester instance and export harested data to csv.
+
+* GET &nbsp; `/d/<docId>/schema` - Returns the schema as defined in the specified Google sheet.
+* GET &nbsp; `/d/<docId>/table/<table>` - Returns the contents of a specified table as an array of objects.
+* POST `/d/<docId>/entry?range=<table>` - Appends an entry to a specified sheet.
+* GET &nbsp; `/d/<docId>/current` - If the schema contains an index, this endpoint will return the current value for any uniquely defined entities.
+* GET &nbsp; `/d/<docId>/export.csv` - Returns a csv of harvested entries.
+
 
 ## App-level Configuration
 
@@ -334,8 +386,8 @@ yarn install
 Once all of the project's dependencies have installed successfully, you will
 need to configure your development environment, providing Harvester with Google
 service account credentials to use to access the sheets that drive it. You can
-[create your own service account to use for this][create-service-account]. 
-Once you have the service account credentials (these should be in the form of a JSON file, 
+[create your own service account to use for this][create-service-account].
+Once you have the service account credentials (these should be in the form of a JSON file,
 canonically placed in the root of the project in a file called `.auth.json`) you should set
 the following environment variable:
 
@@ -347,8 +399,8 @@ This project is set up so you can set environment variables in an `.env` file in
 root of the project, so you can create a file called `.env` and set the
 environment variable there.
 
-If you would like to use a Harvester config sheet to provide Custom Form URLs, 
-as mentioned above, you can also set the following environment variable 
+If you would like to use a Harvester config sheet to provide Custom Form URLs,
+as mentioned above, you can also set the following environment variable
 (though this is optional):
 
 ```
