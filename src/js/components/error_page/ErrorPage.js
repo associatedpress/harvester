@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Navbar } from 'js/components'
-import { Main } from 'js/styles/containers'
+import { Layout } from 'js/components'
+import { Article } from 'js/styles/containers'
 import {
   ErrorContainer,
   ErrorHeader,
@@ -21,9 +21,8 @@ function ErrorPage(props) {
   } = props
 
   return (
-    <div>
-      <Navbar user={user} formType={formType} formId={formId} />
-      <Main>
+    <Layout user={user}>
+      <Article>
         <ErrorContainer>
           <ErrorHeader>
             <ErrorStatus>{status}</ErrorStatus>
@@ -32,8 +31,8 @@ function ErrorPage(props) {
           <ErrorBody>Something went wrong.</ErrorBody>
           <ErrorDetail>{message}</ErrorDetail>
         </ErrorContainer>
-      </Main>
-    </div>
+      </Article>
+    </Layout>
   )
 }
 

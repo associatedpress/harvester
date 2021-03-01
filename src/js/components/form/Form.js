@@ -15,21 +15,19 @@ function Form(props) {
   if (!fields) return null
 
   return (
-    <div>
-      <div>
-        {fields.map(field => (
-          <Field
-            key={field.id}
-            schema={field}
-            value={values[field.id]}
-            errors={errors[field.id]}
-            setField={value => setField({ fieldId: field.id, value })}
-            validateField={() => validateField({ fieldId: field.id })}
-          />
-        ))}
-      </div>
+    <>
+      {fields.map(field => (
+        <Field
+          key={field.id}
+          schema={field}
+          value={values[field.id]}
+          errors={errors[field.id]}
+          setField={value => setField({ fieldId: field.id, value })}
+          validateField={() => validateField({ fieldId: field.id })}
+        />
+      ))}
       <Controls buttons={controls} />
-    </div>
+    </>
   )
 }
 

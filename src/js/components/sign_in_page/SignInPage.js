@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Navbar } from 'js/components'
-import { Main } from 'js/styles/containers'
+import { Layout } from 'js/components'
+import { Article } from 'js/styles/containers'
 import {
   ButtonsContainer,
   ButtonContainer,
@@ -18,9 +18,8 @@ function SignInPage(props) {
   } = props
 
   return (
-    <div>
-      <Navbar formType={formType} formId={formId} />
-      <Main>
+    <Layout>
+      <Article>
         <ButtonsContainer>
           {buttons.map((button, i) => {
             return (
@@ -33,8 +32,8 @@ function SignInPage(props) {
             )
           })}
         </ButtonsContainer>
-      </Main>
-    </div>
+      </Article>
+    </Layout>
   )
 }
 

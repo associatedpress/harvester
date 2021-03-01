@@ -3,14 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
 import { setUser } from 'js/store/actions/user'
-import { Navbar, Header, Notifications, Form, Finished, ErrorBoundary } from 'js/components'
+import { Layout, Header, Notifications, Form, Finished, ErrorBoundary } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
-import { Main } from 'js/styles/containers'
+import { Article } from 'js/styles/containers'
 
 function App(props) {
   const {
     user,
-    className,
     formType,
     formId,
     fetchSchema,
@@ -68,11 +67,10 @@ function App(props) {
   }
 
   return (
-    <div className={className}>
+    <Layout user={user}>
       <Notifications notifications={notifications} />
-      <Navbar user={user} formType={formType} formId={formId} />
-      <Main>
-        <Header />
+      <Article>
+        <Header formType={formType} formId={formId} />
         <ErrorBoundary
           fallbackRender={({ error }) => (
             <div>
@@ -116,14 +114,13 @@ function App(props) {
             </>
           )}
         </ErrorBoundary>
-      </Main>
-    </div>
+      </Article>
+    </Layout>
   )
 }
 
 App.propTypes = {
   user: PropTypes.object,
-  className: PropTypes.string,
   formType: PropTypes.string,
   formId: PropTypes.string,
   schema: PropTypes.object,

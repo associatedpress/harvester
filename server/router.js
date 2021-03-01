@@ -1,5 +1,4 @@
 const express = require('express')
-const CSV = require('csv-string')
 const logger = require('./logger')
 const harvesterAuth = require('./auth')
 const harvesterStores = require('./stores')
