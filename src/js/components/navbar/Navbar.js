@@ -13,6 +13,7 @@ import {
 
 function Navbar(props) {
   const {
+    logo,
     user,
     formId,
     formType,
@@ -22,7 +23,7 @@ function Navbar(props) {
 
   return (
     <Nav>
-      <Logo />
+      <Logo logo={logo} />
       <Brand>Harvester</Brand>
       {user ? (
         <User>

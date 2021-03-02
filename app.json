@@ -11,6 +11,10 @@
   "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_311x360.png",
   "success_url": "/",
   "env": {
+    "HARVESTER_LOGO": {
+      "description": "URL to logo to display at the top of the page (default is the AP logo)",
+      "required": false
+    },
     "HARVESTER_CONFIG_RESOURCE_ID": {
       "description": "Google Sheet that will configure custom URLs for Harvester",
       "required": false

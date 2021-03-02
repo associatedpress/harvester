@@ -18,13 +18,14 @@ const label = (button) => {
 
 function SignInPage(props) {
   const {
+    logo,
     buttons,
     formType,
     formId,
   } = props
 
   return (
-    <Layout>
+    <Layout logo={logo}>
       <Article>
         <ButtonsContainer>
           {buttons.map((button, i) => {
@@ -44,7 +45,10 @@ function SignInPage(props) {
 }
 
 SignInPage.propTypes = {
+  logo: PropTypes.string,
   buttons: PropTypes.array,
+  formType: PropTypes.string,
+  formId: PropTypes.string,
 }
 
 SignInPage.defaultProps = {

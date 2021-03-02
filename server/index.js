@@ -42,6 +42,18 @@ const start = (port = PORT, host = HOST) => {
   const app = express()
 
   app.use(helmet())
+  if (config.logo) {
+    const logoUrl = new URL(config.logo)
+    const dirs = helmet.contentSecurityPolicy.getDefaultDirectives()
+    app.use(
+      helmet.contentSecurityPolicy({
+        directives: {
+          ...dirs,
+          'img-src': [...dirs['img-src'], logoUrl.hostname],
+        },
+      })
+    )
+  }
 
   app.set('trust proxy', config.trustProxy)
   app.set('view engine', 'ejs')

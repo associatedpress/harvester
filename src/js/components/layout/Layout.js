@@ -6,6 +6,7 @@ import { Wrapper } from './styles'
 
 function Layout(props) {
   const {
+    logo,
     user,
     children,
   } = props
@@ -14,7 +15,7 @@ function Layout(props) {
     <>
       <Wrapper>
         <Main>
-          <Navbar user={user} />
+          <Navbar logo={logo} user={user} />
           {children}
         </Main>
       </Wrapper>
@@ -24,6 +25,7 @@ function Layout(props) {
 }
 
 Layout.propTypes = {
+  logo: PropTypes.string,
   user: PropTypes.object,
   children: PropTypes.any,
 }
