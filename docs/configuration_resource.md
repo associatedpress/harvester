@@ -48,11 +48,11 @@ forms. Anyone can create a Google Sheet, set it up correctly, share it with
 your service account, and be off to the races. Depending on how you deploy it,
 you may want to lock down your Harvester a little more tightly.
 
-You can add an tab called `allowlist` to your configuration sheet; this will
-let you specify resources that you don't want to grace with custom URLs
-but that you do want Harvester to be allowed to use. (Anything that has been
-given a custom URL is assumed to be allowed.) A basic `allowlist` might allow
-use of a resource with the ID `1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT` like so:
+You can add a tab called `allowlist` to your configuration sheet; the allowlist
+specifies resources without custom URLs that Harvester is allowed to use.
+(Resources with custom URLs are automatically allowed.) A basic `allowlist`
+might allow use of a resource with the ID `1em6MB9S_tL2K2zoPVx9PQ128xrVft9SpT`
+like so:
 
 | form_id                            |
 |:-----------------------------------|
@@ -65,10 +65,10 @@ given a custom URL then including it in the `allowlist` will have no effect;
 users will still be forwarded to `/forms/<slug>` like normal.
 
 A typical use case for the `allowlist` configuration is to create the
-`allowlist` tab and simply leave it blank. This will cause Harvester to _only_
-render forms that have been given a custom URL in the `forms` tab.
+`allowlist` tab and leave it blank. If your `allowlist` is empty, Harvester
+_only_ renders forms with custom URLs in the `forms` tab.
 
-The advantange of using an `allowlist` is that it lets you restrict who can
+The advantage of using an `allowlist` is that it lets you restrict who can
 create new Harvester projects by restricting access to the configuration sheet
 itself. No new Harvester projects can be started without first adding them to
 the configuration sheet, either as a custom URL or as an entry in the

@@ -41,9 +41,9 @@ We'll use the OAuth client ID and client secret shortly when we deploy the app.
 
 ## Deploying to Heroku
 
-[Heroku][] is an app deployment platform that will host and run your deployment
-of AP Harvester for free, provided you don't exceed certain usage limits. It
-can be a convenient way to escape the hassle of managing server infrastructure
+[Heroku][] is an app deployment platform that will manage your deployment of AP
+Harvester for free, provided you don't exceed certain usage limits. It can be
+a convenient way to escape the hassle of managing server infrastructure
 yourself, especially if you want to spin up your own version of Harvester to
 see if it's right for you. You will need to [create a Heroku
 account][heroku-create-account] if you don't already have one.
@@ -96,22 +96,22 @@ Harvester instance (e.g.,
 [https://ap-harvester.herokuapp.com](https://ap-harvester.herokuapp.com)) and
 you should see the Harvester landing page.
 
-At this point it would be a good idea to [set up a simple Harvester
-project][first-project] to
-make sure that all your credentials are working as expected.
+At this point it would be a good idea to [set up a small Harvester
+project][first-project] to make sure that all your credentials are working as
+expected.
 
 ## Deploying directly or with Docker
 
 Heroku is great, but it's not for everyone. Maybe your newsroom already has
 a preferred environment for running apps and you would prefer to run Harvester
 there. In that case you have two choices: you can use our pre-built Docker
-contianer or you can deploy and run the code directly. No matter how you run
+container or you can deploy and run the code directly. No matter how you run
 your Harvester you will still need [the same set of credentials mentioned
 above][setup-google-credentials], so you should start there.
 
 ### Pre-built Docker Container
 
-In order to run our pre-built Docker contianer you will have to first pull the
+In order to run our pre-built Docker container you will have to first pull the
 Docker container and then run it with all your credentials and a few other
 parameters set through environment variables. Once you have the Harvester
 container your `docker run` command should look something like this:
@@ -132,15 +132,15 @@ is `docker run` and we're passing the flags `-it` to make our container
 interactive and connect it to our terminal output. (If you're running the
 container on a server you might want to omit the `-it` flags.)
 
-Next, we're forwarding (or "publishing") port 8000 on the host that is running
-the container to port 80 in the container. If you ran the command at the
-command line that would mean you could go to
+Next, we're forwarding (or "publishing") port 8000 on the machine that is
+running the container to port 80 in the container. If you ran the command at
+the command line that would mean you could go to
 [http://localhost:8000](http://localhost:8000) and get to Harvester.
 
 After that we're setting a number of environment variables. First is your
-`JWT_SECRET`; this should just be some random string that Harvester can use to
-sign JSON web tokens. You can put in your own value or generate a secret using
-some other method if you want.
+`JWT_SECRET`; this should be a random string that Harvester can use to sign
+JSON web tokens. You can put in your own value or generate a secret using some
+other method if you want.
 
 Next, we're setting your Google OAuth credentials. [Like we said
 earlier][setup-google-credentials], setting up Google OAuth is recommended, but

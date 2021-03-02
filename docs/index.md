@@ -8,11 +8,13 @@ get to the story faster.
 
 AP Harvester is schema-driven, meaning you define the structure of the dataset
 you want to collect and Harvester automatically renders a user-friendly form
-through which a team of repoters can enter data as they collect it. It's built
+through which a team of reporters can enter data as they collect it. It's built
 to be flexible and transparent, allowing you to adapt as your data collection
 needs change.
 
 The current iteration of AP Harvester uses Google Sheets as a data storage
-mechanism, meaning you can easily view and work with your data in a tool used
-by many newsrooms already. Starting a new data collection project with AP
-Harvester is as easy creating a new spreadsheet.
+mechanism, meaning you can view and work with your data in a tool used by many
+newsrooms already. Starting a new data collection project with AP Harvester is
+as easy [creating a new spreadsheet][sheet-new].
+
+[sheet-new]: https://sheets.new

@@ -2,11 +2,11 @@ The Schema
 ==========
 
 The Harvester schema lives in the `schema` tab of the sheet and defines some
-general information about the form as well as the details of each field the
-user will asked to enter. The schema is read row-by-row, with each row
-describing one attribute of the form. The first column declares the attribute
-the form is describing and subsequent columns in the row describe the details
-of the attribute.
+general information about the form as well as the details of each field in the
+form. Harvester reads the schema row-by-row, with each row describing one
+attribute of the form. The first column declares the attribute the form is
+describing and subsequent columns in the row describe the details of the
+attribute.
 
 ## Attribute Types
 
@@ -39,7 +39,7 @@ This defines a (possibly compound) index that uniquely identifies an entity in
 the dataset. An index consists of one or more column keys joined by `+`. When
 an index is specified the user can access a "Current" view where they can
 specify all component pieces of an index and get back the collapsed "current"
-value of all columns for the given entity.  Note that the values referenced in
+value of all columns for the given entity. Note that the values referenced in
 the index are column keys created with the `key:<string>` option (see below).
 Example:
 
@@ -56,7 +56,7 @@ another with `key:city`.
 This defines the main building block of the form: a single field that the user
 will input. The details of the `column` type are below, but every column
 requires the type `column` in the first cell, the name of the column in the
-second cell, and the type of the column in the third cell.  Example:
+second cell, and the type of the column in the third cell. Example:
 
 | column | Age | number |
 |:-------|:----|:-------|
@@ -68,8 +68,8 @@ second cell, and the type of the column in the third cell.  Example:
 This defines a sub-field of a secondary model, and behaves like a `column` but
 defines the field on a secondary or "relative" model rather than on the primary
 model. A relative field corresponds to one sub-field of a complex `has_many`
-field. Note that a `relative_column` requires that the `relative:` option be
-set. Example:
+field. Note that a `relative_column` row must include the `relative:` option.
+Example:
 
 | relative_column | Name | string | relative:albums |
 |:----------------|:-----|:-------|:----------------|
@@ -183,7 +183,7 @@ An input that allows a user to select from a list of options. This column type
 has the ability to be rendered as a dropdown, a collection of checkboxes, or
 a group of radio buttons; a select menu is used when using the `options`
 parameter and checkboxes/radios are used when using the `optionlist` parameter,
-depending on whether multiple entries are allowed.  The `select` input supports
+depending on whether multiple entries are allowed. The `select` input supports
 the following specific options:
 
 `options:<sheet name>` (required if not using `optionlist`) - this option
@@ -192,7 +192,7 @@ options for this select input. The table of options must contain a header row
 and must at least contain a column named `value` that specifies unique
 identifiers for the options. The table may contain any additional columns you
 want. If it contains a column named `label` then the values from that column
-will be used as the option labels in the select menu.  (Note that using the
+will be used as the option labels in the select menu. (Note that using the
 `options` parameter will cause the select input to render as a select menu. If
 you want checkboxes or radio buttons, use the `optionlist` parameter instead.)
 Example:
@@ -233,36 +233,36 @@ name as the required key. Example:
 
 This example won't provide any option in the County select menu until the user
 provides a value for the column with the key `state` (see the `key` option
-below); at that point the `us_counties` tab will be filtered down to just the
-rows with the selected state in the `state` column and those rows will be used
-as the options menu for this select menu. If the user then picks a different
-state this select menu will be cleared and new options will be loaded.
+below); at that point the `us_counties` tab will be filtered down to the rows
+with the selected state in the `state` column and those rows will be used as
+the options menu for this select menu. If the user then picks a different state
+this select menu will be cleared and new options will be loaded.
 
 `multiple:<true|false>` - this determines whether or not the user is allowed to
 select multiple options. When using the `options` parameter this results in
 a multi-select drop-down; with using the `optionlist` parameter this results in
 a collection of checkboxes rather than a group of radio buttons> The default is
-`false`, meaning only one option can be selected.  Example:
+`false`, meaning only one option can be selected. Example:
 
 | column | States | select | options:states | multiple:true |
 |:-------|:-------|:-------|:---------------|:--------------|
 
-`min:<num>` - When `multiple` is set to true, this option specifies the minimum
-number of options a user must select. Example:
+`min:<num>` - this specifies the minimum number of options a user must select
+(requires `multiple:true`). Example:
 
 | column | States | select | options:states | multiple:true | min:1 |
 |:-------|:-------|:-------|:---------------|:--------------|:------|
 
-`max:<num>` - When `multiple` is set to true, this option specifies the maximum
-number of options a user may select. Example:
+`max:<num>` - this specifies the maximum number of options a user may select
+(requires `multiple:true`). Example:
 
 | column | States | select | options:states | multiple:true | max:10 |
 |:-------|:-------|:-------|:---------------|:--------------|:------|
 
-`serialization:<json|csv>` - when `multiple` is set to true this option
-specifies how the multiple values should be serialized so as to occupy a single
-cell in the resulting sheet. Selecting `csv` will cause the multiple values to
-be serialized into a comma-separated list with fields quoted with (`"`) as
+`serialization:<json|csv>` - specifies how multiple values should be serialized
+so as to occupy a single cell in the resulting sheet (requires
+`multiple:true`). Selecting `csv` will cause the multiple values to be
+serialized into a comma-separated list with fields quoted with (`"`) as
 necessary; selecting `json` (the default) will cause the multiple values to be
 serialized as a JSON array. Note that if `multiple` is not set to `true` then
 this option has no impact. Example:

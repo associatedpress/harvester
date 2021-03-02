@@ -59,9 +59,9 @@ rename the automatically created tab (named `Sheet1` by default) and call it
 `entry`. You can leave it blank for now; Harvester will enter the data there
 later.
 
-Harvester also needs to be told what data it should be collecting. You define
-that in a second tab, called `schema`. The `schema` tab should contain [the
-schema that describes your dataset][schema].
+Harvester also needs to know what data it should be collecting. You define that
+in a second tab, called `schema`. The `schema` tab should contain [the schema
+that describes your dataset][schema].
 
 ### Example: Pokemon
 
@@ -79,17 +79,17 @@ newly created form in Harvester by going to the path `/d/SPREADSHEET_ID` (where
 you can [configure a custom URL for the project][configuration] to make life
 a little easier.
 
-Your form should have just one field: a text input where you can specify the
+Your form should have a single field: a text input where you can specify the
 Pokemon's name. We made the field required (`required:true`), so if you try to
 submit the form without a name you'll get an error message.
 
 #### Adding a select input with an option sheet
 
 At this point we're only collecting a list of Pokemon names, and that's not
-very interesting. Any investigative reporter worth her salt would surely want
+very interesting. Any investigative reporter worth their salt would surely want
 to dig a bit deeper, so let's add a field for the Pokemon's type.
 
-Now, we could do what we did for the Pokemon name and just add another `string`
+Now, we could do what we did for the Pokemon name and add another `string`
 field, but that would allow one reporter to enter the string "fire", another to
 enter "Fire", and yet another to enter "fire type". That would be a headache
 when we try to analyze the data. For something like this we would be better of
@@ -106,7 +106,7 @@ We added a new column at the end of our schema called "Type" and said that
 reporters should be allowed to pick from a set of options defined in a tab
 called `types` (that's what `options:types` means). But wait! We don't have
 a tab called `types`! So we should create one by adding a new tab, naming the
-tab `types` and definging a list of type options in it. The tab might look
+tab `types` and defining a list of type options in it. The tab might look
 something like this:
 
 | **value** |
@@ -125,18 +125,17 @@ uniquely identifies each row.
 
 Now if you look again at your Harvester form you should see another input
 field that lets you choose the Pokemon's type! In the real world it would
-probably make sense to make this field required as well, but we won't to keep
-things simple.
+probably make sense to make this field required as well, but we won't in this
+example.
 
-Of course, in reality [there are _a lot_ more types][pokemon-types], and some
-Pokemon are even combinations of multiple types. To better capture that
-complexity you might want to add the option `multiple:true` to the "Type"
-column in order to allow reporters to select multiple types when identifying
-a Pokemon.
+In reality [there are _a lot_ more types][pokemon-types], and some Pokemon are
+even combinations of multiple types. To better capture that complexity you
+might want to add the option `multiple:true` to the "Type" column in order to
+allow reporters to select multiple types when identifying a Pokemon.
 
 #### Adding a select input with an option list
 
-In addition to a Pokemon's type we might care whether or not we've alreadyy
+In addition to a Pokemon's type we might care whether or not we've already
 caught the Pokemon in question. Let's handle that with a radio button:
 
 | headline       | Pokemon             |                |                       |                |
@@ -154,13 +153,13 @@ This should give us a radio button input with two options: "Yes" and "No". The
 Maybe we want to dig a little deeper into the capabilities of the Pokemon we're
 investigating. What if we want to collect data on their attacks? Let's say that
 in our simplified example each attack has a name and a percent chance from 0%
-to 100% of hitting its target. Of course, each Pokemon has anywhere from one to
-several attacks, so we'll need a way to add a variable number of complex
-objects to our Pokemon. This is where the [`has_many` field][has_many] shines.
-Setting it up is a bit more involved than our other input types because we have
-to specify not only the `has_many` field itself, but also the
-[`relative_column` column definitions][relative_column] for the relative model
-of which our primary model _has many_.
+to 100% of hitting its target. Each Pokemon has anywhere from one to several
+attacks, so we'll need a way to add a variable number of complex objects to our
+Pokemon. This is where the [`has_many` field][has_many] shines. Setting it up
+is a bit more involved than our other input types because we have to specify
+not only the `has_many` field itself, but also the [`relative_column` column
+definitions][relative_column] for the relative model of which our primary model
+_has many_.
 
 | headline                | Pokemon             |                  |                      |                   |             |
 |:------------------------|:--------------------|:-----------------|:---------------------|:------------------|:------------|
@@ -184,7 +183,7 @@ There's a lot more going on there, but let's break it down:
 
 Note that both of the `relative_column` rows have to include the option
 `relative: attacks` to specify _which_ relative model they apply to. That's
-what alows Harvester to figure out that "Attack Name" and "Hit Chance (%)" go
+what allows Harvester to figure out that "Attack Name" and "Hit Chance (%)" go
 with the "Attacks" input field.
 
 #### Making our dataset updatable with an index
@@ -198,12 +197,12 @@ we're collecting our data. So if we enter data on Goldeen never having caught
 one and then proceed to catch one the next day we'll need to update our dataset
 to reflect that.
 
-With our current setup we _could_ just add a new entry for Goldeen, but we
-would also have to enter all the other information, like the fact that Goldeen
-is a water type. That's both annoying and error-prone, and luckily Harvester
-lets us do something better: we can set an `index` indicating that the
-_entities_ we're collecting data on are uniquely identified by the "Name"
-field, since no two Pokemon will share the same name.
+With our current setup we _could_ add a new entry for Goldeen, but we would
+also have to enter all the other information, like the fact that Goldeen is
+a water type. That's both annoying and error-prone, and luckily Harvester lets
+us do something better: we can set an `index` indicating that the _entities_
+we're collecting data on are uniquely identified by the "Name" field, since no
+two Pokemon will share the same name.
 
 | headline        | Pokemon             |          |                   |               |         |
 |:----------------|:--------------------|:---------|:------------------|:--------------|:--------|
@@ -225,7 +224,7 @@ entire form at the start you will only be prompted for a Pokemon's name; once
 you enter a name, Harvester will look up the most current data on that Pokemon
 and render the rest of the form with the current data pre-populated.
 
-Now updating the caught status of Goldeen is easy!
+Now updating the caught status of Goldeen is much easier!
 
 #### Encouraging index uniformity with a creatable select
 
@@ -237,9 +236,9 @@ out never realizing that you _did_ have data already under the correctly
 spelled name!
 
 You can make your life a bit easier in this situation by using a _creatable
-`select` field_ instead of a `string` field. It will work just like the "Type"
-field that we created, pulling a set of options from a separate tab, _but_ it
-will allow users to _create new options that aren't already included_.
+`select` field_ instead of a `string` field. It will work exactly like the
+"Type" field that we created, pulling a set of options from a separate tab,
+_but_ it will allow users to _create new options that aren't already included_.
 
 | headline        | Pokemon             |                |                   |                   |                    |          |
 |:----------------|:--------------------|:---------------|:------------------|:------------------|:-------------------|:---------|

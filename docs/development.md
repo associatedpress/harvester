@@ -1,8 +1,8 @@
 Developing AP Harvester
 =======================
 
-Like any open source project, AP Harvester is only as stong as the community
-around it. If you're intested in diving into the code and helping to improve
+Like any open source project, AP Harvester is only as strong as the community
+around it. If you're interested in diving into the code and helping to improve
 the tool for everyone, great! You're in the right place and we welcome your
 contribution!
 
@@ -21,8 +21,8 @@ Once all of the project's dependencies have installed successfully, you will
 need to configure your development environment, providing Harvester with Google
 service account credentials to use to access the sheets that drive it. You can
 follow [Google's documentation to create your own service account for
-development][create-service-account], or if you aready have one you want to use
-you will need its JSON credentials. Once you have the service account
+development][create-service-account], or if you already have one you want to
+use you will need its JSON credentials. Once you have the service account
 credentials (these should be in the form of a JSON file) you should place them
 in a file called `.auth.json` in the root of the cloned repository.
 
@@ -81,9 +81,9 @@ yarn lint
 
 ## Documentation
 
-This documentation is built using [MkDocs][]. In order to preview changes to it
-locally you can [install the MkDocs command line tool][mkdocs-install] and then
-serve a preview version of the documentation locally by running:
+We use [MkDocs][] to build this documentation. In order to preview changes to
+it locally you can [install the MkDocs command line tool][mkdocs-install] and
+then serve a preview version of the documentation locally by running:
 
 ```shell
 yarn docs:serve
