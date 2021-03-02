@@ -27,8 +27,8 @@ started][docs-setup].
 
 ## [Documentation][docs]
 
-* :rocket: Once you have your own Harvester set up you can [start your very own
-  data collection project][docs-first-project]!
+* :rocket: Once you [have your own Harvester set up][docs-setup] you can [start
+  your very own data collection project][docs-first-project]!
 
 * :books: Looking for some more [in-depth documentation on what you can do in
   your schema][docs-schema]? We've got you covered.
