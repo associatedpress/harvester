@@ -27,17 +27,17 @@ started][docs-setup].
 
 ## [Documentation][docs]
 
-* :roket: Once you have your own Harvester set up you can [start your very own
+* :rocket: Once you have your own Harvester set up you can [start your very own
   data collection project][docs-first-project]!
 
-* :face_with_monocle: Looking for some more [in-depth documentation on what you
-  can do in your schema][docs-schema]? We've got you covered.
+* :books: Looking for some more [in-depth documentation on what you can do in
+  your schema][docs-schema]? We've got you covered.
 
-* :plusone: Trying to [collaborate with a whole team on your data collection
-  project][docs-collaboration]? Awesome!
+* :heavy_plus_sign: Trying to [collaborate with a whole team on your data
+  collection project][docs-collaboration]? Awesome!
 
-* :nerd_face: Iterested in [helping make AP Harvester
-  better][docs-development]? :heart:
+* :wave: Iterested in [helping make AP Harvester better][docs-development]?
+  :heart:
 
 Happy harvesting!
 
