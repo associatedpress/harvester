@@ -2,11 +2,16 @@ FROM node:12
 
 WORKDIR /app/
 
-ARG PORT
+ARG PORT=80
+
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=$PORT
+ENV GOOGLE_APPLICATION_CREDENTIALS=.auth.json
 
 COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn install --production=false
 
 COPY . ./
 

@@ -99,9 +99,84 @@ make sure that all your credentials are working as expected.
 
 Heroku is great, but it's not for everyone. Maybe your newsroom already has
 a preferred environment for running apps and you would prefer to run Harvester
-there. In that case you should probably start by checking out the development
-documentation to see how to run the app, build a Docker container, and get the
-app running on your own.
+there. In that case you have two choices: you can use our pre-built Docker
+contianer or you can deploy and run the code directly. No matter how you run
+your Harvester you will still need [the same set of credentials mentioned
+above][setup-google-credentials], so you should start there.
+
+### Pre-built Docker Container
+
+In order to run our pre-built Docker contianer you will have to first pull the
+Docker container and then run it with all your credentials and a few other
+parameters set through environment variables. Once you have the Harvester
+container your `docker run` command should look something like this:
+
+```shell
+docker run -it \
+  --publish 8000:80 \
+  --env JWT_SECRET="$( date | sha256sum | base64 )" \
+  --env GOOGLE_OAUTH_CLIENT_ID=<YOUR_GOOGLE_OAUTH_ID> \
+  --env GOOGLE_OAUTH_CLIENT_SECRET=<YOUR_GOOGLE_OAUTH_SECRET> \
+  --env GOOGLE_SERVICE_ACCOUNT_CREDENTIALS="$( cat .auth.json )" \
+  --env HARVESTER_CONFIG_RESOURCE_ID=<YOUR_CONFIG_SHEET_ID> \
+  docker.artifactory.ap.org/interact/harvester:v2.0.4
+```
+
+That might look like a lot, but let's step through it. First, the base command
+is `docker run` and we're passing the flags `-it` to make our container
+interactive and connect it to our terminal output. (If you're running the
+container on a server you might want to omit the `-it` flags.)
+
+Next, we're forwarding (or "publishing") port 8000 on the host that is running
+the container to port 80 in the container. If you ran the command at the
+command line that would mean you could go to
+[http://localhost:8000](http://localhost:8000) and get to Harvester.
+
+After that we're setting a number of environment variables. First is your
+`JWT_SECRET`; this should just be some random string that Harvester can use to
+sign JSON web tokens. You can put in your own value or generate a secret using
+some other method if you want.
+
+Next, we're setting your Google OAuth credentials. [Like we said
+earlier][setup-google-credentials], setting up Google OAuth is recommended, but
+you can leave out `GOOGLE_OAUTH_CLIENT_ID` and `GOOGLE_OAUTH_CLIENT_SECRET` if
+you want to disable authentication.
+
+After that comes your Google service account credentials. There are two
+different ways you can set these: through an environment variable or by
+mounting a file. In the command above we're setting the credentials with the
+environment variable `GOOGLE_SERVICE_ACCOUNT_CREDENTIALS`, which we're setting
+to be the contents of a file called `.auth.json`. (This assumes that you have
+a file `.auth.json` in the directory where you're running this command that
+contains your service account JSON credentials; it's not required that you
+`cat` the file to get the value inline like that.)
+
+You can also set your service account credentials by mounting your `.auth.json`
+file in the container. Replace this
+
+```shell
+--env GOOGLE_SERVICE_ACCOUNT_CREDENTIALS="$( cat .auth.json )"
+```
+
+with this
+
+```shell
+--volume=/absolute/path/to/local/.auth.json:/app/.auth.json
+```
+
+using the appropriate absolute path to your `.auth.json` file.
+
+Finally, we're setting a [Harvester configuration resource ID to use as our
+Harvester config][configuration-sheet]. That's optional and you can choose
+whether using a configuration is right for you.
+
+### Running Directly
+
+If you want to run Harvester's source code directly (or build your own Docker
+container) you should probably start by [checking out the development
+documentation][development] to see how to run the app, build a Docker
+container, and get the app running on your own. From there you can use any
+means you like to get the code deployed on a server and run it.
 
 [create-service-account]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
 [create-oauth]: https://support.google.com/cloud/answer/6158849?hl=en
@@ -110,3 +185,5 @@ app running on your own.
 [google-spreadsheet-id]: https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id
 [first-project]: ./first_project.md
 [configuration-sheet]: ./configuration_resource.md
+[setup-google-credentials]: ./setup.md#google-credentials
+[development]: ./development.md
