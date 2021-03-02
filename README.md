@@ -39,6 +39,13 @@ started][docs-setup].
 * :wave: Iterested in [helping make AP Harvester better][docs-development]?
   :heart:
 
+## Credit
+
+This project has been a labor of love for the AP Data Team and we can't wait to
+see what you do with it! If you do decide develop your own fork and take it in
+your own direction we would really appreciate it if you kept a shout-out to the
+Associated Press in your version of the tool.
+
 Happy harvesting!
 
 [docs]: ./docs/index.md

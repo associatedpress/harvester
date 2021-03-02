@@ -89,6 +89,15 @@ serve a preview version of the documentation locally by running:
 yarn docs:serve
 ```
 
+## Credit
+
+This project has been a labor of love for the AP Data Team and we can't wait to
+see what you do with it! If you do decide develop your own fork and take it in
+your own direction we would really appreciate it if you kept a shout-out to the
+Associated Press in your version of the tool.
+
+Thanks and happy Harvesting!
+
 [github-fork]: https://docs.github.com/en/github/getting-started-with-github/fork-a-repo
 [repo]: https://github.com/associatedpress/harvester
 [node]: https://nodejs.org/en/
