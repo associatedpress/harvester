@@ -8,6 +8,7 @@ nav:
   - First AP Harvester Project: first_project.md
   - Collaboration in AP Harvester: collaboration.md
   - App Configuration: configuration_resource.md
+  - Working with the Data: entry.md
   - Schema Reference: schema.md
   - Developing AP Harvester: development.md
 theme:
