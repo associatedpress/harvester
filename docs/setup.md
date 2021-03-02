@@ -79,6 +79,11 @@ ID][google-spreadsheet-id] into the field marked
 configuration sheet will allow you to create custom URLs for your Harvester
 projects, so it can be nice to have.
 
+You also have the option of specifying the URL of an image you would like to
+use in the Harvester navbar. This lets you make your Harvester feel like your
+own and fit in a little better among your newsroom's other tools. Paste the URL
+into the box marked `HARVESTER_LOGO`.
+
 Once you've entered all your configuration information you can hit the "Deploy
 app" button at the bottom of the page and Heroku should start building and
 deploying your app. This will take a few minutes, but Heroku should tell you
