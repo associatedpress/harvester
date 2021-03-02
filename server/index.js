@@ -43,6 +43,7 @@ const start = (port = PORT, host = HOST) => {
 
   app.use(helmet())
 
+  app.set('trust proxy', config.trustProxy)
   app.set('view engine', 'ejs')
   app.set('views', path.join(__dirname, 'views'))
 

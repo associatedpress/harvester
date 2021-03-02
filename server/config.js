@@ -1,4 +1,5 @@
 module.exports = {
+  trustProxy: true,
   store: {
     config: {
       type: process.env.HARVESTER_CONFIG_RESOURCE_TYPE || 'd',
