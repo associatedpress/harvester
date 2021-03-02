@@ -9,12 +9,18 @@ const configure = (config) => {
   const stores = harvesterStores.configure(config.store)
   const auth = harvesterAuth.configure(config.auth)
 
+  router.use((req, res, next) => {
+    req.harvesterLogo = config.logo
+    next()
+  })
+
   router.use(auth.parseAuthCookie)
   router.use('/auth', auth.router)
 
   router.get('/', (req, res) => {
     const user = req.auth && { email: req.auth.email }
-    res.render('landing', { user })
+    const logo = req.harvesterLogo
+    res.render('landing', { logo, user })
   })
 
   router.use(stores.router(auth.verifyResourceAccessibility))

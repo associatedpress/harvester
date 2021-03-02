@@ -13,6 +13,7 @@ import {
 
 function ErrorPage(props) {
   const {
+    logo,
     user,
     status,
     message,
@@ -21,7 +22,7 @@ function ErrorPage(props) {
   } = props
 
   return (
-    <Layout user={user}>
+    <Layout logo={logo} user={user}>
       <Article>
         <ErrorContainer>
           <ErrorHeader>
@@ -37,6 +38,7 @@ function ErrorPage(props) {
 }
 
 ErrorPage.propTypes = {
+  logo: PropTypes.string,
   user: PropTypes.object,
   status: PropTypes.number,
   message: PropTypes.string,

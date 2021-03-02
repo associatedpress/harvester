@@ -5,6 +5,7 @@ import { Container, Hero, Title, Description, ButtonLink } from './styles'
 
 function LandingPage(props) {
   const {
+    logo,
     user,
   } = props
 
@@ -15,7 +16,7 @@ function LandingPage(props) {
 
   return (
     <Container>
-      <Navbar user={user} />
+      <Navbar logo={logo} user={user} />
       <Hero>
         <Title>Rake in the data.</Title>
         <Description>

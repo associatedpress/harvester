@@ -14,7 +14,7 @@ export const Nav = styled.header`
   ${gridGap}
 `
 
-export const Logo = styled.img.attrs({ src: apLogo })`
+export const Logo = styled.img.attrs(props => ({ src: props.logo || apLogo }))`
   width: var(--ap-logo-size);
 `
 

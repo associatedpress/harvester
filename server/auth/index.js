@@ -81,6 +81,7 @@ const configure = (config) => {
       const q = new URLSearchParams({ formType, formId })
       if (req.auth) {
         const opts = {
+          logo: req.harvesterLogo,
           status: 400,
           message: error.message,
           user: { email: req.auth.email },
@@ -127,7 +128,7 @@ const configure = (config) => {
         button,
       }
     })
-    res.render('signIn', { formType, formId, buttons })
+    res.render('signIn', { logo: req.harvesterLogo, formType, formId, buttons })
   })
 
   router.get('/sign-out', (req, res) => {

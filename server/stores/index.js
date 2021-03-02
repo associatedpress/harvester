@@ -16,7 +16,8 @@ const configure = ({ config, plugins }) => {
 
   const renderForm = async (formType, formId, req, res) => {
     const user = req.auth && { email: req.auth.email }
-    res.render('formId', { formType, formId, user })
+    const logo = req.harvesterLogo
+    res.render('formId', { logo, formType, formId, user })
   }
 
   const setHarvesterResource = (opts = {}) => {
@@ -55,7 +56,6 @@ const configure = ({ config, plugins }) => {
       })
       return idx >= 0
     } catch(error) {
-      console.error(error)
       return true
     }
   }
@@ -65,8 +65,9 @@ const configure = ({ config, plugins }) => {
     const auth = verify(storePluginsByType)
 
     router.get(`/forms/${slugParam}`, async (req, res, next) => {
+      const user = req.auth && { email: req.auth.email }
+      const logo = req.harvesterLogo
       try {
-        const user = req.auth && { email: req.auth.email }
         const { slug } = req.params
         const customForm = await getCustomForm({ slug })
         if (customForm) {
@@ -80,29 +81,30 @@ const configure = ({ config, plugins }) => {
             await renderForm(formType, formId, req, res)
           })
         } else {
-          res.status(404).render('error', { user, status: 404, message: `No form found with slug '${slug}'` })
+          res.status(404).render('error', { logo, user, status: 404, message: `No form found with slug '${slug}'` })
         }
       } catch (error) {
         logger.error('Error from store:', error)
-        res.status(500).render('error', { user, status: 500, message: error.message })
+        res.status(500).render('error', { logo, user, status: 500, message: error.message })
       }
     })
 
     router.get(`/${formTypeParam}/${formIdParam}`, setHarvesterResource({ api: false }), auth, async (req, res) => {
       const user = req.auth && { email: req.auth.email }
+      const logo = req.harvesterLogo
       try {
         const { formType, formId } = req.params
         const customForm = await getCustomForm({ formId })
         if (customForm) {
           res.redirect(301, `/forms/${customForm.slug}`)
         } else if (!await formIsAllowed({ formType, formId })) {
-          res.status(404).render('error', { user, status: 404, message: `No resource found at ${formType}/${formId}` })
+          res.status(404).render('error', { logo, user, status: 404, message: `No resource found at ${formType}/${formId}` })
         } else {
           await renderForm(formType, formId, req, res)
         }
       } catch (error) {
         logger.error('Error:', error)
-        res.status(500).render('error', { user, status: 500, message: error.message })
+        res.status(500).render('error', { logo, user, status: 500, message: error.message })
       }
     })
 
