@@ -23,7 +23,7 @@ Ready to dive right in? Hit the button to deploy AP Harvester directly to
 Heroku. [Take a look at the setup documentation for how to get
 started][docs-setup].
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/associatedpress/harvester)
 
 ## [Documentation][docs]
 
