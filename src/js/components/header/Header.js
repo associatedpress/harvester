@@ -29,6 +29,8 @@ function Header(props) {
 Header.propTypes = {
   headline: PropTypes.string,
   chatter: PropTypes.string,
+  formType: PropTypes.string,
+  formId: PropTypes.string,
 }
 
 Header.defaultProps = {}

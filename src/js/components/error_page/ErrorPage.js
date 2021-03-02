@@ -17,8 +17,6 @@ function ErrorPage(props) {
     user,
     status,
     message,
-    formType,
-    formId,
   } = props
 
   return (

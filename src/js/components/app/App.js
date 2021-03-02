@@ -128,6 +128,7 @@ App.propTypes = {
   schema: PropTypes.object,
   values: PropTypes.object,
   errors: PropTypes.object,
+  finished: PropTypes.bool,
   fetchSchema: PropTypes.func,
   submit: PropTypes.func,
   loadIndex: PropTypes.func,
@@ -138,7 +139,7 @@ App.propTypes = {
   dirty: PropTypes.bool,
   indexLoaded: PropTypes.bool,
   clear: PropTypes.func,
-  serUser: PropTypes.func,
+  setUser: PropTypes.func,
 }
 
 App.defaultProps = {

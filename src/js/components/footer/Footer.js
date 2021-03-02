@@ -1,6 +1,6 @@
 import React from 'react'
 import { Main } from 'js/styles/containers'
-import { Container, Logo, FooterContent } from './styles'
+import { Container, FooterContent } from './styles'
 
 function Footer() {
   const openSource = (

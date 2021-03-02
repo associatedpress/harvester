@@ -20,8 +20,6 @@ function SignInPage(props) {
   const {
     logo,
     buttons,
-    formType,
-    formId,
   } = props
 
   return (
@@ -47,8 +45,6 @@ function SignInPage(props) {
 SignInPage.propTypes = {
   logo: PropTypes.string,
   buttons: PropTypes.array,
-  formType: PropTypes.string,
-  formId: PropTypes.string,
 }
 
 SignInPage.defaultProps = {

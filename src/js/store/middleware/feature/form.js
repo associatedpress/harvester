@@ -12,7 +12,6 @@ import {
   SUBMIT,
   CLEAR,
   clear,
-  fetchSchema,
   validateField,
   validateForm,
   setError,

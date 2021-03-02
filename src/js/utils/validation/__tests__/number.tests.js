@@ -9,7 +9,7 @@ describe('validate', () => {
 
     inputs.forEach(input => {
       // WHEN
-      const output = validate(schema, inputs)
+      const output = validate(schema, input)
 
       // THEN
       expect(output).toEqual([])

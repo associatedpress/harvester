@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { gridGap } from 'js/styles/containers'
 import { primary } from 'js/styles/colors'
 import apLogo from 'images/ap_logo.png'
 

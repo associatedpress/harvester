@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Navbar, Footer } from 'js/components'
-import { Main, Article } from 'js/styles/containers'
+import { Main } from 'js/styles/containers'
 import { Wrapper } from './styles'
 
 function Layout(props) {

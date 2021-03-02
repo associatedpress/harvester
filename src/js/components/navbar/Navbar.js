@@ -40,6 +40,7 @@ function Navbar(props) {
 }
 
 Navbar.propTypes = {
+  logo: PropTypes.string,
   user: PropTypes.shape({
     email: PropTypes.string,
   }),

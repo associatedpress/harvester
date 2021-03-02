@@ -21,7 +21,6 @@ export const serializeDateTime = (datetime, opts = {}) => {
 export const parseDateTime = (datetime, opts = {}) => {
   const {
     date = true,
-    time = true,
   } = opts
 
   if (!datetime) return datetime

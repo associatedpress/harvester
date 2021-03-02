@@ -8,7 +8,7 @@ function validateLength(value, maxLength=80) {
 }
 
 function validateRegex(value, regex) {
-  const re = new RegExp(`^${regex}\$`);
+  const re = new RegExp(`^${regex}$`);
   if (!re.test(value)) {
       return `entry does not match specified pattern ${regex}`
   }
@@ -16,14 +16,14 @@ function validateRegex(value, regex) {
   
 export default function validate(schema, value) {
   const {
-    regex
+    regex,
+    maxLength,
   } = schema.config
-  const valueLengthText = validateLength(value, schema.config.maxLength)
 
   const errors = []
 
+  errors.push(validateLength(value, maxLength))
   if (regex) errors.push(validateRegex(value, regex))
-  if (valueLengthText) errors.push(valueLengthText)
   
   return errors.filter(e => e)
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { copy, bold } from 'js/styles/fonts'
-import { primary } from 'js/styles/colors'
 import { gridGap } from 'js/styles/containers'
 import apLogo from 'images/ap_logo.png'
 

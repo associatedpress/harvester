@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Layout, Navbar } from 'js/components'
+import { Navbar } from 'js/components'
 import { Container, Hero, Title, Description, ButtonLink } from './styles'
 
 function LandingPage(props) {
@@ -34,6 +34,7 @@ function LandingPage(props) {
 }
 
 LandingPage.propTypes = {
+  logo: PropTypes.string,
   user: PropTypes.object,
 }
 
