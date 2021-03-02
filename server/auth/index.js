@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken')
 const google = require('../stores/google-sheets/google')
 const parseSchema = require('../stores/schema')
 
+const { NODE_ENV = 'development' } = process.env
+
 const configure = (config) => {
   const {
     secret,
@@ -29,7 +31,7 @@ const configure = (config) => {
   const setAuthCookie = (req, res, token) => {
     res.cookie('token', token, {
       httpOnly: true,
-      secure: req.secure,
+      secure: NODE_ENV === 'production',
     })
   }
 
