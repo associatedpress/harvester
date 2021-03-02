@@ -9,7 +9,7 @@ describe('form', () => {
 
       it('should start with id=null', () => {
         // THEN
-        expect(initial.id).toBeNull()
+        expect(initial.form).toEqual({})
       })
 
       it('should start with schema={}', () => {
@@ -32,14 +32,16 @@ describe('form', () => {
       it('should set the id', () => {
         // GIVEN
         const initial = form.formReducer(undefined, { type: '@@INIT' })
+        const formType = 'd'
         const formId = '12345'
-        const action = actions.fetchSchema({ id: formId })
+        const action = actions.fetchSchema({ type: formType, id: formId })
 
         // WHEN
         const newState = form.formReducer(initial, action)
 
         // THEN
-        expect(newState.id).toEqual(formId)
+        expect(newState.form.id).toEqual(formId)
+        expect(newState.form.type).toEqual(formType)
       })
     })
 
@@ -126,7 +128,10 @@ describe('form', () => {
       it('should create an option for a field', () => {
         // GIVEN
         const initialState = {
-          id: '12345',
+          form: {
+            type: 'd',
+            id: '12345',
+          },
           schema: { headline: 'foo', columns: [] },
           fields: { 0: 'hello', 1: 'world' },
           errors: { 0: ['field is required'] },
@@ -147,7 +152,7 @@ describe('form', () => {
 
         // THEN
         expect(newState).toEqual({
-          id: initialState.id,
+          form: initialState.form,
           schema: initialState.schema,
           fields: {},
           errors: {},

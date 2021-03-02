@@ -1,0 +1,23 @@
+.ap-footer {
+  margin-top: 16px;
+}
+
+.ap-footer .ap-links {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.ap-footer .ap-footer-link {
+  color: inherit;
+  margin-right: 12px;
+}
+
+.ap-footer .ap-social {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.ap-footer .ap-social .ap-footer-link-social {
+  margin-left: 2px;
+  margin-right: 2px;
+}

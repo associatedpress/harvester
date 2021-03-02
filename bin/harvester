@@ -12,7 +12,9 @@ shift
 
 case "$CMD" in
   run)
-    echo -e "$GOOGLE_CREDS" > "$GOOGLE_APPLICATION_CREDENTIALS"
+    if [[ $GOOGLE_SERVICE_ACCOUNT_CREDENTIALS ]]; then
+      printf '%s' "$GOOGLE_SERVICE_ACCOUNT_CREDENTIALS" > "$GOOGLE_APPLICATION_CREDENTIALS"
+    fi
     set -x
     yarn server
     ;;

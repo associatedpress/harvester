@@ -10,7 +10,7 @@ import {
   TextInput,
   HasManyInput
 } from 'js/components'
-import { Label } from './styles'
+import { FieldText, Label } from './styles'
 
 function Field(props) {
   const {
@@ -34,8 +34,10 @@ function Field(props) {
 
   return (
     <FieldErrors errors={errors}>
-      <Label>{schema.label}</Label>
-      <FieldHelp help={schema.config.help} />
+      <FieldText>
+        <Label>{schema.label}</Label>
+        <FieldHelp help={schema.config.help} />
+      </FieldText>
       <Input
         schema={schema}
         value={value}

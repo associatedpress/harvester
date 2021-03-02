@@ -9,7 +9,7 @@ import {
   SET_ERROR
 } from '../actions/form'
 
-const formIdReducer = (formId = null, action) => {
+const formMetaReducer = (formId = {}, action) => {
   switch (action.type) {
     case FETCH_SCHEMA:
       return action.payload
@@ -85,7 +85,7 @@ const createdOptionsReducer = (options = {}, action) => {
 }
 
 export const formReducer = combineReducers({
-  id: formIdReducer,
+  form: formMetaReducer,
   schema: schemaReducer,
   fields: fieldValueReducer,
   errors: fieldErrorReducer,

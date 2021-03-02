@@ -1,5 +1,12 @@
 node_modules
 public
+site
+coverage
+docs
+docs_theme
 .git
 .auth.json
+.auth-ap.json
+.auth-stanford.json
 .env
+.env.template

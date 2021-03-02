@@ -7,11 +7,14 @@ export const darkNeutral = '#777'
 export const lightNeutral = '#ECECEC'
 export const neutral = '#D9D9D9'
 
-export const lightPrimary = '#D5EAF2'
-export const primary = '#568EA6'
-export const darkPrimary = '#305F72'
-
 export const copy = '#2C2C2C'
 
 export const confirmColor = '#d6f5d6'
 export const errorColor = '#ffc2b3'
+
+export const primary = {
+  light: '#f3f8f8',
+  midlight: '#b5d4d4',
+  main: '#30b6af',
+  dark: '#004142',
+}

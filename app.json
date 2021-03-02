@@ -1,0 +1,49 @@
+{
+  "name": "AP Harvester",
+  "description": "An open and collaborative data collection tool developed by the Associated Press",
+  "keywords": [
+    "collaborative",
+    "data",
+    "collection"
+  ],
+  "website": "https://gitlab.inside.ap.org/newsapps/harvester",
+  "repository": "https://gitlab.inside.ap.org/newsapps/harvester",
+  "logo": "https://interactives.ap.org/assets/images/ap/AP_LOGO_311x360.png",
+  "success_url": "/",
+  "env": {
+    "HARVESTER_CONFIG_RESOURCE_ID": {
+      "description": "Google Sheet that will configure custom URLs for Harvester",
+      "required": false
+    },
+    "GOOGLE_APPLICATION_CREDENTIALS": {
+      "description": "File containing Google service account credentials",
+      "value": ".auth.json"
+    },
+    "GOOGLE_SERVICE_ACCOUNT_CREDENTIALS": {
+      "description": "JSON Google service account credentials"
+    },
+    "GOOGLE_OAUTH_CLIENT_ID": {
+      "description": "Google OAuth client ID (leave empty to disable auth)",
+      "required": false
+    },
+    "GOOGLE_OAUTH_CLIENT_SECRET": {
+      "description": "Google OAuth client secret (leave empty to disable auth)",
+      "required": false
+    },
+    "JWT_SECRET": {
+      "description": "A secret key for verifying the integrity of signed cookies.",
+      "generator": "secret"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

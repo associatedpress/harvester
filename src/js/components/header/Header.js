@@ -1,16 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { TitleContainer, DownloadLink, DownloadIcon } from './styles'
 
 function Header(props) {
   const {
+    formType,
+    formId,
     headline,
     chatter,
   } = props
 
   return (
     <div>
-      {headline && <h1>{headline}</h1>}
+      {headline && (
+        <TitleContainer>
+          <h1>{headline}</h1>
+          <DownloadLink formType={formType} formId={formId}>
+            <DownloadIcon />
+          </DownloadLink>
+        </TitleContainer>
+      )}
       {chatter && <div>{chatter}</div>}
     </div>
   )

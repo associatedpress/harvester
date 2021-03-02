@@ -1,0 +1,19 @@
+site_name: AP Harvester
+repo_url: https://github.com/associatedpress/harvester
+site_description: Documentation for AP Harvester, an open source, collaborative data collection tool from the Data Team at the Associated Press
+site_author: AP Data Team
+nav:
+  - Home: index.md
+  - Setting up AP Harvester: setup.md
+  - First AP Harvester Project: first_project.md
+  - Collaboration in AP Harvester: collaboration.md
+  - App Configuration: configuration_resource.md
+  - Working with the Data: entry.md
+  - Schema Reference: schema.md
+  - Developing AP Harvester: development.md
+theme:
+  name: readthedocs
+  custom_dir: docs_theme
+extra_css:
+  - css/tables.css
+  - css/ap-footer.css

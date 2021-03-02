@@ -13,6 +13,13 @@ import Controls from './controls'
 import FieldHelp from './field_help'
 import HasManyInput from './has_many_input'
 import Navbar from './navbar'
+import Finished from './finished'
+import ErrorPage from './error_page'
+import SignInPage from './sign_in_page'
+import ErrorBoundary from './error_boundary'
+import LandingPage from './landing_page'
+import Footer from './footer'
+import Layout from './layout'
 
 export {
   App,
@@ -29,7 +36,14 @@ export {
   Controls,
   FieldHelp,
   HasManyInput,
-  Navbar
+  Navbar,
+  Finished,
+  ErrorPage,
+  SignInPage,
+  ErrorBoundary,
+  LandingPage,
+  Footer,
+  Layout
 }
 
 export default App

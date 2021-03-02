@@ -11,10 +11,31 @@ async function setAuthClient() {
   const auth = new google.auth.GoogleAuth({
     scopes: [
       'https://www.googleapis.com/auth/spreadsheets',
+      'https://www.googleapis.com/auth/drive.metadata.readonly',
     ],
   })
   authClient = await auth.getClient()
   return authClient
+}
+
+async function emailCanRead(fileId, email) {
+  const auth = await getAuth()
+  const drive = google.drive('v3')
+  const fields = [
+    'permissions/id',
+    'permissions/emailAddress',
+    'permissions/role',
+  ]
+  const request = {
+    auth,
+    fileId,
+    fields: fields.join(','),
+  }
+  const filePermissions = await drive.permissions.list(request)
+  return filePermissions.data.permissions.some(perm => {
+    if (perm.id === 'anyoneWithLink') return true
+    return perm.emailAddress === email
+  })
 }
 
 async function getRange(spreadsheetId, options = {}) {
@@ -82,4 +103,5 @@ async function appendRows(spreadsheetId, rows, options = {}) {
 module.exports = {
   getRange,
   appendRows,
+  emailCanRead,
 }

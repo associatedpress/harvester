@@ -2,18 +2,20 @@ FROM node:12
 
 WORKDIR /app/
 
-ARG PORT
+ARG PORT=80
 
-RUN yarn config set "strict-ssl" false --global && \
-  yarn config set registry https://artifactory.ap.org/api/npm/npm/ --global
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=$PORT
+ENV GOOGLE_APPLICATION_CREDENTIALS=.auth.json
 
 COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn install --production=false
 
 COPY . ./
 
-RUN yarn build:app
+RUN yarn build
 
 EXPOSE $PORT
 
