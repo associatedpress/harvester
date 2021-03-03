@@ -27,7 +27,8 @@ case "$CMD" in
 
   push)
     echo "Pushing ${TAG} with tags ${VERSION} and latest"
-    docker push "${TAG}"
+    docker push "${NAME}"
+    docker push "${LATEST}"
     ;;
 
   *)
