@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Main } from 'js/styles/containers'
 import { Container, FooterContent } from './styles'
 
 function Footer(props) {
@@ -38,7 +37,9 @@ function Footer(props) {
   )
 }
 
-Footer.propTypes = {}
+Footer.propTypes = {
+  version: PropTypes.string,
+}
 
 Footer.defaultProps = {}
 
