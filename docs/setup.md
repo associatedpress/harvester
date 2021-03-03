@@ -131,7 +131,7 @@ docker run -it \
   --env GOOGLE_OAUTH_CLIENT_SECRET=<YOUR_GOOGLE_OAUTH_SECRET> \
   --env GOOGLE_SERVICE_ACCOUNT_CREDENTIALS="$( cat .auth.json )" \
   --env HARVESTER_CONFIG_RESOURCE_ID=<YOUR_CONFIG_SHEET_ID> \
-  docker.artifactory.ap.org/interact/harvester:v2.0.4
+  associatedpess/harvester
 ```
 
 That might look like a lot, but let's step through it. First, the base command
