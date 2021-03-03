@@ -119,10 +119,9 @@ so you can pull it with:
 docker pull associatedpress/harvester
 ```
 
-Then you can run it with all your
-credentials and a few other parameters set through environment variables. Once
-you have the Harvester container your `docker run` command should look
-something like this:
+Then you can run it with all your credentials and a few other parameters set
+through environment variables. Once you have the Harvester container your
+`docker run` command should look something like this:
 
 ```shell
 docker run -it \
