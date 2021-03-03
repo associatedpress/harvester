@@ -32,7 +32,7 @@ client secret in the new `.env` file. If you want to use a Harvester config
 sheet to provide Custom Form URLs you can also set the
 `HARVESTER_CONFIG_RESOURCE_ID` variable.
 
-## Running the app
+## Running the app in development
 
 Once your environment is properly configured, you can run Harvester locally by
 running:
@@ -64,6 +64,29 @@ yarn devbackend
 ```
 
 will run the server process.
+
+## Running the app in production
+
+You can run AP Harvester in production mode by setting the environment variable
+`NODE_ENV=production` and running:
+
+```shell
+yarn server
+```
+
+This will run the backend process, which, when in production mode, will serve
+the front-end code as static assets. For the static assets to be available you
+will have to build them first:
+
+```shell
+yarn build
+```
+
+The build process will build and bundle the front-end assets into the `public`
+directory from which the back-end will serve static assets.
+
+Note that Harvester does not use your `.env` file in production, so you will be
+responsible for configuring your deployment environment yourself.
 
 ## Code quality
 
