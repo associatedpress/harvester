@@ -18,12 +18,12 @@ const label = (button) => {
 
 function SignInPage(props) {
   const {
-    logo,
     buttons,
+    ...layoutProps
   } = props
 
   return (
-    <Layout logo={logo}>
+    <Layout {...layoutProps}>
       <Article>
         <ButtonsContainer>
           {buttons.map((button, i) => {
@@ -43,7 +43,6 @@ function SignInPage(props) {
 }
 
 SignInPage.propTypes = {
-  logo: PropTypes.string,
   buttons: PropTypes.array,
 }
 

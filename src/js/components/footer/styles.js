@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { primary } from 'js/styles/colors'
+import { primary, neutral, darkNeutral } from 'js/styles/colors'
 import apLogo from 'images/ap_logo.png'
 
 export const Container = styled.footer`
   min-height: 80px;
-  background-color: ${primary.dark};
+  border-top: 1px solid ${neutral};
 `
 
 export const Logo = styled.img.attrs({ src: apLogo })`
@@ -13,13 +13,14 @@ export const Logo = styled.img.attrs({ src: apLogo })`
 
 export const FooterContent = styled.div`
   padding-top: 20px;
-  color: ${primary.midlight};
+  color: ${darkNeutral};
+  font-size: 0.8em;
 
   a {
-    color: ${primary.main};
+    color: ${primary.dark};
 
     &:hover {
-      color: ${primary.light};
+      color: ${primary.main};
     }
   }
 `

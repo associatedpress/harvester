@@ -9,6 +9,7 @@ import { Article } from 'js/styles/containers'
 
 function App(props) {
   const {
+    version,
     logo,
     user,
     formType,
@@ -68,7 +69,7 @@ function App(props) {
   }
 
   return (
-    <Layout logo={logo} user={user}>
+    <Layout logo={logo} user={user} formType={formType} formId={formId} version={version}>
       <Notifications notifications={notifications} />
       <Article>
         <Header formType={formType} formId={formId} />
@@ -121,6 +122,7 @@ function App(props) {
 }
 
 App.propTypes = {
+  version: PropTypes.string,
   logo: PropTypes.string,
   user: PropTypes.object,
   formType: PropTypes.string,
