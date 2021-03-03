@@ -1,18 +1,19 @@
-Setting up your own Harvester
-=============================
+Setting up your own AP Harvester
+================================
 
-There are several different ways you can deploy your very own Harvester.
-Because the project is open source, you can take the code and run it directly
-on a server; you can also run our freely available Docker container or build
-your own Docker container using the Dockerfile included in the project; or you
-can deploy Harvester directly to [Heroku][] at the click of a button.
+There are several different ways you can deploy your very own instance of AP
+Harvester.  Because the project is open source, you can take the code and run
+it directly on a server; you can also run our freely available Docker container
+or build your own Docker container using the Dockerfile included in the
+project; or you can deploy Harvester directly to [Heroku][] at the click of
+a button.
 
 Before you dive into deploying the code, you first need to set up some Google
 credentials for the tool to use, no matter how you deploy it.
 
 ## Google Credentials
 
-Since AP Harvester relies on Google Sheets for data storage, the first step in
+Since Harvester relies on Google Sheets for data storage, the first step in
 setting up your own Harvester is [creating a Google service account for the
 tool to use][create-service-account]. This is the account that Harvester will
 use to read and write Google Sheets, so each sheet you create to start a new

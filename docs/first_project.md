@@ -38,11 +38,11 @@ Ideas:
 
 ### Creating and sharing the sheet
 
-AP Harvester relies on a Google Sheet to store everything it needs to know
-about an individual project, so the first step in starting a new project is
-[creating a new Google Sheet][new-sheet]. (You should name the sheet
-something relevant that will help you with your own record keeping, but the
-name of the sheet isn't actually used by Harvester.)
+Harvester relies on a Google Sheet to store everything it needs to know about
+an individual project, so the first step in starting a new project is [creating
+a new Google Sheet][new-sheet]. (You should name the sheet something relevant
+that will help you with your own record keeping, but the name of the sheet
+isn't actually used by Harvester.)
 
 Once your sheet exists you should share it with [your Harvester Google service
 account's][setup-google] email address, granting _edit_ permissions to the
@@ -53,11 +53,10 @@ project and also add rows as the actual data is collected.
 
 ### Setting up the sheet's structure
 
-AP Harvester will record the data as it's collected in a tab named `entry`, so
-you should make sure such a tab exists. The simplest way to do that is to
-rename the automatically created tab (named `Sheet1` by default) and call it
-`entry`. You can leave it blank for now; Harvester will enter the data there
-later.
+Harvester will record the data as it's collected in a tab named `entry`, so you
+should make sure such a tab exists. The simplest way to do that is to rename
+the automatically created tab (named `Sheet1` by default) and call it `entry`.
+You can leave it blank for now; Harvester will enter the data there later.
 
 Harvester also needs to know what data it should be collecting. You define that
 in a second tab, called `schema`. The `schema` tab should contain [the schema

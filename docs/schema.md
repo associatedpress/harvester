@@ -1,7 +1,7 @@
 The Schema
 ==========
 
-The Harvester schema lives in the `schema` tab of the sheet and defines some
+The AP Harvester schema lives in the `schema` tab of the sheet and defines some
 general information about the form as well as the details of each field in the
 form. Harvester reads the schema row-by-row, with each row describing one
 attribute of the form. The first column declares the attribute the form is

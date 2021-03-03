@@ -67,7 +67,7 @@ will run the server process.
 
 ## Running the app in production
 
-You can run AP Harvester in production mode by setting the environment variable
+You can run Harvester in production mode by setting the environment variable
 `NODE_ENV=production` and running:
 
 ```shell

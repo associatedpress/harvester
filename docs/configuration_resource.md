@@ -1,13 +1,13 @@
 App-level Configuration
 =======================
 
-Harvester allows for some optional app-level configuration through a Harvester
-configuration sheet. If you deploy the app with the environment variable
+AP Harvester allows for some optional app-level configuration through
+a configuration sheet. If you deploy the app with the environment variable
 `HARVESTER_CONFIG_RESOURCE_ID` set to [the spreadsheet ID of a Google
 Sheet][google-spreadsheet-id] then Harvester will use that sheet as its app
 configuration.
 
-To set up a Harvester configuration sheet you can [create a new Google
+To set up a configuration sheet you can [create a new Google
 Sheet](https://sheets.new), name it something you'll remember (like "Harvester
 Config"), rename the first tab from "Sheet1" to "forms", and put the strings
 `slug` and `form_id` in cells `A1` and `B1`, respectively; finally, you'll have
@@ -43,10 +43,10 @@ will redirect users from the latter with a `301` to the former.
 
 ## Limiting Allowed Resources
 
-By default AP Harvester is not picky about the resources it uses to render
-forms. Anyone can create a Google Sheet, set it up correctly, share it with
-your service account, and be off to the races. Depending on how you deploy it,
-you may want to lock down your Harvester a little more tightly.
+By default Harvester is not picky about the resources it uses to render forms.
+Anyone can create a Google Sheet, set it up correctly, share it with your
+service account, and be off to the races. Depending on how you deploy it, you
+may want to lock down your Harvester a little more tightly.
 
 You can add a tab called `allowlist` to your configuration sheet; the allowlist
 specifies resources without custom URLs that Harvester is allowed to use.
