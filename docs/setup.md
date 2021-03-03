@@ -111,10 +111,18 @@ above][setup-google-credentials], so you should start there.
 
 ### Pre-built Docker Container
 
-In order to run our pre-built Docker container you will have to first pull the
-Docker container and then run it with all your credentials and a few other
-parameters set through environment variables. Once you have the Harvester
-container your `docker run` command should look something like this:
+In order to run our pre-built Docker container you will have to first [pull the
+Docker container][docker-harvester]. The container is available on Docker Hub,
+so you can pull it with:
+
+```shell
+docker pull associatedpress/harvester
+```
+
+Then you can run it with all your
+credentials and a few other parameters set through environment variables. Once
+you have the Harvester container your `docker run` command should look
+something like this:
 
 ```shell
 docker run -it \
@@ -192,3 +200,4 @@ means you like to get the code deployed on a server and run it.
 [configuration-sheet]: ./configuration_resource.md
 [setup-google-credentials]: ./setup.md#google-credentials
 [development]: ./development.md
+[docker-harvester]: https://hub.docker.com/r/associatedpress/harvester

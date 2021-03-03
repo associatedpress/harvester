@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+CMD=$1
+if [[ -z $CMD ]]; then
+  echo "Must specify a task" >&2
+  exit 1
+fi
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
+#TAG="docker.artifactory.ap.org/interact/harvester"
+TAG="associatedpress/harvester"
+VERSION="v$( cat "$DIR/package.json" | jq '.version' | sed 's/"//g' )"
+echo "Using version $VERSION found in package.json"
+
+NAME="${TAG}:${VERSION}"
+LATEST="${TAG}:latest"
+
+shift
+
+case "$CMD" in
+  build)
+    echo "Building ${TAG} with tags ${VERSION} and latest"
+    docker build -t ${TAG} -t "${NAME}" -t "${LATEST}" -f "${DOCKERFILE}" "${DIR}"
+    ;;
+
+  push)
+    echo "Pushing ${TAG} with tags ${VERSION} and latest"
+    docker push "${TAG}"
+    ;;
+
+  *)
+    echo "Unsupported task '${CMD}'" >&2
+    exit 1
+    ;;
+esac

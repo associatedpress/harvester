@@ -11,10 +11,10 @@
     "yarn": "1.x"
   },
   "scripts": {
-    "release": "bin/push && echo 'Successfully released docker image!'",
+    "release": "bin/docker push && echo 'Successfully released docker image!'",
     "prerelease": "yarn version && yarn build:docker",
     "postversion": "git push --tags && git push",
-    "build:docker": "bin/build",
+    "build:docker": "bin/docker build",
     "devbackend": "BABEL_WATCH_NODE_OPTIONS=\"-r dotenv/config\" babel-watch -- server/index.js",
     "devfrontend": "webpack-dev-server --config webpack-dev.config.js",
     "start": "node -r dotenv/config bin/dev.js",
