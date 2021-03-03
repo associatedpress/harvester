@@ -2,6 +2,7 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const google = require('../stores/google-sheets/google')
 const parseSchema = require('../stores/schema')
+const renderView = require('../render')
 
 const { NODE_ENV = 'development' } = process.env
 
@@ -80,15 +81,7 @@ const configure = (config) => {
       const { formType, formId } = req.harvesterResource
       const q = new URLSearchParams({ formType, formId })
       if (req.auth) {
-        const opts = {
-          logo: req.harvesterLogo,
-          status: 400,
-          message: error.message,
-          user: { email: req.auth.email },
-          formType,
-          formId,
-        }
-        return res.status(400).render('error', opts)
+        return renderView(req, res, { view: 'error', status: 400, message: error.message })
       }
       return res.redirect(`/auth/sign-in?${q}`)
     }
@@ -128,7 +121,7 @@ const configure = (config) => {
         button,
       }
     })
-    res.render('signIn', { logo: req.harvesterLogo, formType, formId, buttons })
+    renderView(req, res, { view: 'signIn', buttons })
   })
 
   router.get('/sign-out', (req, res) => {

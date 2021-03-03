@@ -2,6 +2,8 @@ const express = require('express')
 const logger = require('./logger')
 const harvesterAuth = require('./auth')
 const harvesterStores = require('./stores')
+const renderView = require('./render')
+const harvesterVersion = require('../package.json').version
 
 const configure = (config) => {
   const router = express.Router()
@@ -11,6 +13,7 @@ const configure = (config) => {
 
   router.use((req, res, next) => {
     req.harvesterLogo = config.logo
+    req.harvesterVersion = harvesterVersion
     next()
   })
 
@@ -18,9 +21,7 @@ const configure = (config) => {
   router.use('/auth', auth.router)
 
   router.get('/', (req, res) => {
-    const user = req.auth && { email: req.auth.email }
-    const logo = req.harvesterLogo
-    res.render('landing', { logo, user })
+    renderView(req, res, { view: 'landing' })
   })
 
   router.use(stores.router(auth.verifyResourceAccessibility))

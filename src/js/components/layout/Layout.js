@@ -6,27 +6,31 @@ import { Wrapper } from './styles'
 
 function Layout(props) {
   const {
+    version,
     logo,
     user,
+    formType,
+    formId,
     children,
   } = props
 
   return (
-    <>
+    <Main>
+      <Navbar logo={logo} user={user} formType={formType} formId={formId} />
       <Wrapper>
-        <Main>
-          <Navbar logo={logo} user={user} />
-          {children}
-        </Main>
+        {children}
       </Wrapper>
-      <Footer user={user} />
-    </>
+      <Footer version={version} />
+    </Main>
   )
 }
 
 Layout.propTypes = {
+  version: PropTypes.string,
   logo: PropTypes.string,
   user: PropTypes.object,
+  formType: PropTypes.string,
+  formId: PropTypes.string,
   children: PropTypes.any,
 }
 
