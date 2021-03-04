@@ -51,8 +51,8 @@ Associated Press in your version of the tool.
 Happy harvesting!
 
 [docs]: https://harvester.readthedocs.io/en/latest/
-[docs-setup]: https://harvester.readthedocs.io/en/latest/setup.md
-[docs-first-project]: https://harvester.readthedocs.io/en/latest/first_project.md
-[docs-schema]: https://harvester.readthedocs.io/en/latest/schema.md
-[docs-collaboration]: https://harvester.readthedocs.io/en/latest/collaboration.md
-[docs-development]: https://harvester.readthedocs.io/en/latest/development.md
+[docs-setup]: https://harvester.readthedocs.io/en/latest/setup
+[docs-first-project]: https://harvester.readthedocs.io/en/latest/first_project
+[docs-schema]: https://harvester.readthedocs.io/en/latest/schema
+[docs-collaboration]: https://harvester.readthedocs.io/en/latest/collaboration
+[docs-development]: https://harvester.readthedocs.io/en/latest/development

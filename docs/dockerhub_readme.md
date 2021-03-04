@@ -94,6 +94,6 @@ When all this is complete, you can access AP Harvester by going to [http://local
 [sheet-new]: https://sheets.new
 [create-service-account]: https://cloud.google.com/iam/docs/creating-managing-service-accounts
 [create-oauth]: https://support.google.com/cloud/answer/6158849?hl=en
-[first-project]: https://harvester.readthedocs.io/en/latest/first_project.md
-[configuration-sheet]: https://harvester.readthedocs.io/en/latest/configuration_resource.md
-[setup-google-credentials]: https://harvester.readthedocs.io/en/latest/setup.md#google-credentials
+[first-project]: https://harvester.readthedocs.io/en/latest/first_project
+[configuration-sheet]: https://harvester.readthedocs.io/en/latest/configuration_resource
+[setup-google-credentials]: https://harvester.readthedocs.io/en/latest/setup#google-credentials
