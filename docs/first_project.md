@@ -5,14 +5,6 @@ So you have your very own instance of AP Harvester up and running and you want
 to see what you can do with it. Let's start by setting up a basic project and
 then we can add to it as we explore Harvester's potential.
 
-Ideas:
-
-* Pokemon (`name:string`, `type:select`, `caught:select`, `attacks:has_many`)
-
-* Restaurant recommendations
-
-* Members of Congress
-
 ## At a glance
 
 1. [Create a new Google Sheet][new-sheet] and give it a helpful name.
