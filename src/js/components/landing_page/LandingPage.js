@@ -10,7 +10,7 @@ function LandingPage(props) {
   } = props
 
   const repo = 'https://github.com/associatedpress/harvester'
-  const docs = 'https://github.com/associatedpress/harvester'
+  const docs = 'https://harvester.readthedocs.io/en/latest/'
 
   const openSource = <a href={repo}>open source</a>
 

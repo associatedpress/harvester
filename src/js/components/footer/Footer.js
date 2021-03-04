@@ -7,10 +7,11 @@ function Footer(props) {
     version,
   } = props
 
+  const docs = 'https://harvester.readthedocs.io/en/latest/'
   const repo = 'https://github.com/associatedpress/harvester'
 
   const apHarvester = (
-    <a href={repo}>AP Harvester</a>
+    <a href={docs}>AP Harvester</a>
   )
 
   const release = (

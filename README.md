@@ -1,6 +1,8 @@
 AP Harvester
 ============
 
+[![Documentation Status](https://readthedocs.org/projects/harvester/badge/?version=latest)](https://harvester.readthedocs.io/en/latest/?badge=latest)
+
 AP Harvester is an open source, collaborative data collection platform designed
 to help newsrooms gather structured data at the speed of news. We built it to
 lower the barriers in spinning up a new data collection project so that you can
@@ -23,7 +25,7 @@ Ready to dive right in? Hit the button to deploy AP Harvester directly to
 Heroku. [Take a look at the setup documentation for how to get
 started][docs-setup].
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/associatedpress/harvester)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## [Documentation][docs]
 
@@ -48,9 +50,9 @@ Associated Press in your version of the tool.
 
 Happy harvesting!
 
-[docs]: ./docs/index.md
-[docs-setup]: ./docs/setup.md
-[docs-first-project]: ./docs/first_project.md
-[docs-schema]: ./docs/schema.md
-[docs-collaboration]: ./docs/collaboration.md
-[docs-development]: ./docs/development.md
+[docs]: https://harvester.readthedocs.io/en/latest/
+[docs-setup]: https://harvester.readthedocs.io/en/latest/setup.md
+[docs-first-project]: https://harvester.readthedocs.io/en/latest/first_project.md
+[docs-schema]: https://harvester.readthedocs.io/en/latest/schema.md
+[docs-collaboration]: https://harvester.readthedocs.io/en/latest/collaboration.md
+[docs-development]: https://harvester.readthedocs.io/en/latest/development.md
