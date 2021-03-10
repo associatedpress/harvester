@@ -102,6 +102,7 @@ function HasManyInput(props) {
       {relatives.map((relative, i) => (
         <Relative
           key={relative.id}
+          namespace={`${schema.relative}-${relative.id}`}
           schema={relativeSchema}
           values={relative.relative}
           errors={relativeErrors.errors[i]}

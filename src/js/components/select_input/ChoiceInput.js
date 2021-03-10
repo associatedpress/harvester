@@ -5,6 +5,7 @@ import { parseValue, serializeValue } from 'js/utils/serialize'
 
 function ChoiceInput(props) {
   const {
+    namespace,
     schema,
     value,
     setField,
@@ -44,7 +45,7 @@ function ChoiceInput(props) {
         return (
           <div key={i}>
             <Input
-              name={`select-${schema.id}`}
+              name={`${namespace}:select-${schema.id}`}
               checked={checked}
               onChange={() => handleChange(opt, checked)}
               onBlur={validateField}
@@ -61,6 +62,7 @@ function ChoiceInput(props) {
 }
 
 ChoiceInput.propTypes = {
+  namespace: PropTypes.string,
   schema: PropTypes.object,
   value: PropTypes.string,
   setField: PropTypes.func,
@@ -68,6 +70,7 @@ ChoiceInput.propTypes = {
 }
 
 ChoiceInput.defaultProps = {
+  namespace: '',
   value: '',
 }
 

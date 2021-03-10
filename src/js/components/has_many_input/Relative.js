@@ -6,6 +6,7 @@ import UndoDelete from './UndoDelete'
 
 function Relative(props) {
   const {
+    namespace,
     schema,
     values,
     errors,
@@ -32,6 +33,7 @@ function Relative(props) {
           {schema.map((column, i) => (
             <Field
               key={column.id}
+              namespace={namespace}
               schema={column}
               value={values[i]}
               errors={errors[i]}
@@ -47,6 +49,7 @@ function Relative(props) {
 }
 
 Relative.propTypes = {
+  namespace: PropTypes.string,
   schema: PropTypes.array,
   values: PropTypes.array,
   errors: PropTypes.object,
