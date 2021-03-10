@@ -1,6 +1,6 @@
 {
   "name": "harvester",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "main": "./src/js/main-app.js",
   "description": "Collaborative data collection tool developed by the Associated Press",
   "repository": "https://gitlab.inside.ap.org/newsapps/harvester",
