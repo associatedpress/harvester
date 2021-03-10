@@ -449,17 +449,17 @@ describe('form', () => {
       expect(action.payload).toEqual(options.options)
     })
 
-    it('should include fieldId in action meta', () => {
+    it('should include range in action meta', () => {
       // GIVEN
       const options = {
-        fieldId: 1,
+        range: 'foo',
       }
 
       // WHEN
       const action = form.submitCreatedOptions(options)
 
       // THEN
-      expect(action.meta.fieldId).toEqual(options.fieldId)
+      expect(action.meta.range).toEqual(options.range)
     })
   })
 
