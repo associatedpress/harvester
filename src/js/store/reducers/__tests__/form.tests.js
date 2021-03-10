@@ -97,14 +97,15 @@ describe('form', () => {
         // GIVEN
         const initial = form.formReducer(undefined, { type: '@@INIT' })
         const fieldId = 1
+        const range = 'foo'
         const options = [{ value: 'hello' }]
-        const action = actions.setOptions({ fieldId, options })
+        const action = actions.setOptions({ range, fieldId, options })
 
         // WHEN
         const newState = form.formReducer(initial, action)
 
         // THEN
-        expect(newState.options).toEqual({ loaded: {  [fieldId]: options }, created: {} })
+        expect(newState.options).toEqual({ loaded: {  [range]: options }, created: {} })
       })
     })
 
@@ -113,14 +114,15 @@ describe('form', () => {
         // GIVEN
         const initial = form.formReducer(undefined, { type: '@@INIT' })
         const fieldId = 1
+        const range = 'foo'
         const option = { value: 'hello' }
-        const action = actions.createOption({ fieldId, option })
+        const action = actions.createOption({ range, fieldId, option })
 
         // WHEN
         const newState = form.formReducer(initial, action)
 
         // THEN
-        expect(newState.options).toEqual({ loaded: {}, created: {  [fieldId]: [option] } })
+        expect(newState.options).toEqual({ loaded: {}, created: {  [range]: [option] } })
       })
     })
 

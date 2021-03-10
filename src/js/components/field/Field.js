@@ -14,6 +14,7 @@ import { FieldText, Label } from './styles'
 
 function Field(props) {
   const {
+    namespace,
     schema,
     value,
     errors,
@@ -39,6 +40,7 @@ function Field(props) {
         <FieldHelp help={schema.config.help} />
       </FieldText>
       <Input
+        namespace={namespace}
         schema={schema}
         value={value}
         errors={errors}
@@ -50,6 +52,7 @@ function Field(props) {
 }
 
 Field.propTypes = {
+  namespace: PropTypes.string,
   schema: PropTypes.object,
   value: PropTypes.any,
   errors: PropTypes.oneOfType([
