@@ -63,7 +63,11 @@ function SelectInput(props) {
     setField(serializeValue(newValue, { multiple, serialization }))
     if (action.action === 'create-option') {
       [opt].flat().forEach(newOpt => {
-        createOption({ fieldId: schema.id, option: newOpt })
+        createOption({
+          range: schema.config.options.range,
+          fieldId: schema.id,
+          option: newOpt,
+        })
       })
     }
   }
@@ -100,9 +104,12 @@ SelectInput.defaultProps = {
 
 function mapStateToProps(state, { schema }) {
   const requireFieldId = getFieldIdByKey(state, schema.config.requires)
+  const { config = {} } = schema
+  const { options = {} } = config
+  const range = options.range
   return {
-    loadedOptions: getFieldLoadedOptions(state, schema.id),
-    createdOptions: getFieldCreatedOptions(state, schema.id),
+    loadedOptions: getFieldLoadedOptions(state, range),
+    createdOptions: getFieldCreatedOptions(state, range),
     requireValue: getFieldValue(state, requireFieldId),
   }
 }

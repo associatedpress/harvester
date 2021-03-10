@@ -58,7 +58,7 @@ const fieldErrorReducer = (errors = {}, action) => {
 const loadedOptionsReducer = (options = {}, action) => {
   switch (action.type) {
     case SET_OPTIONS:
-      return { ...options, [action.meta.fieldId]: action.payload }
+      return { ...options, [action.meta.range]: action.payload }
 
     case CLEAR:
       return {}
@@ -73,7 +73,7 @@ const createdOptionsReducer = (options = {}, action) => {
     case CREATE_OPTION:
       return {
         ...options,
-        [action.meta.fieldId]: [...(options[action.meta.fieldId] || []), action.payload],
+        [action.meta.range]: [...(options[action.meta.range] || []), action.payload],
       }
 
     case CLEAR:

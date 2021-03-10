@@ -93,7 +93,11 @@ const handleApiSuccess = (store, next, action) => {
       break
 
     case FETCH_OPTIONS:
-      next(setOptions({ fieldId: referrer.meta.fieldId, options: action.payload }))
+      next(setOptions({
+        range: referrer.payload,
+        fieldId: referrer.meta.fieldId,
+        options: action.payload,
+      }))
       break
 
     case SUBMIT:
@@ -143,12 +147,11 @@ const handleFetchOptions = (store, next, action) => {
 
 const handleSubmitCreatedOptions = (store, next, action) => {
   const state = store.getState()
-  const schema = getFieldSchema(state, action.meta.fieldId)
   next(apiRequest({
     body: JSON.stringify([action.payload.map(opt => opt.value)]),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    url: submitURL(state.form.form, schema.config.options.range),
+    url: submitURL(state.form.form, action.meta.range),
     referrer: action,
     feature: FORM,
   }))
@@ -197,8 +200,8 @@ const handleSubmit = (store, next, action) => {
     const message = 'Correct errors before submission'
     return next(setErrorNotification({ message, feature: FORM }))
   }
-  Object.entries(state.form.options.created).forEach(([fieldId, options]) => {
-    store.dispatch(submitCreatedOptions({ fieldId, options }))
+  Object.entries(state.form.options.created).forEach(([range, options]) => {
+    store.dispatch(submitCreatedOptions({ range, options }))
   })
   const row = state.form.schema.columns
     .map(col => getFieldValue(state, col.id))

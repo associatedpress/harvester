@@ -65,22 +65,22 @@ export const fetchOptions = ({ fieldId, range, requires, requireValue }) => ({
   meta: { fieldId, requires, requireValue, feature: FORM },
 })
 
-export const createOption = ({ fieldId, option }) => ({
+export const createOption = ({ range, fieldId, option }) => ({
   type: CREATE_OPTION,
   payload: option,
-  meta: { fieldId, feature: FORM },
+  meta: { range, fieldId, feature: FORM },
 })
 
-export const submitCreatedOptions = ({ fieldId, options }) => ({
+export const submitCreatedOptions = ({ range, options }) => ({
   type: SUBMIT_CREATED_OPTIONS,
   payload: options,
-  meta: { fieldId, feature: FORM },
+  meta: { range, feature: FORM },
 })
 
-export const setOptions = ({ fieldId, options }) => ({
+export const setOptions = ({ range, fieldId, options }) => ({
   type: SET_OPTIONS,
   payload: options,
-  meta: { fieldId, feature: FORM },
+  meta: { range, fieldId, feature: FORM },
 })
 
 export const loadIndex = () => ({
