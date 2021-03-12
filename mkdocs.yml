@@ -5,6 +5,7 @@ site_author: AP Data Team
 nav:
   - Home: index.md
   - Setting up AP Harvester: setup.md
+  - Google Credentials: google_credentials.md
   - First AP Harvester Project: first_project.md
   - Collaboration in AP Harvester: collaboration.md
   - App Configuration: configuration_resource.md
