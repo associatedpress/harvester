@@ -31,14 +31,10 @@ to sign into Harvester using their Google accounts. This is technically
 optional, but it is strongly recommended unless you want every Harvester
 project to be available to everyone who has access to the app. Still, there are
 advantages to enabling authentication, like automatically tracking which users
-have entered data. While you are setting up your Google OAuth consent screen
-for the application you will need to include the following scopes:
+have entered data.
 
-* `auth/userinfo.email`
-
-* `auth/userinfo.profile`
-
-We'll use the OAuth client ID and client secret shortly when we deploy the app.
+You can find [detailed instructions on setting up Google credentials for
+Harvester here][docs-google-creds].
 
 ## Deploying to Heroku
 
@@ -201,3 +197,4 @@ means you like to get the code deployed on a server and run it.
 [setup-google-credentials]: ./setup.md#google-credentials
 [development]: ./development.md
 [docker-harvester]: https://hub.docker.com/r/associatedpress/harvester
+[docs-google-creds]: ./google_credentials.md
