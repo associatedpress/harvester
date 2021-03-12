@@ -18,8 +18,9 @@ to uncheck "Notify people").
 
 The app configuration sheet allows you to set up custom form URLs in order to
 get a more human-readable link to share with data collectors. If the config
-sheet has a tab named `forms` that contains the columns `slug` and `doc_id`
-then you can access the form specified by the sheet with ID `doc_id` at the URL
+sheet has a tab named `forms` that contains the columns `slug` and `form_id`
+then you can access the form specified by the sheet with ID `form_id` at the
+URL
 
 ```shell
 /forms/<slug>
