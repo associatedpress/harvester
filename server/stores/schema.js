@@ -1,4 +1,6 @@
 const CSV = require('csv-string')
+const { marked } = require('marked')
+const sanitizeHtml = require('sanitize-html')
 
 function identity(x) {
   return x
@@ -98,6 +100,7 @@ function parseSchema(type, form, configs) {
       id: form,
       path: `/${type}/${form}`,
     },
+    layout: [],
   }
   for (let config of configs) {
     const [configType, ...cfg] = config.filter(c => c)
@@ -105,6 +108,7 @@ function parseSchema(type, form, configs) {
       schema.columns = schema.columns || []
       const column = parseColumnSchema(cfg, schema.columns.length)
       schema.columns.push(column)
+      schema.layout.push({ type: 'column', index: schema.columns.length - 1 })
     } else if (configType === 'relative_column') {
       schema.relatives = schema.relatives || {}
       const column = parseColumnSchema(cfg)
@@ -115,6 +119,12 @@ function parseSchema(type, form, configs) {
       const relativeCols = schema.relatives[column.relative]
       const id = relativeCols.length
       relativeCols.push({ ...column, id })
+    } else if (configType === 'text') {
+      const html = sanitizeHtml(marked(cfg[0] || ''))
+      schema.layout.push({ type: 'text', html })
+    } else if (configType === 'chatter') {
+      const html = sanitizeHtml(marked(cfg[0] || ''))
+      schema.chatter = html
     } else {
       schema[configType.toLowerCase()] = cfg[0]
     }

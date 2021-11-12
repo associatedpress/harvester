@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Controls, Field } from 'js/components'
+import { Controls, Field, TextBlock } from 'js/components'
 
 function Form(props) {
   const {
-    fields,
+    blocks,
+    columns,
     controls,
     values,
     errors,
@@ -12,19 +13,32 @@ function Form(props) {
     validateField,
   } = props
 
-  if (!fields) return null
+  if (!blocks || !columns) return null
+
+  function renderBlock(block) {
+    if (block.type === 'text') return (
+      <TextBlock dangerouslySetInnerHTML={{ __html: block.html }} />
+    )
+
+    const field = columns[block.index]
+    return (
+      <Field
+        key={field.id}
+        schema={field}
+        value={values[field.id]}
+        errors={errors[field.id]}
+        setField={value => setField({ fieldId: field.id, value })}
+        validateField={() => validateField({ fieldId: field.id })}
+      />
+    )
+  }
 
   return (
     <>
-      {fields.map(field => (
-        <Field
-          key={field.id}
-          schema={field}
-          value={values[field.id]}
-          errors={errors[field.id]}
-          setField={value => setField({ fieldId: field.id, value })}
-          validateField={() => validateField({ fieldId: field.id })}
-        />
+      {blocks.map((block, i) => (
+        <React.Fragment key={i}>
+          {renderBlock(block)}
+        </React.Fragment>
       ))}
       <Controls buttons={controls} />
     </>

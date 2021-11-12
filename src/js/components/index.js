@@ -20,6 +20,7 @@ import ErrorBoundary from './error_boundary'
 import LandingPage from './landing_page'
 import Footer from './footer'
 import Layout from './layout'
+import TextBlock from './text_block'
 
 export {
   App,
@@ -43,7 +44,8 @@ export {
   ErrorBoundary,
   LandingPage,
   Footer,
-  Layout
+  Layout,
+  TextBlock
 }
 
 export default App
