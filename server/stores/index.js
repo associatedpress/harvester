@@ -120,8 +120,14 @@ const configure = ({ config, plugins }) => {
     router.get(`/${formTypeParam}/${formIdParam}/table/:table`, setHarvesterResource(), auth, async (req, res) => {
       try {
         const { formType, formId, table } = req.params
+        const opts = {
+          ...req.query,
+        }
+        if (typeof req.query.headers !== 'undefined') {
+          opts.headers = req.query.headers === 'true'
+        }
         const storePlugin = storePluginsByType[formType]
-        const data = await storePlugin.table(formId, table)
+        const data = await storePlugin.table(formId, table, opts)
         res.json(data)
       } catch (error) {
         logger.error('Error:', error)
