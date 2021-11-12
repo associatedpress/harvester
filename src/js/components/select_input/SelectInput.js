@@ -49,6 +49,7 @@ function SelectInput(props) {
   if (optionlist) return <ChoiceInput {...props} />
 
   const options = [...(loadedOptions || []), ...(createdOptions || [])]
+  const optionsSet = new Set(options)
   const parsedValue = parseValue(value, { multiple, serialization })
 
   const getLabel = opt => opt.label || opt.value
@@ -63,6 +64,7 @@ function SelectInput(props) {
     setField(serializeValue(newValue, { multiple, serialization }))
     if (action.action === 'create-option') {
       [opt].flat().forEach(newOpt => {
+        if (optionsSet.has(newOpt)) return
         createOption({
           range: schema.config.options.range,
           fieldId: schema.id,
