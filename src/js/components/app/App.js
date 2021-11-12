@@ -29,6 +29,7 @@ function App(props) {
     validateField,
     clear,
     setUser,
+    embed,
   } = props
 
   useEffect(() => { setUser({ email: user && user.email }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -69,7 +70,7 @@ function App(props) {
   }
 
   return (
-    <Layout logo={logo} user={user} formType={formType} formId={formId} version={version}>
+    <Layout logo={logo} user={user} formType={formType} formId={formId} version={version} embed={embed}>
       <Notifications notifications={notifications} />
       <Article>
         <Header formType={formType} formId={formId} />
@@ -142,10 +143,12 @@ App.propTypes = {
   indexLoaded: PropTypes.bool,
   clear: PropTypes.func,
   setUser: PropTypes.func,
+  embed: PropTypes.bool,
 }
 
 App.defaultProps = {
   notifications: [],
+  embed: false,
 }
 
 function mapStateToProps(state) {

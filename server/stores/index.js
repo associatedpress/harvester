@@ -19,6 +19,10 @@ const configure = ({ config, plugins }) => {
     renderView(req, res, { view: 'formId', formType, formId })
   }
 
+  const renderEmbed = async (formType, formId, req, res) => {
+    renderView(req, res, { view: 'formId', formType, formId, embed: true })
+  }
+
   const setHarvesterResource = (opts = {}) => {
     const {
       api = true,
@@ -102,6 +106,22 @@ const configure = ({ config, plugins }) => {
       } catch (error) {
         logger.error('Error:', error)
         renderView(req, res, { view: 'error', status: 500, message: error.message })
+      }
+    })
+
+    router.get(`/${formTypeParam}/${formIdParam}/embed`, setHarvesterResource({ api: false }), auth, async (req, res) => {
+      try {
+        const { formType, formId } = req.params
+        const customForm = await getCustomForm({ formId })
+        if (!await formIsAllowed({ formType, formId })) {
+          const message = `No resource found at ${formType}/${formId}`
+          renderView(req, res, { view: 'error', status: 404, message, embed: true })
+        } else {
+          await renderEmbed(formType, formId, req, res)
+        }
+      } catch (error) {
+        logger.error('Error:', error)
+        renderView(req, res, { view: 'error', status: 500, message: error.message, embed: true })
       }
     })
 

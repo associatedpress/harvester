@@ -14,10 +14,13 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx'],
   },
-  entry: glob.sync(`${path.resolve(__dirname, './src/js')}/*-app.js`).reduce((entry, file) => {
-    const name = path.basename(file).slice(0, -1 * '-app.js'.length)
-    return { ...entry, [name]: file }
-  }, {}),
+  entry: {
+    ...glob.sync(`${path.resolve(__dirname, './src/js')}/*-app.js`).reduce((entry, file) => {
+      const name = path.basename(file).slice(0, -1 * '-app.js'.length)
+      return { ...entry, [name]: file }
+    }, {}),
+    resize: path.resolve(__dirname, './src/js/resize.js'),
+  },
   output: {
     path: path.resolve(__dirname, 'public'),
     filename: '[name].js',

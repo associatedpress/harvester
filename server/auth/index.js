@@ -79,7 +79,7 @@ const configure = (config) => {
     if (enabled && req.harvesterResource && !req.harvesterResource.api) {
       console.error(error)
       const { formType, formId } = req.harvesterResource
-      const q = new URLSearchParams({ formType, formId })
+      const q = new URLSearchParams({ formType, formId, path: req.path })
       if (req.auth) {
         return renderView(req, res, { view: 'error', status: 400, message: error.message })
       }
@@ -93,10 +93,13 @@ const configure = (config) => {
     res.status(400).json({ message: error.message })
   }
 
-  function resolveAuth(req, res, { form, data, options }) {
+  function resolveAuth(req, res, { form, path, data, options }) {
     const token = signToken(data, options)
     setAuthCookie(req, res, token)
-    if (form.type && form.id) {
+    if (path) {
+      return res.redirect(path)
+    }
+    if (form && form.type && form.id) {
       return res.redirect(`/${form.type}/${form.id}`)
     }
     return res.redirect('/')
@@ -105,10 +108,9 @@ const configure = (config) => {
   const router = express.Router()
 
   router.get('/sign-in', (req, res) => {
-    const { formType, formId } = req.query
-    const hasForm = formType && formId
-    const q = hasForm ? `?${new URLSearchParams({ formType, formId })}`: ''
-    if (!enabled) return res.redirect(hasForm ? `/${formType}/${formId}` : '/')
+    const { path = '/' } = req.query
+    if (!enabled) return res.redirect(path)
+    const q = `?${new URLSearchParams({ path })}`
     const buttons = plugins.map(plugin => {
       const path = `/auth/${plugin.plugin.path}/sign-in${q}`
       const button = {
@@ -125,13 +127,10 @@ const configure = (config) => {
   })
 
   router.get('/sign-out', (req, res) => {
-    const { formType, formId } = req.query
+    const { path = '/' } = req.query
     const token = signToken({}, { expiresIn: 0 })
     setAuthCookie(req, res, token)
-    if (formType && formId) {
-      return res.redirect(`/${formType}/${formId}`)
-    }
-    return res.redirect('/')
+    return res.redirect(path)
   })
 
   plugins.forEach(plugin => {

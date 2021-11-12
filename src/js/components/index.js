@@ -20,6 +20,7 @@ import ErrorBoundary from './error_boundary'
 import LandingPage from './landing_page'
 import Footer from './footer'
 import Layout from './layout'
+import EmbedResizeMessenger from './embed_resize_messenger'
 
 export {
   App,
@@ -43,7 +44,8 @@ export {
   ErrorBoundary,
   LandingPage,
   Footer,
-  Layout
+  Layout,
+  EmbedResizeMessenger
 }
 
 export default App

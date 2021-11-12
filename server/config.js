@@ -23,4 +23,10 @@ module.exports = {
       },
     ],
   },
+  embed: {
+    domains: [
+      'localhost:9999',
+      '*.ap.org',
+    ],
+  },
 }

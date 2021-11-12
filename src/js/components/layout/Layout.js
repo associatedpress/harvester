@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Navbar, Footer } from 'js/components'
+import { Navbar, Footer, EmbedResizeMessenger } from 'js/components'
 import { Main } from 'js/styles/containers'
 import { Wrapper } from './styles'
 
@@ -12,16 +12,25 @@ function Layout(props) {
     formType,
     formId,
     children,
+    embed,
   } = props
 
   return (
-    <Main>
-      <Navbar logo={logo} user={user} formType={formType} formId={formId} />
-      <Wrapper>
-        {children}
-      </Wrapper>
-      <Footer version={version} />
-    </Main>
+    <EmbedResizeMessenger>
+      <Main>
+        {embed ? (
+          children
+        ) : (
+          <>
+            <Navbar logo={logo} user={user} formType={formType} formId={formId} />
+            <Wrapper>
+              {children}
+            </Wrapper>
+          </>
+        )}
+        <Footer version={version} />
+      </Main>
+    </EmbedResizeMessenger>
   )
 }
 
@@ -32,8 +41,11 @@ Layout.propTypes = {
   formType: PropTypes.string,
   formId: PropTypes.string,
   children: PropTypes.any,
+  embed: PropTypes.bool,
 }
 
-Layout.defaultProps = {}
+Layout.defaultProps = {
+  embed: false,
+}
 
 export default Layout

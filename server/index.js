@@ -38,22 +38,33 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 const HOST = process.env.HOST || '0.0.0.0'
 const PORT = process.env.PORT || 3000
 
+const csp = cfg => {
+  const directives = helmet.contentSecurityPolicy.getDefaultDirectives()
+  const newDirectives = { ...directives }
+
+  if (cfg.logo) {
+    const logoUrl = new URL(config.logo)
+    newDirectives['img-src'] = [...newDirectives['img-src'], logoUrl.hostname]
+  }
+
+  if (cfg.embed) {
+    newDirectives['frame-ancestors'] = [
+      ...newDirectives['frame-ancestors'],
+      ...(cfg.embed.domains || []),
+    ]
+  }
+
+  return newDirectives
+}
+
 const start = (port = PORT, host = HOST) => {
   const app = express()
 
-  app.use(helmet())
-  if (config.logo) {
-    const logoUrl = new URL(config.logo)
-    const dirs = helmet.contentSecurityPolicy.getDefaultDirectives()
-    app.use(
-      helmet.contentSecurityPolicy({
-        directives: {
-          ...dirs,
-          'img-src': [...dirs['img-src'], logoUrl.hostname],
-        },
-      })
-    )
-  }
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: csp(config)
+    },
+  }))
 
   app.set('trust proxy', config.trustProxy)
   app.set('view engine', 'ejs')

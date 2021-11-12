@@ -74,8 +74,8 @@ const configure = (opts = {}) => {
 
   const mount = ({ router, resolve, token }) => {
     router.get('/sign-in', (req, res) => {
-      const { formType, formId } = req.query
-      const state = token.sign({ formType, formId }, { expiresIn: '5m' })
+      const { formType, formId, path } = req.query
+      const state = token.sign({ formType, formId, path }, { expiresIn: '5m' })
       const authURL = getGoogleAuthURL(oauth2Client(req), { state })
       res.redirect(authURL)
     })
@@ -86,13 +86,13 @@ const configure = (opts = {}) => {
           code,
           state,
         } = req.query
-        const { formType, formId } = token.verify(state)
+        const { formType, formId, path } = token.verify(state)
         const auth = oauth2Client(req)
         const { tokens } = await auth.getToken(code)
         auth.setCredentials(tokens)
         const data = await authLease(auth)
         const form = { type: formType, id: formId }
-        resolve(req, res, { form, data })
+        resolve(req, res, { form, data, path })
       } catch(error) {
         next(error)
       }
