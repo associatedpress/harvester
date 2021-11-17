@@ -34,7 +34,7 @@ async function emailCanRead(fileId, email) {
   const filePermissions = await drive.permissions.list(request)
   return filePermissions.data.permissions.some(perm => {
     if (perm.id === 'anyoneWithLink') return true
-    return perm.emailAddress === email
+    return perm.emailAddress.toLowerCase() === email.toLowerCase()
   })
 }
 
