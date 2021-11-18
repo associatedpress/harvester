@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { TextBlock } from 'js/components'
 import { TitleContainer, DownloadLink, DownloadIcon } from './styles'
 
 function Header(props) {
@@ -21,7 +22,7 @@ function Header(props) {
           </DownloadLink>
         </TitleContainer>
       )}
-      {chatter && <div>{chatter}</div>}
+      {chatter && <TextBlock dangerouslySetInnerHTML={{ __html: chatter }} />}
     </div>
   )
 }

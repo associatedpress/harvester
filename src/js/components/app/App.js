@@ -37,11 +37,15 @@ function App(props) {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
 
-  const { index, columns = [] } = schema
+  const { index, columns = [], layout = [] } = schema
   const indexKeys = index && index.split('+')
-  const indexFields = index && columns.filter(col => indexKeys.includes(col.config.key))
-  const indexMissing = index && indexFields.some(col => values[col.id] == null)
-  const nonIndexFields = columns.filter(col => !index || !indexKeys.includes(col.config.key))
+  const indexBlocks = index && columns
+    .map((col, i) => [i, col])
+    .filter(([i, col]) => indexKeys.includes(col.config.key))
+    .map(([i]) => ({ type: 'column', index: i }))
+  const indexMissing = index && indexBlocks.some(({ index }) => values[columns[index].id] == null)
+  const nonIndexBlocks = layout
+    .filter(block => !index || block.type !== 'column' || !indexKeys.includes(columns[block.index].config.key))
 
   const submitForm = () => {
     const msg = 'Submit data? Please make sure entered data is correct.'
@@ -93,7 +97,8 @@ function App(props) {
             <>
               {index && (
                 <Form
-                  fields={indexFields}
+                  blocks={indexBlocks}
+                  columns={columns}
                   controls={[{
                     label: 'Search',
                     onClick: loadIndexData,
@@ -105,7 +110,8 @@ function App(props) {
               )}
               {indexLoaded && (
                 <Form
-                  fields={nonIndexFields}
+                  blocks={nonIndexBlocks}
+                  columns={columns}
                   controls={[{ label: 'Submit', onClick: submitForm, primary: true }]}
                   values={values}
                   errors={errors}

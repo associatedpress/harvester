@@ -1,4 +1,8 @@
 import parseSchema from '../schema'
+import { marked } from 'marked'
+import sanitizeHtml from 'sanitize-html'
+
+const parseMarkdown = s => sanitizeHtml(marked(s || ''))
 
 const describeFieldType = (opts) => {
   const {
@@ -157,7 +161,7 @@ describe('schema', () => {
       expect(schema.headline).toEqual(headline)
     })
 
-    it('should handle the chatter config', () => {
+    it('should handle the chatter config and parse it as markdown', () => {
       // GIVEN
       const formType = 'd'
       const formId = '12345'
@@ -170,7 +174,7 @@ describe('schema', () => {
       const schema = parseSchema(formType, formId, configs)
 
       // THEN
-      expect(schema.chatter).toEqual(chatter)
+      expect(schema.chatter).toEqual(parseMarkdown(chatter))
     })
 
     it('should handle the index config', () => {
@@ -428,6 +432,67 @@ describe('schema', () => {
 
         // THEN
         expect(columnSchema.columns).toEqual(relativeSchema.relatives[relative])
+      })
+    })
+
+    describe('text', () => {
+      it('should parse text as markdown', () => {
+        // GIVEN
+        const formType = 'd'
+        const formId = '12345'
+        const text = 'some **markdown**'
+        const configs = [
+          ['text', text],
+        ]
+
+        // WHEN
+        const schema = parseSchema(formType, formId, configs)
+
+        // THEN
+        expect(schema.layout).toEqual([{
+          type: 'text',
+          html: parseMarkdown(text),
+        }])
+      })
+    })
+
+    describe('layout', () => {
+      it('should interleave text and columns in layout blocks', () => {
+        // GIVEN
+        const formType = 'd'
+        const formId = '12345'
+        const text1 = 'some **markdown**'
+        const text2 = 'some _more_ **markdown**'
+        const configs = [
+          ['text', text1],
+          ['column', 'Name', 'string'],
+          ['text', text2],
+          ['column', 'Occupation', 'string'],
+        ]
+
+        // WHEN
+        const schema = parseSchema(formType, formId, configs)
+
+        // THEN
+        expect(schema.columns).toHaveLength(2)
+        expect(schema.layout).toEqual([
+          {
+            type: 'text',
+            html: parseMarkdown(text1),
+          },
+          {
+            type: 'column',
+            index: 0,
+          },
+          {
+            type: 'text',
+            html: parseMarkdown(text2),
+          },
+          {
+            type: 'column',
+            index: 1,
+          },
+        ])
       })
     })
   })
