@@ -154,7 +154,7 @@ describe('form', () => {
       const getState = () => state
       const next = jest.fn()
       const splitNext = actionSplitterMiddleware()(next)
-      const action = actions.submitCreatedOptions({ fieldId: 0, options: ['basic'] })
+      const action = actions.submitCreatedOptions({ fieldId: 0, options: [{ value: 'basic' }] })
 
       // WHEN
       form.formMiddleware({ getState })(splitNext)(action)
@@ -163,6 +163,43 @@ describe('form', () => {
       expect(next.mock.calls.length).toEqual(2)
       expect(next.mock.calls[0][0]).toEqual(action)
       expect(next.mock.calls[1][0].type).toMatch(apiActions.API_REQUEST)
+      expect(next.mock.calls[1][0].payload).toEqual(JSON.stringify([['basic']]))
+    })
+
+    it('should trigger API request on SUBMIT_CREATED_OPTIONS with multiple values as separate rows', () => {
+      // GIVEN
+      const state = {
+        form: {
+          form: {
+            type: 'd',
+            id: '12345',
+          },
+          schema: {
+            columns: [
+              { id: 0, label: 'Type', config: { options: { range: 'types' } } },
+            ],
+          },
+        },
+      }
+      const getState = () => state
+      const next = jest.fn()
+      const splitNext = actionSplitterMiddleware()(next)
+      const action = actions.submitCreatedOptions({
+        fieldId: 0,
+        options: [
+          { value: 'basic' },
+          { value: 'complex' },
+        ],
+      })
+
+      // WHEN
+      form.formMiddleware({ getState })(splitNext)(action)
+
+      // THEN
+      expect(next.mock.calls.length).toEqual(2)
+      expect(next.mock.calls[0][0]).toEqual(action)
+      expect(next.mock.calls[1][0].type).toMatch(apiActions.API_REQUEST)
+      expect(next.mock.calls[1][0].payload).toEqual(JSON.stringify([['basic'], ['complex']]))
     })
 
     describe('VALIDATE_FIELD', () => {

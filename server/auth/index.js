@@ -69,8 +69,12 @@ const configure = (config) => {
       }
 
       const authToCheck = authIsCurrent(auth) ? auth : undefined
-      const userCanAccess = await storePlugin.userCanAccess(formId, authToCheck)
-      if (userCanAccess) return next()
+      try {
+        const userCanAccess = await storePlugin.userCanAccess(formId, authToCheck)
+        if (userCanAccess) return next()
+      } catch(error) {
+        console.error(error)
+      }
       next(new Error(`unauthorized access to resource ${formType}/${formId}`))
     }
   }

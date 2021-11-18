@@ -148,7 +148,7 @@ const handleFetchOptions = (store, next, action) => {
 const handleSubmitCreatedOptions = (store, next, action) => {
   const state = store.getState()
   next(apiRequest({
-    body: JSON.stringify([action.payload.map(opt => opt.value)]),
+    body: JSON.stringify(action.payload.map(opt => [opt.value])),
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     url: submitURL(state.form.form, action.meta.range),
