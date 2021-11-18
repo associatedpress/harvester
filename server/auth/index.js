@@ -74,8 +74,8 @@ const configure = (config) => {
         if (userCanAccess) return next()
       } catch(error) {
         console.error(error)
-        next(new Error(`unauthorized access to resource ${formType}/${formId}`))
       }
+      next(new Error(`unauthorized access to resource ${formType}/${formId}`))
     }
   }
 
