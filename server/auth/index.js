@@ -50,12 +50,11 @@ const configure = (config) => {
   const verifyResourceAccessibility = (storePluginsByType) => {
     return async (req, res, next) => {
       if (!enabled) return next()
-      const { formType, formId, api } = req.harvesterResource
+      const { formType, formId } = req.harvesterResource
       const storePlugin = storePluginsByType[formType]
       let auth = req.auth
 
-      // attempt refresh of stale authentication if not API call
-      if (auth && !authIsCurrent(auth) && !api) {
+      if (auth && !authIsCurrent(auth)) {
         const plugin = authPluginsByType[req.auth.issuer]
         if (!plugin) {
           auth = undefined
