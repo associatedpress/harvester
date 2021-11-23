@@ -80,6 +80,22 @@ const handleLoadIndexResponse = (store, next, action) => {
   next(setIndexLoaded({ state: true, feature: FORM }))
 }
 
+const handleFormSubmissionSuccess = (store, next, action) => {
+  const state = store.getState()
+
+  // Submit created options
+  Object.entries(state.form.options.created).forEach(([range, options]) => {
+    store.dispatch(submitCreatedOptions({ range, options }))
+  })
+
+  // Clear form and notify success
+  store.dispatch(clear())
+  next([
+    setNotification({ message: 'Form submission successful', feature: FORM }),
+    setFinished({ state: true, feature: FORM }),
+  ])
+}
+
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
 
@@ -101,11 +117,7 @@ const handleApiSuccess = (store, next, action) => {
       break
 
     case SUBMIT:
-      store.dispatch(clear())
-      next([
-        setNotification({ message: 'Form submission successful', feature: FORM }),
-        setFinished({ state: true, feature: FORM }),
-      ])
+      handleFormSubmissionSuccess(store, next, action)
       break
 
     case LOAD_INDEX:
@@ -200,9 +212,6 @@ const handleSubmit = (store, next, action) => {
     const message = 'Correct errors before submission'
     return next(setErrorNotification({ message, feature: FORM }))
   }
-  Object.entries(state.form.options.created).forEach(([range, options]) => {
-    store.dispatch(submitCreatedOptions({ range, options }))
-  })
   const row = state.form.schema.columns
     .map(col => getFieldValue(state, col.id))
   const now = new Date()
