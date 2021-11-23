@@ -362,7 +362,7 @@ describe('form', () => {
     })
 
     describe('SUBMIT', () => {
-      it('should validate form, trigger API request, and submit created options on SUBMIT', () => {
+      it('should validate form and trigger API request', () => {
         // GIVEN
         const state = {
           user: {},
@@ -399,9 +399,8 @@ describe('form', () => {
         form.formMiddleware({ getState, dispatch })(splitNext)(action)
 
         // THEN
-        expect(dispatch.mock.calls.length).toEqual(2)
+        expect(dispatch.mock.calls.length).toEqual(1)
         expect(dispatch.mock.calls[0][0].type).toEqual(actions.VALIDATE_FORM)
-        expect(dispatch.mock.calls[1][0].type).toEqual(actions.SUBMIT_CREATED_OPTIONS)
         expect(next.mock.calls.length).toEqual(2)
         expect(next.mock.calls[0][0]).toEqual(action)
         expect(next.mock.calls[1][0].type).toMatch(apiActions.API_REQUEST)
