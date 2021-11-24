@@ -16,6 +16,10 @@ export const SET_OPTIONS = `${FORM} SET_OPTIONS`
 export const LOAD_INDEX = `${FORM} LOAD_INDEX`
 export const SUBMIT = `${FORM} SUBMIT`
 export const CLEAR = `${FORM} CLEAR`
+export const PERSIST_IN_LOCAL_STORAGE = `${FORM} PERSIST_IN_LOCAL_STORAGE`
+export const CLEAR_LOCAL_STORAGE = `${FORM} CLEAR_LOCAL_STORAGE`
+export const REJECT_LOCAL_STORAGE = `${FORM} REJECT_LOCAL_STORAGE`
+export const ACCEPT_LOCAL_STORAGE = `${FORM} ACCEPT_LOCAL_STORAGE`
 
 // action creators
 export const fetchSchema = ({ type, id }) => ({
@@ -95,5 +99,25 @@ export const submit = () => ({
 
 export const clear = () => ({
   type: CLEAR,
+  meta: { feature: FORM },
+})
+
+export const persistInLocalStorage = () => ({
+  type: PERSIST_IN_LOCAL_STORAGE,
+  meta: { feature: FORM },
+})
+
+export const clearLocalStorage = () => ({
+  type: CLEAR_LOCAL_STORAGE,
+  meta: { feature: FORM },
+})
+
+export const rejectLocalStorage = () => ({
+  type: REJECT_LOCAL_STORAGE,
+  meta: { feature: FORM },
+})
+
+export const acceptLocalStorage = () => ({
+  type: ACCEPT_LOCAL_STORAGE,
   meta: { feature: FORM },
 })

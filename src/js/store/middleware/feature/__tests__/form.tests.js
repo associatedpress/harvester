@@ -63,7 +63,7 @@ describe('form', () => {
       expect(next.mock.calls[2][0].payload).toBe(false)
     })
 
-    it('should set form dirty and dispatch set field on INPUT_FIELD', () => {
+    it('should set form dirty, dispatch set field, and persist in local storage on INPUT_FIELD', () => {
       // GIVEN
       const dispatch = jest.fn()
       const next = jest.fn()
@@ -78,10 +78,11 @@ describe('form', () => {
       expect(next.mock.calls[0][0]).toEqual(action)
       expect(next.mock.calls[1][0].type).toMatch(uiActions.SET_FORM_DIRTY)
       expect(next.mock.calls[1][0].payload).toBe(true)
-      expect(dispatch.mock.calls.length).toEqual(1)
+      expect(dispatch.mock.calls.length).toEqual(2)
       expect(dispatch.mock.calls[0][0].type).toEqual(actions.SET_FIELD)
       expect(dispatch.mock.calls[0][0].payload).toEqual(action.payload)
       expect(dispatch.mock.calls[0][0].meta.fieldId).toEqual(action.meta.fieldId)
+      expect(dispatch.mock.calls[1][0].type).toEqual(actions.PERSIST_IN_LOCAL_STORAGE)
     })
 
     it('should set requires to null on SET_FIELD', () => {
@@ -443,7 +444,7 @@ describe('form', () => {
     })
 
     describe('CLEAR', () => {
-      it('should reset UI state on CLEAR resetting index if index set', () => {
+      it('should clear local storage and reset UI state on CLEAR resetting index if index set', () => {
         // GIVEN
         const state = {
           form: {
@@ -453,21 +454,24 @@ describe('form', () => {
           },
         }
         const getState = () => state
+        const dispatch = jest.fn()
         const next = jest.fn()
         const splitNext = actionSplitterMiddleware()(next)
         const action = actions.clear()
 
         // WHEN
-        form.formMiddleware({ getState })(splitNext)(action)
+        form.formMiddleware({ getState, dispatch })(splitNext)(action)
 
         // THEN
         expect(next.mock.calls.length).toEqual(3)
         expect(next.mock.calls[0][0]).toEqual(action)
         expect(next.mock.calls[1][0]).toEqual(uiActions.setFormDirty({ state: false, feature: actions.FORM }))
         expect(next.mock.calls[2][0]).toEqual(uiActions.setIndexLoaded({ state: false, feature: actions.FORM }))
+        expect(dispatch.mock.calls.length).toEqual(1)
+        expect(dispatch.mock.calls[0][0].type).toEqual(actions.CLEAR_LOCAL_STORAGE)
       })
 
-      it('should reset UI state on CLEAR not resetting index if no index set', () => {
+      it('should clear local storage and reset UI state on CLEAR not resetting index if no index set', () => {
         // GIVEN
         const state = {
           form: {
@@ -475,18 +479,21 @@ describe('form', () => {
           },
         }
         const getState = () => state
+        const dispatch = jest.fn()
         const next = jest.fn()
         const splitNext = actionSplitterMiddleware()(next)
         const action = actions.clear()
 
         // WHEN
-        form.formMiddleware({ getState })(splitNext)(action)
+        form.formMiddleware({ getState, dispatch })(splitNext)(action)
 
         // THEN
         expect(next.mock.calls.length).toEqual(3)
         expect(next.mock.calls[0][0]).toEqual(action)
         expect(next.mock.calls[1][0]).toEqual(uiActions.setFormDirty({ state: false, feature: actions.FORM }))
         expect(next.mock.calls[2][0]).toEqual(uiActions.setIndexLoaded({ state: true, feature: actions.FORM }))
+        expect(dispatch.mock.calls.length).toEqual(1)
+        expect(dispatch.mock.calls[0][0].type).toEqual(actions.CLEAR_LOCAL_STORAGE)
       })
     })
   })

@@ -5,6 +5,7 @@ export const SET_FORM_DIRTY = 'SET_FORM_DIRTY'
 export const SET_FORM_READY = 'SET_FORM_READY'
 export const SET_INDEX_LOADED = 'SET_INDEX_LOADED'
 export const SET_FINISHED = 'SET_FINISHED'
+export const SET_ASKING_TO_RESTORE = 'SET_ASKING_TO_RESTORE'
 
 // action creators
 export const setLoader = ({ state, feature }) => ({
@@ -39,6 +40,12 @@ export const setIndexLoaded = ({ state, feature }) => ({
 
 export const setFinished = ({ state, feature }) => ({
   type: `${feature} ${SET_FINISHED}`,
+  payload: state,
+  meta: { feature },
+})
+
+export const setAskingToRestore = ({ state, feature }) => ({
+  type: `${feature} ${SET_ASKING_TO_RESTORE}`,
   payload: state,
   meta: { feature },
 })

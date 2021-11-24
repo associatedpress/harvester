@@ -4,7 +4,8 @@ import {
   SET_FORM_DIRTY,
   SET_FORM_READY,
   SET_INDEX_LOADED,
-  SET_FINISHED
+  SET_FINISHED,
+  SET_ASKING_TO_RESTORE
 } from '../actions/ui'
 
 const initState = {
@@ -14,6 +15,7 @@ const initState = {
   formReady: false,
   indexLoaded: false,
   finished: false,
+  askingToRestore: false,
 }
 
 export const uiReducer = (ui = initState, action) => {
@@ -35,6 +37,9 @@ export const uiReducer = (ui = initState, action) => {
 
     case action.type.includes(SET_FINISHED):
       return { ...ui, finished: action.payload }
+
+    case action.type.includes(SET_ASKING_TO_RESTORE):
+      return { ...ui, askingToRestore: action.payload }
 
     default:
       return ui
