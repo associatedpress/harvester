@@ -11,6 +11,8 @@ import {
   LOAD_INDEX,
   SUBMIT,
   CLEAR,
+  PERSIST_IN_LOCAL_STORAGE,
+  CLEAR_LOCAL_STORAGE,
   clear,
   validateField,
   validateForm,
@@ -18,7 +20,9 @@ import {
   setField,
   setSchema,
   setOptions,
-  submitCreatedOptions
+  submitCreatedOptions,
+  persistInLocalStorage,
+  clearLocalStorage,
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
 import { setLoader, setFormDirty, setIndexLoaded, setFinished } from '../../actions/ui'
@@ -218,12 +222,31 @@ const handleSubmit = (store, next, action) => {
 }
 
 const handleClear = (store, next) => {
+  store.dispatch(clearLocalStorage())
   const state = store.getState()
   const newIndexLoaded = !state.form.schema.index
   next([
     setFormDirty({ state: false, feature: FORM }),
     setIndexLoaded({ state: newIndexLoaded, feature: FORM }),
   ])
+}
+
+const handlePersistInLocalStorage = (store) => {
+  const state = store.getState()
+  const { type, id } = state.form.form
+  const key = `harvester-state:${type}/${id}`
+  const storageState = {
+    schema: state.form.schema,
+    fields: state.form.fields,
+  }
+  window.localStorage.setItem(key, JSON.stringify(storageState))
+}
+
+const handleClearLocalStorage = (store, next) => {
+  const state = store.getState()
+  const { type, id } = state.form.form
+  const key = `harvester-state:${type}/${id}`
+  window.localStorage.removeItem(key)
 }
 
 export const formMiddleware = store => next => action => {
@@ -257,6 +280,7 @@ export const formMiddleware = store => next => action => {
 
     case INPUT_FIELD:
       store.dispatch(setField({ fieldId: action.meta.fieldId, value: action.payload }))
+      store.dispatch(persistInLocalStorage())
       next(setFormDirty({ state: true, feature: FORM }))
       break
 
@@ -290,6 +314,14 @@ export const formMiddleware = store => next => action => {
 
     case CLEAR:
       handleClear(store, next, action)
+      break
+
+    case PERSIST_IN_LOCAL_STORAGE:
+      handlePersistInLocalStorage(store, next, action)
+      break
+
+    case CLEAR_LOCAL_STORAGE:
+      handleClearLocalStorage(store, next, action)
       break
   }
 }
