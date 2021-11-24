@@ -13,24 +13,40 @@ import {
   CLEAR,
   PERSIST_IN_LOCAL_STORAGE,
   CLEAR_LOCAL_STORAGE,
+  ACCEPT_LOCAL_STORAGE,
+  REJECT_LOCAL_STORAGE,
   clear,
   validateField,
   validateForm,
   setError,
   setField,
+  inputField,
   setSchema,
   setOptions,
   submitCreatedOptions,
   persistInLocalStorage,
   clearLocalStorage,
+  acceptLocalStorage,
+  rejectLocalStorage
 } from '../../actions/form'
 import { API_SUCCESS, API_ERROR, apiRequest } from '../../actions/api'
-import { setLoader, setFormDirty, setIndexLoaded, setFinished } from '../../actions/ui'
+import {
+  setLoader,
+  setFormDirty,
+  setIndexLoaded,
+  setFinished,
+  setAskingToRestore
+} from '../../actions/ui'
 import { setNotification, setErrorNotification } from '../../actions/notification'
 import { getFieldSchema, getFieldValue } from '../../selectors/form'
 import { getUserEmail } from '../../selectors/user'
 import validate from 'js/utils/validation'
 import { serializeDateTime } from 'js/utils/datetime'
+
+const localStorageKey = state => {
+  const { type, id } = state.form.form
+  return `harvester-state:${type}/${id}`
+}
 
 const schemaURL = form => `/${form.type}/${form.id}/schema`
 const optionsURL = (form, range, opts = {}) => {
@@ -233,8 +249,7 @@ const handleClear = (store, next) => {
 
 const handlePersistInLocalStorage = (store) => {
   const state = store.getState()
-  const { type, id } = state.form.form
-  const key = `harvester-state:${type}/${id}`
+  const key = localStorageKey(state)
   const storageState = {
     schema: state.form.schema,
     fields: state.form.fields,
@@ -242,11 +257,34 @@ const handlePersistInLocalStorage = (store) => {
   window.localStorage.setItem(key, JSON.stringify(storageState))
 }
 
-const handleClearLocalStorage = (store, next) => {
+const handleClearLocalStorage = (store) => {
   const state = store.getState()
-  const { type, id } = state.form.form
-  const key = `harvester-state:${type}/${id}`
+  const key = localStorageKey(state)
   window.localStorage.removeItem(key)
+}
+
+const handleAcceptLocalStorage = (store, next) => {
+  const state = store.getState()
+  const key = localStorageKey(state)
+  let storageState = { fields: {} }
+  try {
+    storageState = JSON.parse(window.localStorage.getItem(key))
+  } catch(error) {
+    console.error(error)
+  }
+  Object.entries(storageState.fields).forEach(([fieldId, value]) => {
+    store.dispatch(inputField({ fieldId, value }))
+  })
+  next(setAskingToRestore({ state: false, feature: FORM }))
+}
+
+const handleRejectLocalStorage = (store, next) => {
+  const state = store.getState()
+  state.form.schema.columns.forEach(col => {
+    store.dispatch(setField({ fieldId: col.id, value: parseDefault(col.config.default, col.type) }))
+  })
+  store.dispatch(clearLocalStorage())
+  next(setAskingToRestore({ state: false, feature: FORM }))
 }
 
 export const formMiddleware = store => next => action => {
@@ -322,6 +360,14 @@ export const formMiddleware = store => next => action => {
 
     case CLEAR_LOCAL_STORAGE:
       handleClearLocalStorage(store, next, action)
+      break
+
+    case ACCEPT_LOCAL_STORAGE:
+      handleAcceptLocalStorage(store, next, action)
+      break
+
+    case REJECT_LOCAL_STORAGE:
+      handleRejectLocalStorage(store, next, action)
       break
   }
 }
