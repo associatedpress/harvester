@@ -100,16 +100,34 @@ const handleLoadIndexResponse = (store, next, action) => {
   next(setIndexLoaded({ state: true, feature: FORM }))
 }
 
+const handleFetchSchemaSuccess = (store, next, action) => {
+  next(setLoader({ state: false, feature: FORM }))
+  store.dispatch(setSchema({ schema: action.payload }))
+
+  const state = store.getState()
+  const key = localStorageKey(state)
+
+  let storageState
+  try {
+    const storageStateJSON = window.localStorage.getItem(key)
+    storageState = storageStateJSON && JSON.parse(storageStateJSON)
+  } catch(error) {
+    console.error(error)
+  }
+
+  if (storageState && JSON.stringify(storageState.schema) === JSON.stringify(action.payload)) {
+    store.dispatch(setAskingToRestore({ state: true, feature: FORM }))
+  } else {
+    store.dispatch(rejectLocalStorage())
+  }
+}
+
 const handleApiSuccess = (store, next, action) => {
   const { referrer } = action.meta
 
   switch (referrer.type) {
     case FETCH_SCHEMA:
-      next(setLoader({ state: false, feature: FORM }))
-      store.dispatch(setSchema({ schema: action.payload }))
-      action.payload.columns.forEach(col => {
-        store.dispatch(setField({ fieldId: col.id, value: parseDefault(col.config.default, col.type) }))
-      })
+      handleFetchSchemaSuccess(store, next, action)
       break
 
     case FETCH_OPTIONS:
