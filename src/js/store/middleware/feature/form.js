@@ -271,6 +271,7 @@ const handlePersistInLocalStorage = (store) => {
   const storageState = {
     schema: state.form.schema,
     fields: state.form.fields,
+    ui: state.ui,
   }
   window.localStorage.setItem(key, JSON.stringify(storageState))
 }
@@ -284,7 +285,7 @@ const handleClearLocalStorage = (store) => {
 const handleAcceptLocalStorage = (store, next) => {
   const state = store.getState()
   const key = localStorageKey(state)
-  let storageState = { fields: {} }
+  let storageState = { ui: {}, fields: {} }
   try {
     storageState = JSON.parse(window.localStorage.getItem(key))
   } catch(error) {
@@ -293,6 +294,9 @@ const handleAcceptLocalStorage = (store, next) => {
   Object.entries(storageState.fields).forEach(([fieldId, value]) => {
     store.dispatch(inputField({ fieldId, value }))
   })
+  if (storageState.ui.indexLoaded) {
+    next(setIndexLoaded({ state: true, feature: FORM }))
+  }
   next(setAskingToRestore({ state: false, feature: FORM }))
 }
 
