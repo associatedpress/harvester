@@ -1,7 +1,17 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { fetchSchema, submit, clear, loadIndex, inputField, setField, validateField } from 'js/store/actions/form'
+import {
+  fetchSchema,
+  submit,
+  clear,
+  loadIndex,
+  inputField,
+  setField,
+  validateField,
+  acceptLocalStorage,
+  rejectLocalStorage
+} from 'js/store/actions/form'
 import { setUser } from 'js/store/actions/user'
 import { Layout, Header, Notifications, Form, Finished, ErrorBoundary } from 'js/components'
 import { getNotifications } from 'js/store/selectors/notification'
@@ -29,6 +39,9 @@ function App(props) {
     validateField,
     clear,
     setUser,
+    askingToRestore,
+    acceptLocalStorage,
+    rejectLocalStorage,
   } = props
 
   useEffect(() => { setUser({ email: user && user.email }) }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -36,6 +49,16 @@ function App(props) {
   useEffect(() => {
     window.onbeforeunload = () => dirty ? true : undefined
   }, [dirty])
+
+  useEffect(() => {
+    if (!askingToRestore) return
+    const msg = 'You have some unsubmitted data for this form. Would you like to pick up where you left off?'
+    if (confirm(msg)) {
+      acceptLocalStorage()
+    } else {
+      rejectLocalStorage()
+    }
+  }, [askingToRestore])
 
   const { index, columns = [], layout = [] } = schema
   const indexKeys = index && index.split('+')
@@ -163,7 +186,19 @@ function mapStateToProps(state) {
     dirty: state.ui.formDirty,
     indexLoaded: state.ui.indexLoaded,
     finished: state.ui.finished,
+    askingToRestore: state.ui.askingToRestore,
   }
 }
 
-export default connect(mapStateToProps, { fetchSchema, submit, clear, loadIndex, setField, inputField, validateField, setUser })(App)
+export default connect(mapStateToProps, {
+  fetchSchema,
+  submit,
+  clear,
+  loadIndex,
+  setField,
+  inputField,
+  validateField,
+  setUser,
+  acceptLocalStorage,
+  rejectLocalStorage,
+})(App)
