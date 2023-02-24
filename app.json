@@ -39,12 +39,6 @@
       "generator": "secret"
     }
   },
-  "formation": {
-    "web": {
-      "quantity": 1,
-      "size": "eco"
-    }
-  },
   "buildpacks": [
     {
       "url": "heroku/nodejs"
